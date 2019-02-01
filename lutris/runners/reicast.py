@@ -8,7 +8,7 @@ from lutris import settings
 from lutris.runners.runner import Runner
 from lutris.util import joypad, system
 from lutris.gui.dialogs import NoticeDialog
-
+from gettext import gettext as _
 
 class reicast(Runner):
     human_name = "Reicast"

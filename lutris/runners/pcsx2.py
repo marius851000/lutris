@@ -1,6 +1,6 @@
 import os
 from lutris.runners.runner import Runner
-
+from gettext import gettext as _
 
 class pcsx2(Runner):
     human_name = "PCSX2"

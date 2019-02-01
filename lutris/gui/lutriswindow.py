@@ -38,7 +38,7 @@ from lutris.gui.config_dialogs import (
 from lutris.gui.gameviews import (
     GameListView, GameGridView, ContextualMenu, GameStore
 )
-
+from gettext import gettext as _
 
 @GtkTemplate(ui=os.path.join(datapath.get(), 'ui', 'lutris-window.ui'))
 class LutrisWindow(Gtk.ApplicationWindow):

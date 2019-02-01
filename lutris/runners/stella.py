@@ -1,6 +1,6 @@
 import os
 from lutris.runners.runner import Runner
-
+from gettext import gettext as _
 
 class stella(Runner):
     description = _("Atari 2600 emulator")

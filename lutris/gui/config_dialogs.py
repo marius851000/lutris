@@ -12,6 +12,7 @@ from lutris.gui.widgets.dialogs import Dialog
 from lutris.gui.widgets.utils import get_pixbuf_for_game, get_pixbuf, BANNER_SIZE, ICON_SIZE
 from lutris.util.strings import slugify
 from lutris.util import datapath, resources
+from gettext import gettext as _
 
 DIALOG_WIDTH = 780
 DIALOG_HEIGHT = 560

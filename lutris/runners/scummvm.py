@@ -4,7 +4,7 @@ import subprocess
 
 from lutris import settings
 from lutris.runners.runner import Runner
-
+from gettext import gettext as _
 
 class scummvm(Runner):
     description = _("Runs various 2D point-and-click adventure games.")

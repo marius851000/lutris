@@ -10,7 +10,7 @@ from lutris.util.log import logger
 from lutris.util import system
 from lutris.util.steam import get_app_state_log, get_default_acf, read_config, to_vdf
 from lutris.services.steam import get_path_from_appmanifest
-
+from gettext import gettext as _
 
 def shutdown():
     """Cleanly quit Steam."""
@@ -313,7 +313,7 @@ class steam(Runner):
     def play(self):
         self.game_launch_time = time.localtime()
         game_args = self.game_config.get('args') or ''
-        
+
         steamless_binary = self.game_config.get('steamless_binary')
         if self.runner_config['run_without_steam'] == True and steamless_binary:
             # Start without steam
@@ -326,14 +326,14 @@ class steam(Runner):
                     command.append(arg)
         else:
             # Start through steam
-            
+
             # Get current steam pid to act as the root pid instead of lutris
             self.original_steampid = get_steam_pid()
             command = self.launch_args
             if game_args:
                 for arg in shlex.split(game_args):
                     command.append(arg)
-    
+
             if self.runner_config.get('start_in_big_picture') or not game_args:
                 command.append('steam://rungameid/%s' % self.appid)
             else:

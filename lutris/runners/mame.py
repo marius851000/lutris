@@ -1,7 +1,7 @@
 import os
 import subprocess
 from lutris.runners.runner import Runner
-
+from gettext import gettext as _
 
 class mame(Runner):
     human_name = "MAME"

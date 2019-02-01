@@ -16,7 +16,7 @@ from lutris.util.x360ce import X360ce
 from lutris.runners.runner import Runner
 from lutris.thread import LutrisThread
 from lutris.gui.dialogs import FileDialog
-
+from gettext import gettext as _
 WINE_DIR = os.path.join(settings.RUNNER_DIR, "wine")
 WINE_PATHS = {
     'winehq-devel': '/opt/wine-devel/bin/wine',

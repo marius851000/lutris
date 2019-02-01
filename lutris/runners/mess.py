@@ -2,7 +2,7 @@ import os
 from lutris import settings
 from lutris.util.log import logger
 from lutris.runners.runner import Runner
-
+from gettext import gettext as _
 
 class mess(Runner):
     human_name = "MESS"
@@ -170,7 +170,7 @@ class mess(Runner):
                 ("Punch Tape 2", 'ptap2'),
                 ("Print Out", 'prin'),
                 ("Print Out", 'prin'),
-                
+
             ]
         }
     ]

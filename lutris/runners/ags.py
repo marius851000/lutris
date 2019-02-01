@@ -1,11 +1,11 @@
 import os
 
 from lutris.runners.runner import Runner
-
+from gettext import gettext as _
 
 class ags(Runner):
     human_name = "Adventure Game Studio"
-    description = "Graphics adventure engine"
+    description = _("Graphics adventure engine")
     platforms = ['Linux']
     runner_executable = 'ags/ags.sh'
     game_options = [{

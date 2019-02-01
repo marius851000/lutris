@@ -4,6 +4,7 @@ from collections import OrderedDict
 
 from lutris import runners
 from lutris.util import display, system
+from gettext import gettext as _
 
 DISPLAYS = None
 

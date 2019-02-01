@@ -1,6 +1,6 @@
 import os
 from lutris.runners.runner import Runner
-
+from gettext import gettext as _
 
 class dolphin(Runner):
     description = _("Gamecube and Wii emulator")
@@ -21,7 +21,7 @@ class dolphin(Runner):
         {
             'option': 'platform',
             'type': 'choice',
-            'label': 'Platform',
+            'label': _('Platform'),
             'choices': (
                 ('Nintendo Gamecube', '0'),
                 ('Nintendo Wii', '1')

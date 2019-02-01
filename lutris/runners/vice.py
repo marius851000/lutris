@@ -3,7 +3,7 @@ from lutris import settings
 from lutris.util import system
 from lutris.util.log import logger
 from lutris.runners.runner import Runner
-
+from gettext import gettext as _
 
 class vice(Runner):
     description = _("Commodore Emulator")

@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 from lutris.runners.runner import Runner
-
+from gettext import gettext as _
 
 class browser(Runner):
     human_name = "Browser"

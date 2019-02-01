@@ -15,6 +15,7 @@ from lutris.util.log import logger
 from lutris.util.steam import get_app_state_log, read_config
 from lutris.services.steam import get_path_from_appmanifest
 from lutris.util.wineregistry import WineRegistry
+from gettext import gettext as _
 
 # Redefine wine installer tasks
 set_regedit = wine.set_regedit

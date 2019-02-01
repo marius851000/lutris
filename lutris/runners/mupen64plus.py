@@ -2,7 +2,7 @@
 import os
 from lutris import settings
 from lutris.runners.runner import Runner
-
+from gettext import gettext as _
 
 class mupen64plus(Runner):
     human_name = "Mupen64Plus"

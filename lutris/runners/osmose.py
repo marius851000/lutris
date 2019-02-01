@@ -1,6 +1,6 @@
 import os
 from lutris.runners.runner import Runner
-
+from gettext import gettext as _
 
 class osmose(Runner):
     human_name = "Osmose"

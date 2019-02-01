@@ -1,6 +1,6 @@
 import os
 from lutris.runners.runner import Runner
-
+from gettext import gettext as _
 
 class ppsspp(Runner):
     human_name = "PPSSPP"

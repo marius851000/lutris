@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 import os
 from lutris.runners.runner import Runner
-
+from gettext import gettext as _
 
 class o2em(Runner):
     human_name = "O2EM"

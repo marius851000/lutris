@@ -4,6 +4,7 @@ from lutris.runners.runner import Runner
 from lutris.util.display import get_current_resolution
 from lutris.util.log import logger
 from lutris.util.joypad import get_controller_mappings
+from gettext import gettext as _
 
 class mednafen(Runner):
     human_name = "Mednafen"
@@ -289,7 +290,7 @@ class mednafen(Runner):
 
         # Construct the controlls options
         for button in layout[machine]:
-            controls.append("-{}.input.{}.{}".format(machine,gamepad,button)) 
+            controls.append("-{}.input.{}.{}".format(machine,gamepad,button))
             controls.append("joystick {} {}".format(joy_ids[0],map_code[button]))
         return controls
 

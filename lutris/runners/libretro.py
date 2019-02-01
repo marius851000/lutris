@@ -4,7 +4,7 @@ from lutris.util.libretro import RetroConfig
 from lutris.util import system
 from lutris.util.log import logger
 from lutris import settings
-
+from gettext import gettext as _
 
 def get_core_choices():
     # Don't forget to update self.platforms

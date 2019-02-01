@@ -1,12 +1,12 @@
 import os
 
 from lutris.runners.runner import Runner
-
+from gettext import gettext as _
 
 class desmume(Runner):
     human_name = "DeSmuME"
     platforms = ['Nintendo DS']
-    description = 'Nintendo DS emulator'
+    description = _('Nintendo DS emulator')
     runner_executable = 'desmume/bin/desmume'
     game_options = [{
         'option': 'main_file',

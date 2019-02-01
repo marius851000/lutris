@@ -1,11 +1,11 @@
 import os
 
 from lutris.runners.runner import Runner
-
+from gettext import gettext as _
 
 class dgen(Runner):
     human_name = "DGen"
-    description = "Sega Genesis emulator"
+    description = _("Sega Genesis emulator")
     platforms = ['Sega Genesis']
     runner_executable = 'dgen/bin/dgen'
     game_options = [{
@@ -18,7 +18,7 @@ class dgen(Runner):
         {
             'option': 'fullscreen',
             'type': 'bool',
-            'label': 'Fullscreen',
+            'label': _('Fullscreen'),
             'default': True
         }
     ]

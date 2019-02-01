@@ -1,7 +1,7 @@
 import os
 from lutris.util import display
 from lutris.runners.runner import Runner
-
+from gettext import gettext as _
 
 class zdoom(Runner):
     # http://zdoom.org/wiki/Command_line_parameters

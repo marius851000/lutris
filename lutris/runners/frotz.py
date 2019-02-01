@@ -3,11 +3,11 @@
 
 import os
 from lutris.runners.runner import Runner
-
+from gettext import gettext as _
 
 class frotz(Runner):
     human_name = "Frotz"
-    description = "Z-code emulator for text adventure games such as Zork."
+    description = _("Z-code emulator for text adventure games such as Zork.")
     platforms = ["Z-Machine"]
     runner_executable = 'frotz/frotz'
 

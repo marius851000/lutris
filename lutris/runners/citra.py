@@ -1,12 +1,12 @@
 import os
 
 from lutris.runners.runner import Runner
-
+from gettext import gettext as _
 
 class citra(Runner):
     human_name = "Citra"
     platforms = ['Nintendo 3DS']
-    description = 'Nintendo 3DS emulator'
+    description = _('Nintendo 3DS emulator')
     runner_executable = 'citra/citra-qt'
     game_options = [{
         'option': 'main_file',

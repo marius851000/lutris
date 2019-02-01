@@ -1,7 +1,7 @@
 import os
 from lutris.runners.runner import Runner
 from lutris.util.display import get_current_resolution
-
+from gettext import gettext as _
 
 class fsuae(Runner):
     human_name = "FS-UAE"
@@ -89,7 +89,7 @@ class fsuae(Runner):
             "label": _("Scanlines display style"),
             "type": "bool",
             'default': False,
-            'help': (
+            'help': _(
                 "Activates a display filter adding scanlines to imitate "
                  "the displays of yesteryear."
             )

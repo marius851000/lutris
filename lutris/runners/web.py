@@ -8,6 +8,7 @@ from urllib.parse import urlparse
 from lutris.runners.runner import Runner
 from lutris.util import datapath
 from lutris import pga, settings
+from gettext import gettext as _
 
 DEFAULT_ICON = os.path.join(datapath.get(), 'media/default_icon.png')
 

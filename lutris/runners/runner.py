@@ -15,7 +15,7 @@ from lutris.util.log import logger
 from lutris.util import system
 from lutris.util.http import Request
 from lutris.runners import RunnerInstallationError
-
+from gettext import gettext as _
 
 def get_arch():
     """Return the architecture returning values compatible with the reponses

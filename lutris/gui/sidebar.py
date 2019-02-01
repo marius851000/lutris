@@ -7,7 +7,7 @@ from lutris.gui.runnerinstalldialog import RunnerInstallDialog
 from lutris.gui.config_dialogs import RunnerConfigDialog
 from lutris.gui.runnersdialog import RunnersDialog
 from lutris.gui.widgets.utils import get_runner_icon
-
+from gettext import gettext as _
 TYPE = 0
 SLUG = 1
 ICON = 2

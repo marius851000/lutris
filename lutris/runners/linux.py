@@ -3,7 +3,7 @@ import os
 import shlex
 import stat
 from lutris.runners.runner import Runner
-
+from gettext import gettext as _
 
 class linux(Runner):
     human_name = "Linux"

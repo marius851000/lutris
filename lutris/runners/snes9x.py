@@ -5,6 +5,7 @@ import xml.etree.ElementTree as etree
 from lutris.util.log import logger
 from lutris.runners.runner import Runner
 from lutris import settings
+from gettext import gettext as _
 
 SNES9X_DIR = os.path.join(settings.DATA_DIR, "runners/snes9x")
 

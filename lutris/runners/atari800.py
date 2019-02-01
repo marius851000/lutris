@@ -6,7 +6,7 @@ from lutris.config import LutrisConfig
 from lutris.gui.dialogs import DownloadDialog, ErrorDialog
 from lutris.runners.runner import Runner
 from lutris.util import display, extract, system
-
+from gettext import gettext as _
 
 # pylint: disable=C0103
 class atari800(Runner):
@@ -26,33 +26,17 @@ class atari800(Runner):
         "osb_rom": "a3e8d617c95d08031fe1b20d541434b2",
         "5200_rom": ""
     }
-
-    def get_long_help_msg(self,option):
-        help_messages = {}
-
-        # main_file
-        help_messages['main_file'] = _(
-            "The game data, commonly called a ROM image."
-            "Supported rom formats: ATR, XFD, DCM, ATR.GZ, XFD.GZ"
-            "and PRO."
-        )
-
-        # bios_path
-        help_messages['bios_path'] = _(
-            "A folder containing the Atari 800 bios files."
-            "They are provided by Lutris so you shouldn't have to"
-            "change this"
-        )
-
-        return help_messages.get(option, "")
-
-
+    
     game_options = [
         {
             "option": "main_file",
             "type": "file",
             "label": _("ROM file"),
-            'help': get_long_help_msg('main_file')
+            'help': _(
+                "The game data, commonly called a ROM image."
+                "Supported rom formats: ATR, XFD, DCM, ATR.GZ, XFD.GZ"
+                "and PRO."
+            )
         }
     ]
 
@@ -70,7 +54,11 @@ class atari800(Runner):
             "option": "bios_path",
             "type": "directory_chooser",
             "label": "Bios location",
-            'help': get_long_help_msg('bios_path')
+            'help': _(
+                "A folder containing the Atari 800 bios files."
+                "They are provided by Lutris so you shouldn't have to"
+                "change this"
+            )
         },
         {
             "option": "machine",

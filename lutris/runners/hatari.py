@@ -4,7 +4,7 @@ from lutris.config import LutrisConfig
 from lutris.gui.dialogs import QuestionDialog, FileDialog
 from lutris.runners.runner import Runner
 from lutris.util import system
-
+from gettext import gettext as _
 
 class hatari(Runner):
     human_name = "Hatari"

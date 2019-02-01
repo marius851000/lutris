@@ -3,7 +3,7 @@ import os
 from lutris.util.log import logger
 from lutris.util import system
 from lutris.runners.runner import Runner
-
+from gettext import gettext as _
 
 def dosexec(config_file=None, executable=None, args=None, exit=True,
             working_dir=None):

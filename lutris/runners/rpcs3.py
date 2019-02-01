@@ -16,5 +16,5 @@ class rpcs3(Runner):
     ]
 
     def play(self):
-       
+
         return {'command': [self.get_executable(), self.game_config.get('main_file')] }

@@ -1,10 +1,10 @@
 from lutris.runners.runner import Runner
 from os.path import expanduser
-
+from gettext import gettext as _
 
 class higan(Runner):
     human_name = "higan"
-    description = ("Multi-system emulator including NES, GB(A), PC Engine "
+    description = _("Multi-system emulator including NES, GB(A), PC Engine "
                    "support.")
     platforms = [
         'Nintendo Game Boy (Color)',
@@ -23,8 +23,8 @@ class higan(Runner):
         {
             "option": "main_dir",
             "type": "directory_chooser",
-            "label": "ROM directory",
-            'help': ("The game data directory. \n"
+            "label": _("ROM directory"),
+            'help': _("The game data directory. \n"
                      "higan uses its own \"Game Pak\" system. Gamepaks are "
                      "an attempt to simulate physical Nintendo Game Paks in digital form. "
                      "The idea is that for each game, one folder acts as a gamepak, "
@@ -33,7 +33,7 @@ class higan(Runner):
         {
             "option": "subgame1",
             "type": "directory_chooser",
-            "label": "Secondary ROM directory",
+            "label": _("Secondary ROM directory"),
             "advanced": True,
             "help": ("The game data directory for the secondary cart slot"
                      "on either the Sufami Turbo, Satellaview or Super Game Boy.")
@@ -41,28 +41,28 @@ class higan(Runner):
         {
             "option": "subgame2",
             "type": "directory_chooser",
-            "label": "Tertiary ROM directory",
+            "label": _("Tertiary ROM directory"),
             "advanced": True,
-            "help": "The game data directory for the tertiary cart slot on the Sufami Turbo."
+            "help": _("The game data directory for the tertiary cart slot on the Sufami Turbo.")
         }
     ]
     runner_options = [
         {
             "option": "fs",
             "type": "bool",
-            "label": "Fullscreen",
+            "label": _("Fullscreen"),
             "default": False,
         },
         {
             "option": "region",
             "type": "choice",
-            "label": "Region",
+            "label": _("Region"),
             "choices": [('Auto', 'auto'),
                         ('NTSC-U', 'NTSC-U'),
                         ('PAL', 'PAL'),
                         ('NTSC-J', 'NTSC-J')],
             "default": "auto",
-            "help": "The region of the console."
+            "help": _("The region of the console.")
         }
     ]
 

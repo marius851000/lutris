@@ -1,6 +1,6 @@
 import os
 from lutris.runners.runner import Runner
-
+from gettext import gettext as _
 
 class jzintv(Runner):
     human_name = "jzIntv"
@@ -12,7 +12,7 @@ class jzintv(Runner):
         'type': 'file',
         'label': _("ROM file"),
         'default_path': 'game_path',
-        'help': (
+        'help': _(
             "The game data, commonly called a ROM image. "
             "Supported rom formats: .rom, .bin+.cfg, .int, .itv"
             "The file extension must be lower-case."
