@@ -26,10 +26,10 @@ Examples:
 ::
 
     files:
-    - file1: http://site.com/gamesetup.exe
+    - file1: https://example.com/gamesetup.exe
     - file2: "N/A:Select the game's setup file"
     - file3:
-        url: http://site.com/url-that-doesnt-resolve-to-a-proper-filename
+        url: https://example.com/url-that-doesnt-resolve-to-a-proper-filename
         filename: actual_local_filename.zip
         referer: www.mywebsite.com
 
@@ -56,6 +56,17 @@ Example: ``main_file: game.rom``
 
 For web games, specify the game's URL (or filename) with ``main_file``.
 Example: ``main_file: http://www...``
+
+Customizing the game's name
+---------------------------
+
+Use the ``custom-name`` directive to override the name of the game. Use this
+only if the installer provides a significantly different game from the base
+one.
+(Note: In a future update, custom names will be added as game aliases so they
+can be searchable)
+
+Example: ``custom-name: Quake Champions: Doom Edition``
 
 Presetting game parameters
 --------------------------
@@ -111,6 +122,21 @@ Example (setting some environment variables):
         __GL_THREADED_OPTIMIZATIONS: '1'
         mesa_glthread: 'true'
 
+Requiring additional binaries
+-----------------------------
+
+If the game or the installer needs some system binaries to run, you can specify
+them in the `require-binaries` directive. The value is a comma-separated list
+of required binaries (acting as AND), if one of several binaries are able to
+run the program, you can add them as a ``|`` separated list (acting as OR).
+
+Example
+
+::
+
+    # This requires cmake to be installed and either ggc or clang
+    require-binaries: cmake, gcc | clang
+
 Mods and add-ons
 ----------------
 
@@ -118,9 +144,10 @@ Mods and add-ons require that a base game is already installed on the system.
 You can let the installer know that you want to install an add-on by specifying
 the ``requires`` directive. The value of ``requires`` must be the canonical
 slug name of the base game, not one of its aliases. For example, to install the
-add-on "The reckoning" for Quake 2, you should add:
+add-on "The reckoning" for Quake 2, you should add: ``requires: quake-2``
 
-``requires: quake-2``
+You can also add complex requirements following the same syntax as the
+``require-binaries`` directive described above.
 
 
 Writing the installation script
@@ -179,13 +206,14 @@ Example:
 ::
 
     - move:
-        src: $game-file-id
+        src: game_file_id
         dst: $GAMEDIR/location
 
 Copying and merging directories
 -------------------------------
 
-Both merging and copying actions are done with the ``merge`` directive.
+Both merging and copying actions are done with the ``merge`` or the ``copy`` directive.
+It is not important which of these directives is used because ``copy`` is just an alias for ``merge``.
 Whether the action does a merge or copy depends on the existence of the
 destination directory. When merging into an existing directory, original files
 with the same name as the ones present in the merged directory will be
@@ -200,7 +228,7 @@ Example:
 ::
 
     - merge:
-        src: $game-file-id
+        src: game_file_id
         dst: $GAMEDIR/location
 
 Extracting archives
@@ -220,7 +248,7 @@ Example:
 ::
 
     - extract:
-        file: $game-archive
+        file: game_archive
         dst: $GAMEDIR/datadir/
 
 Making a file executable
@@ -249,7 +277,7 @@ Example:
 
     - execute:
         args: --argh
-        file: $great-id
+        file: great_id
         terminal: true
         env:
           key: value
@@ -294,9 +322,10 @@ Writing into an INI type config file
 Modify or create a config file with the ``write_config`` directive. A config file
 is a text file composed of key=value (or key: value) lines grouped under
 [sections]. Use the ``file`` (an absolute path or a ``file id``), ``section``,
-``key`` and ``value`` parameters. Note that the file is entirely rewritten and
-comments are left out; Make sure to compare the initial and resulting file
-to spot any potential parsing issues.
+``key`` and ``value`` parameters or the ``data`` parameter. Set ``merge: false``
+to first truncate the file. Note that the file is entirely rewritten and
+comments are left out; Make sure to compare the initial and resulting file to
+spot any potential parsing issues.
 
 Example:
 
@@ -307,6 +336,16 @@ Example:
         section: Engine
         key: Renderer
         value: OpenGL
+
+::
+
+    - write_config:
+        file: $GAMEDIR/myfile.ini
+        data:
+          General:
+            iNumHWThreads: 2
+            bUseThreadedAI: 1
+
 
 Writing into a JSON type file
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -327,6 +366,7 @@ Example:
             Enabled: 'false'
 
 This writes (or updates) a file with the following content:
+
 ::
 
     {
@@ -350,8 +390,18 @@ Currently, the following tasks are implemented:
 *   wine / winesteam: ``create_prefix`` Creates an empty Wine prefix at the
     specified path. The other wine/winesteam directives below include the
     creation of the prefix, so in most cases you won't need to use the
-    create_prefix command. Parameters are ``prefix`` (the path), ``arch``
-    (optional architecture of the prefix, default: win32), ``overrides`` (optional dll overrides, format described later), ``install_gecko`` (optional variable to stop installing gecko), ``install_mono`` (optional variable to stop installing mono).
+    create_prefix command. Parameters are:
+
+    * ``prefix``: the path
+
+    * ``arch``: optional architecture of the prefix, default: win64 unless a
+      32bit build is specified in the runner options.
+
+    * ``overrides``: optional dll overrides, format described later
+
+    * ``install_gecko``: optional variable to stop installing gecko
+
+    * ``install_mono``: optional variable to stop installing mono
 
     Example:
 
@@ -520,7 +570,7 @@ Currently, the following tasks are implemented:
 
         - task:
             name: dosexec
-            executable: $file_id
+            executable: file_id
             config: $GAMEDIR/game_install.conf
             args: -scaler normal3x -conf more_conf.conf
 
@@ -548,13 +598,13 @@ Example:
         id: LANG
         options:
         - en: English
-        - bf: Brainfuck
+        - fr: French
         - "value and": "label can be anything, surround them with quotes to avoid issues"
-        preselect: bf
+        preselect: fr
 
 In this example, English would be preselected. If the option eventually
-selected is Brainfuck, the "$INPUT_LANG" alias would be available in
-following directives and would correspond to "bf". "$INPUT" would work as well,
+selected is French, the "$INPUT_LANG" alias would be available in
+following directives and would correspond to "fr". "$INPUT" would work as well,
 up until the next input directive.
 
 
@@ -587,7 +637,7 @@ Example Linux game:
         working_dir: $GAMEDIR
 
       files:
-      - myfile: http://example.com/mygame.zip
+      - myfile: https://example.com/mygame.zip
 
       installer:
       - chmodx: $GAMEDIR/mygame
@@ -616,11 +666,11 @@ Example wine game:
       files:
       - installer: "N/A:Select the game's setup file"
       installer:
-      - task: 
-        executable: installer
-        name: wineexec
-        prefix: $GAMEDIR/prefix
-        arch: win64
+      - task:
+          executable: installer
+          name: wineexec
+          prefix: $GAMEDIR/prefix
+          arch: win64
       wine:
         Desktop: true
         WineDesktop: 1024x768
@@ -632,7 +682,11 @@ Example wine game:
           WINEDLLOVERRIDES: d3d11=
           SOMEENV: true
 
-Example gog wine game, some installer crash with with /SILENT or /VERYSILENT option (Cuphead and Star Wars: Battlefront II for example), (most options can be found here http://www.jrsoftware.org/ishelp/index.php?topic=setupcmdline, there is undocumented gog option ``/nogui``, you need to use it when you use ``/silent`` and ``/suppressmsgboxes`` parameters):
+Example gog wine game, some installer crash with with /SILENT or /VERYSILENT
+option (Cuphead and Star Wars: Battlefront II for example), (most options can
+be found here http://www.jrsoftware.org/ishelp/index.php?topic=setupcmdline,
+there is undocumented gog option ``/NOGUI``, you need to use it when you use
+``/SILENT`` and ``/SUPPRESSMSGBOXES`` parameters):
 
 ::
 
@@ -653,11 +707,11 @@ Example gog wine game, some installer crash with with /SILENT or /VERYSILENT opt
       - installer: "N/A:Select the game's setup file"
       installer:
       - task:
-        args: /SILENT /LANG=en /SP- /NOCANCEL /SUPPRESSMSGBOXES /NOGUI /DIR="C:/game"
-        executable: installer
-        name: wineexec
-        prefix: $GAMEDIR/prefix
-        arch: win64
+          args: /SILENT /LANG=en /SP- /NOCANCEL /SUPPRESSMSGBOXES /NOGUI /DIR="C:/game"
+          executable: installer
+          name: wineexec
+          prefix: $GAMEDIR/prefix
+          arch: win64
       wine:
         Desktop: true
         WineDesktop: 1024x768
@@ -691,7 +745,7 @@ Example gog wine game, alternative (requires innoextract):
       - installer: "N/A:Select the game's setup file"
       installer:
       - execute:
-          args: --gog -d "$CACHE" "$setup"
+          args: --gog -d "$CACHE" setup
           description: Extracting game data
           file: innoextract
       - move:
@@ -730,9 +784,9 @@ Example gog linux game (mojosetup options found here https://www.reddit.com/r/li
       installer:
       - chmodx: installer
       - execute:
-        executable: installer
-        description: Installing game, it will take a while...
-        args: -- --i-agree-to-all-licenses --noreadme --nooptions --noprompt --destination=$GAMEDIR
+          file: installer
+          description: Installing game, it will take a while...
+          args: -- --i-agree-to-all-licenses --noreadme --nooptions --noprompt --destination=$GAMEDIR
       system:
         terminal: true
 
@@ -755,12 +809,12 @@ Example gog linux game, alternative (requires unzip):
       - installer: "N/A:Select the game's setup file"
       installer:
       - execute:
-        args: $installer -d "$GAMEDIR" "data/noarch/*"
-        description: Extracting game data, it will take a while...
-        file: unzip
+          args: installer -d "$GAMEDIR" "data/noarch/*"
+          description: Extracting game data, it will take a while...
+          file: unzip
       - rename:
-        dst: $GAMEDIR/Game
-        src: $GAMEDIR/data/noarch
+          dst: $GAMEDIR/Game
+          src: $GAMEDIR/data/noarch
       system:
         terminal: true
 
@@ -783,12 +837,11 @@ Example winesteam game:
         arch: win64
       installer:
       - task:
-        description: Setting up wine prefix
-        name: create_prefix
-        prefix: $GAMEDIR/prefix
-        arch: win64
-
-      wine:
+          description: Setting up wine prefix
+          name: create_prefix
+          prefix: $GAMEDIR/prefix
+          arch: win64
+      winesteam:
         Desktop: true
         WineDesktop: 1024x768
         overrides:
@@ -807,7 +860,7 @@ Example steam linux game:
     game_slug: my-game
     version: Installer
     slug: my-game-installer
-    runner: winesteam
+    runner: steam
 
     script:
       game:
@@ -829,7 +882,7 @@ When submitting the installer script to lutris.net, only copy the script part. R
       args: --some-arg
 
     files:
-    - myfile: http://example.com
+    - myfile: https://example.com
 
     installer:
     - chmodx: $GAMEDIR/mygame
@@ -885,47 +938,23 @@ Sysoptions
 
 ``version`` (example: ``staging-2.21-x86_64``)
 
-``custom_wine_path`` (example: ``/usr/local/bin/wine``)
-
-``x360ce-path`` (example: ``$GAMEDIR``)
-
-``x360ce-dinput`` (example: ``true``)
-
-``x360ce-xinput9`` (example: ``true``)
-
-``dumbxinputemu`` (example: ``true``)
-
-``xinput-arch`` (example: ``win32`` or ``win64``)
-
 ``Desktop`` (example: ``true``)
 
 ``WineDesktop`` (example: ``1024x768``)
 
 ``MouseWarpOverride`` (example: ``enable``, ``disable`` or ``force``)
 
-``OffscreenRenderingMode`` (example: ``fbo`` or ``backbuffer``)
-
-``StrictDrawOrdering`` (example: ``enabled`` or ``disabled``)
-
-``UseGLSL`` (example: ``enabled`` or ``disabled``)
-
-``RenderTargetLockMode`` (example: ``disabled``, ``readtex`` or ``readdraw``)
-
 ``Audio`` (example: ``auto``, ``alsa``, ``oss`` or ``jack``)
 
 ``ShowCrashDialog`` (example: ``true``)
-
-``show_debug`` (example: empty value, ``-all`` or ``+all``)
 
 ``overrides`` (example: described above)
 
 **winesteam (wine section options available to winesteam runner) section:**
 
-``steam_path`` (example: ``Z:\home\user\Steam\Steam.exe``) 
+``steam_path`` (example: ``Z:\home\user\Steam\Steam.exe``)
 
 ``quit_steam_on_exit`` (example: ``true``)
-
-``steamless_binary64`` (example: fallout64-nosteam)
 
 ``steamless_binary`` (example: fallout-nosteam)
 
@@ -933,15 +962,9 @@ Sysoptions
 
 **steam section:**
 
-``steamless_binary64`` (example: fallout64-nosteam)
-
 ``steamless_binary`` (example: fallout-nosteam)
 
 ``run_without_steam`` (example: ``true``)
-
-``quit_steam_on_exit`` (example: ``true``)
-
-``start_in_big_picture`` (example: ``true``)
 
 ``steam_native_runtime`` (example: ``false``)
 
@@ -969,7 +992,7 @@ Sysoptions
 
 ``disable_runtime`` (example: ``true``)
 
-``disable_monitoring`` (example: ``true``)
+``disable_compositor`` (example: ``true``)
 
 ``reset_pulse`` (example: ``true``)
 

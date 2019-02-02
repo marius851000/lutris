@@ -1,29 +1,30 @@
-VERSION=`grep "VERSION" lutris/settings.py | cut -d" " -f 3 | sed 's|"\(.*\)"|\1|'`
+VERSION=`grep "__version__" lutris/__init__.py | cut -d" " -f 3 | sed 's|"\(.*\)"|\1|'`
 
 cover:
 	rm tests/fixtures/pga.db -f
 	rm tests/coverage/ -rf
-	nosetests3 --with-coverage --cover-package=lutris --cover-html --cover-html-dir=tests/coverage
+	nosetests --with-coverage --cover-package=lutris --cover-html --cover-html-dir=tests/coverage
 
 test:
 	rm tests/fixtures/pga.db -f
-	nosetests3
+	nosetests
+	flake8 lutris
 
 deb-source: clean
-	gbp buildpackage -S
+	gbp buildpackage -S --git-debian-branch=${GITBRANCH}
 	mkdir -p build
 	mv ../lutris_0* build
 
 deb: clean
-	gbp buildpackage
+	gbp buildpackage --git-debian-branch=${GITBRANCH}
 	mkdir -p build
 	mv ../lutris_0* build
 
 changelog-add:
-	dch -i
+	EDITOR=vim dch -i
 
 changelog-edit:
-	dch -e
+	EDITOR=vim dch -e
 
 clean:
 	rm -rf build

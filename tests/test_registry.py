@@ -1,6 +1,6 @@
 import os
 from unittest import TestCase
-from lutris.util.wineregistry import WineRegistry, WineRegistryKey
+from lutris.util.wine.registry import WineRegistry, WineRegistryKey
 
 FIXTURES_PATH = os.path.join(os.path.dirname(__file__), 'fixtures')
 
@@ -108,5 +108,8 @@ class TestWineRegistryKey(TestCase):
         key.parse('"A"=val')
         self.assertEqual(key.subkeys["A"], 'val')
 
-        key.parse('"String with \\"quotes\\""=val')
-        self.assertEqual(key.subkeys['String with \\"quotes\\"'], 'val')
+        key.parse('"String with \"quotes\""=val')
+        self.assertEqual(key.subkeys['String with \"quotes\"'], 'val')
+
+        key.parse('"\"C:\\Program Files\\Windows Media Player\\wmplayer.exe\""="Yes"')
+        self.assertEqual(key.subkeys['\"C:\\Program Files\\Windows Media Player\\wmplayer.exe\"'], '"Yes"')

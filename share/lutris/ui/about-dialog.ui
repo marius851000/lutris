@@ -13,10 +13,10 @@
     <property name="skip_taskbar_hint">True</property>
     <property name="skip_pager_hint">True</property>
     <property name="program_name">Lutris</property>
-    <property name="copyright" translatable="yes">© 2010, 2017 Mathieu Comandon</property>
+    <property name="copyright" translatable="yes">© 2010, 2018 Mathieu Comandon</property>
     <property name="comments" translatable="yes">Open Source Gaming Platform</property>
-    <property name="website">http://lutris.net</property>
-    <property name="website_label" translatable="yes">http://lutris.net</property>
+    <property name="website">https://lutris.net</property>
+    <property name="website_label" translatable="yes">https://lutris.net</property>
     <property name="license" translatable="yes">This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
 the Free Software Foundation, either version 3 of the License, or
@@ -30,9 +30,7 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see &lt;http://www.gnu.org/licenses/&gt;.
 </property>
-    <property name="authors">Mathieu Comandon &lt;strider@strycore. com&gt;
-Xodetaetl &lt;dev@xod.me&gt;</property>
-    <property name="artists">Ludovic Soulié &lt;contact@ludal.net&gt;</property>
+    <property name="authors">The Lutris team</property>
     <property name="logo">../media/logo.svg</property>
     <property name="wrap_license">True</property>
     <property name="license_type">gpl-3-0</property>

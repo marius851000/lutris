@@ -1,6 +1,7 @@
-import os
 from lutris.runners.runner import Runner
+from lutris.util import system
 from gettext import gettext as _
+
 
 class openmsx(Runner):
     human_name = "openMSX"
@@ -11,12 +12,12 @@ class openmsx(Runner):
             "option": "main_file",
             "type": "file",
             "label": _("ROM file"),
-            'help': _("The game data, commonly called a ROM image.")
+            "help": _("The game data, commonly called a ROM image."),
         }
     ]
 
     def play(self):
-        rom = self.game_config.get('main_file') or ''
-        if not os.path.exists(rom):
-            return {'error': 'FILE_NOT_FOUND', 'file': rom}
-        return {'command': [self.get_executable(), rom]}
+        rom = self.game_config.get("main_file") or ""
+        if not system.path_exists(rom):
+            return {"error": "FILE_NOT_FOUND", "file": rom}
+        return {"command": [self.get_executable(), rom]}

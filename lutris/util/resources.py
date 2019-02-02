@@ -1,96 +1,82 @@
+"""Utility module to handle media resources"""
 import os
-import re
-import shutil
 import concurrent.futures
 from urllib.parse import urlparse, parse_qsl
 from gi.repository import GLib
 
 from lutris import settings
-from lutris import api
-from lutris.util.log import logger
 from lutris.util.http import Request
+from lutris.util.log import logger
+
+from lutris.util import system
 
 BANNER = "banner"
 ICON = "icon"
 
 
-def get_icon_path(game, icon_type):
+def get_icon_path(game_slug, icon_type):
+    """Return the absolute path for a game_slug icon/banner"""
     if icon_type == BANNER:
-        return os.path.join(settings.BANNER_PATH, "%s.jpg" % game)
+        return os.path.join(settings.BANNER_PATH, "%s.jpg" % game_slug)
     if icon_type == ICON:
-        return os.path.join(settings.ICON_PATH, "lutris_%s.png" % game)
+        return os.path.join(settings.ICON_PATH, "lutris_%s.png" % game_slug)
+    return None
 
 
-def has_icon(game, icon_type):
-    if icon_type == BANNER:
-        icon_path = get_icon_path(game, BANNER)
-        return os.path.exists(icon_path)
-    elif icon_type == ICON:
-        icon_path = get_icon_path(game, ICON)
-        return os.path.exists(icon_path)
-
-
-def fetch_icons(game_slugs, callback=None):
-    no_banners = [slug for slug in game_slugs if not has_icon(slug, BANNER)]
-    no_icons = [slug for slug in game_slugs if not has_icon(slug, ICON)]
-
-    # Remove duplicate slugs
-    missing_media_slugs = list(set(no_banners) | set(no_icons))
-    if not missing_media_slugs:
+def fetch_icons(lutris_media, callback):
+    """Download missing icons from lutris.net"""
+    if not lutris_media:
         return
 
-    results = api.get_games(game_slugs=missing_media_slugs)
-
-    new_icon = False
-    banner_downloads = []
-    icon_downloads = []
-    updated_slugs = []
-    for game in results:
-        if game['slug'] in no_banners:
-            banner_url = game['banner_url']
-            if banner_url:
-                dest_path = get_icon_path(game['slug'], BANNER)
-                banner_downloads.append((game['banner_url'], dest_path))
-                updated_slugs.append(game['slug'])
-        if game['slug'] in no_icons:
-            icon_url = game['icon_url']
-            if icon_url:
-                dest_path = get_icon_path(game['slug'], ICON)
-                icon_downloads.append((game['icon_url'], dest_path))
-                updated_slugs.append(game['slug'])
-                new_icon = True
-
-    updated_slugs = list(set(updated_slugs))  # Deduplicate slugs
-
-    downloads = banner_downloads + icon_downloads
+    available_banners, available_icons = lutris_media
+    downloads = [
+        (slug, available_banners[slug], get_icon_path(slug, BANNER))
+        for slug in available_banners
+    ] + [
+        (slug, available_icons[slug], get_icon_path(slug, ICON))
+        for slug in available_icons
+    ]
     with concurrent.futures.ThreadPoolExecutor(max_workers=16) as executor:
-        futs = [executor.submit(download_media, url, dest_path)
-                for url, dest_path in downloads]
-        concurrent.futures.wait(futs)
+        future_downloads = {
+            executor.submit(download_media, url, dest_path): slug
+            for slug, url, dest_path in downloads
+        }
+        for future in concurrent.futures.as_completed(future_downloads):
+            slug = future_downloads[future]
+            try:
+                future.result()
+            except Exception as ex:  # pylint: disable=broad-except
+                logger.exception('%r generated an exception: %s', slug, ex)
+            else:
+                GLib.idle_add(callback, slug, priority=GLib.PRIORITY_LOW)
 
-    if (new_icon):
+    if bool(available_icons):
         udpate_desktop_icons()
 
-    if updated_slugs and callback:
-        callback(updated_slugs)
 
 def udpate_desktop_icons():
-    # Update Icon for GTK+ desktop manager
-    gtk_update_icon_cache = shutil.which("gtk-update-icon-cache")
-    if (gtk_update_icon_cache):
-        os.system("gtk-update-icon-cache -tf %s"
-        % os.path.join(GLib.get_user_data_dir(), 'icons', 'hicolor'))
+    """Update Icon for GTK+ desktop manager"""
+    gtk_update_icon_cache = system.find_executable("gtk-update-icon-cache")
+    if gtk_update_icon_cache:
+        os.system(
+            "gtk-update-icon-cache -tf %s"
+            % os.path.join(GLib.get_user_data_dir(), "icons", "hicolor")
+        )
 
     # Other desktop manager cache command must be added here when needed
 
+
 def download_media(url, dest, overwrite=False):
-    if os.path.exists(dest):
+    """Save a remote media locally"""
+    # logger.debug("Downloading %s to %s", url, dest)
+    if system.path_exists(dest):
         if overwrite:
             os.remove(dest)
         else:
-            return
+            return dest
     request = Request(url).get()
     request.write_to_file(dest)
+    return dest
 
 
 def parse_installer_url(url):
@@ -100,7 +86,8 @@ def parse_installer_url(url):
     action = None
     try:
         parsed_url = urlparse(url, scheme="lutris")
-    except:
+    except Exception:  # pylint: disable=broad-except
+        logger.warning("Unable to parse url %s", url)
         return False
     if parsed_url.scheme != "lutris":
         return False
@@ -109,24 +96,20 @@ def parse_installer_url(url):
         return False
     # urlparse can't parse if the path only contain numbers
     # workaround to remove the scheme manually:
-    if url_path.startswith('lutris:'):
+    if url_path.startswith("lutris:"):
         url_path = url_path[7:]
 
-    url_parts = url_path.split('/')
+    url_parts = url_path.split("/")
     if len(url_parts) == 2:
         action = url_parts[0]
         game_slug = url_parts[1]
     elif len(url_parts) == 1:
         game_slug = url_parts[0]
     else:
-        raise ValueError('Invalid lutris url %s' % url)
+        raise ValueError("Invalid lutris url %s" % url)
 
     revision = None
     if parsed_url.query:
         query = dict(parse_qsl(parsed_url.query))
-        revision = query.get('revision')
-    return {
-        'game_slug': game_slug,
-        'revision': revision,
-        'action': action
-    }
+        revision = query.get("revision")
+    return {"game_slug": game_slug, "revision": revision, "action": action}
