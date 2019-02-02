@@ -82,9 +82,9 @@ class UninstallGameDialog(GtkBuilderDialog):
             game_dir = self.game.directory.replace("&", "&amp;")
             dlg = QuestionDialog(
                 {
-                    _("question": "Are you sure you want to delete EVERYTHING under "
+                    "question": _("Are you sure you want to delete EVERYTHING under "
                     "\n<b>%s</b>?\n (This can't be undone)") % game_dir,
-                    _("title": "CONFIRM DANGEROUS OPERATION"),
+                    "title": _("CONFIRM DANGEROUS OPERATION"),
                 }
             )
             if dlg.result != Gtk.ResponseType.YES:

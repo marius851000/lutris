@@ -24,7 +24,7 @@ system_options = [  # pylint: disable=invalid-name
         "label": _("Default installation folder"),
         "default": os.path.expanduser("~/Games"),
         "scope": ["runner", "system"],
-        "help": _("The default folder where you install your games."))
+        "help": _("The default folder where you install your games.")
     },
     {
         "option": "disable_runtime",
@@ -122,7 +122,7 @@ system_options = [  # pylint: disable=invalid-name
         "type": "choice",
         "default": "off",
         "choices": get_optirun_choices,
-        "label": _("Optimus launcher (NVIDIA Optimus laptops)",)
+        "label": _("Optimus launcher (NVIDIA Optimus laptops)"),
         "advanced": True,
         "help": (
             _("If you have installed the primus or bumblebee packages, "

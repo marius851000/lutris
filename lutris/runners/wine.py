@@ -413,7 +413,7 @@ class wine(Runner):
             {
                 "option": "autoconf_joypad",
                 "type": "bool",
-                _("label": "Autoconfigure joypads"),
+                "label": _("Autoconfigure joypads"),
                 "advanced": True,
                 "default": True,
                 "help": _(
