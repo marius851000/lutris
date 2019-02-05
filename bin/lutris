@@ -22,13 +22,14 @@ if not LAUNCH_PATH.startswith("/usr"):
     sys.dont_write_bytecode = True
     SOURCE_PATH = normpath(os.path.join(LAUNCH_PATH, '..'))
     sys.path.insert(0, SOURCE_PATH)
+    translation_dir = os.path.join(SOURCE_PATH, "share/locale")
+else:
+    translation_dir = "/usr/share/locale"
 
 try:
     locale_name = locale.getlocale()
     locale.setlocale(locale.LC_ALL, locale_name)
-    import locale
-    d="/usr/share/locale"
-    gettext.bindtextdomain("lutris", d)
+    gettext.bindtextdomain("lutris", translation_dir)
     gettext.textdomain("lutris")
 
 except (locale.Error, ValueError):
