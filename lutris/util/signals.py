@@ -1,6 +1,7 @@
 """Signal handling module"""
 import os
 import signal
+import gettext
 from gi.repository import GLib
 from lutris.util.log import logger
 
@@ -13,7 +14,7 @@ def sigchld_handler(_signum, _frame):
     try:
         pid, returncode, _ = os.wait3(os.WNOHANG)
     except ChildProcessError as ex:  # already handled by someone else
-        logger.debug("Wait call failed: %s", ex)
+        logger.debug(gettext.gettext("Wait call failed: %s"), ex)
         return
     try:
         handler = PID_HANDLERS.pop(pid)
@@ -24,7 +25,7 @@ def sigchld_handler(_signum, _frame):
 
 def register_handler(pid, handler):
     """Attaches a callback to a pid, called when the process stops"""
-    logger.debug("Registering %s to %s", handler, pid)
+    logger.debug(gettext.gettext("Registering %s to %s"), handler, pid)
     PID_HANDLERS[pid] = handler
 
 

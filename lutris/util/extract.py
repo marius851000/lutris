@@ -5,6 +5,7 @@ import tarfile
 import subprocess
 import gzip
 import zlib
+from gettext import gettext as _
 from lutris.util import system
 from lutris.util.log import logger
 from lutris import settings
@@ -65,7 +66,7 @@ def is_7zip_supported(path, extractor):
 def extract_archive(path, to_directory=".", merge_single=True, extractor=None):
     path = os.path.abspath(path)
     mode = None
-    logger.debug("Extracting %s to %s", path, to_directory)
+    logger.debug(_("Extracting %s to %s"), path, to_directory)
 
     if path.endswith(".tar.gz") or path.endswith(".tgz") or extractor == "tgz":
         opener, mode = tarfile.open, "r:gz"
@@ -82,14 +83,14 @@ def extract_archive(path, to_directory=".", merge_single=True, extractor=None):
         opener = "7zip"
     else:
         raise RuntimeError(
-            "Could not extract `%s` as no appropriate extractor is found" % path
+            _("Could not extract `%s` as no appropriate extractor is found") % path
         )
     temp_name = ".extract-" + str(uuid.uuid4())[:8]
     temp_path = temp_dir = os.path.join(to_directory, temp_name)
     try:
         _do_extract(path, temp_path, opener, mode, extractor)
     except (OSError, zlib.error) as ex:
-        logger.exception("Extraction failed: %s", ex)
+        logger.exception(_("Extraction failed: %s"), ex)
         raise ExtractFailure(str(ex))
     if merge_single:
         extracted = os.listdir(temp_path)
@@ -99,7 +100,7 @@ def extract_archive(path, to_directory=".", merge_single=True, extractor=None):
     if os.path.isfile(temp_path):
         destination_path = os.path.join(to_directory, extracted[0])
         if os.path.isfile(destination_path):
-            logger.warning("Overwrite existing file %s", destination_path)
+            logger.warning(_("Overwrite existing file %s"), destination_path)
             os.remove(destination_path)
         shutil.move(temp_path, to_directory)
         os.removedirs(temp_dir)
@@ -110,7 +111,7 @@ def extract_archive(path, to_directory=".", merge_single=True, extractor=None):
             # logger.debug("Moving extracted files from %s to %s", source_path, destination_path)
 
             if system.path_exists(destination_path):
-                logger.warning("Overwrite existing path %s", destination_path)
+                logger.warning(_("Overwrite existing path %s"), destination_path)
                 if os.path.isfile(destination_path):
                     os.remove(destination_path)
                     shutil.move(source_path, destination_path)
@@ -119,7 +120,7 @@ def extract_archive(path, to_directory=".", merge_single=True, extractor=None):
             else:
                 shutil.move(source_path, destination_path)
         system.remove_folder(temp_dir)
-    logger.debug("Finished extracting %s to %s", path, to_directory)
+    logger.debug(_("Finished extracting %s to %s"), path, to_directory)
     return path, to_directory
 
 
@@ -155,7 +156,7 @@ def extract_7zip(path, dest, archive_type=None):
     if not system.path_exists(_7zip_path):
         _7zip_path = system.find_executable("7z")
     if not system.path_exists(_7zip_path):
-        raise OSError("7zip is not found in the lutris runtime or on the system")
+        raise OSError(_("7zip is not found in the lutris runtime or on the system"))
     command = [_7zip_path, "x", path, "-o{}".format(dest), "-aoa"]
     if archive_type:
         command.append("-t{}".format(archive_type))

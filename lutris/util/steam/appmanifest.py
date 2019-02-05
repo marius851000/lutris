@@ -1,6 +1,8 @@
 """Steam appmanifest file hnadling"""
 import re
 import os
+from gettext import gettext as _
+
 from lutris.util.steam.vdf import vdf_parse
 from lutris.util.strings import slugify
 from lutris.util.log import logger
@@ -44,7 +46,7 @@ class AppManifest:
             with open(appmanifest_path, "r") as appmanifest_file:
                 self.appmanifest_data = vdf_parse(appmanifest_file, {})
         else:
-            logger.error("Path to AppManifest file %s doesn't exist", appmanifest_path)
+            logger.error(_("Path to AppManifest file %s doesn't exist"), appmanifest_path)
 
     def __repr__(self):
         return "<AppManifest: %s>" % self.appmanifest_path
@@ -105,7 +107,7 @@ class AppManifest:
             return "windows"
         else:
             raise ValueError(
-                "Can't find %s in %s" % (self.steamapps_path, steamapps_paths)
+                _("Can't find %s in %s") % (self.steamapps_path, steamapps_paths)
             )
 
     def get_runner_name(self):
@@ -119,11 +121,11 @@ class AppManifest:
 def get_appmanifest_from_appid(steamapps_path, appid):
     """Given the steam apps path and appid, return the corresponding appmanifest"""
     if not steamapps_path:
-        raise ValueError("steamapps_path is mandatory")
+        raise ValueError(_("steamapps_path is mandatory"))
     if not path_exists(steamapps_path):
-        raise IOError("steamapps_path must be a valid directory")
+        raise IOError(_("steamapps_path must be a valid directory"))
     if not appid:
-        raise ValueError("Missing mandatory appid")
+        raise ValueError(_("Missing mandatory appid"))
     appmanifest_path = os.path.join(steamapps_path, "appmanifest_%s.acf" % appid)
     if not path_exists(appmanifest_path):
         return None

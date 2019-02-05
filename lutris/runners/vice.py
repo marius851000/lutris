@@ -9,12 +9,12 @@ class vice(Runner):
     description = _("Commodore Emulator")
     human_name = "Vice"
     platforms = [
-        "Commodore 64",
-        "Commodore 128",
-        "Commodore VIC20",
-        "Commodore PET",
-        "Commodore Plus/4",
-        "Commodore CBM II",
+        _("Commodore 64"),
+        _("Commodore 128"),
+        _("Commodore VIC20"),
+        _("Commodore PET"),
+        _("Commodore Plus/4"),
+        _("Commodore CBM II"),
     ]
 
     game_options = [
@@ -31,7 +31,7 @@ class vice(Runner):
     ]
 
     runner_options = [
-        {"option": "joy", "type": "bool", "label": "Use joysticks", "default": False},
+        {"option": "joy", "type": "bool", "label": _("Use joysticks"), "default": False},
         {
             "option": "fullscreen",
             "type": "bool",
@@ -41,7 +41,7 @@ class vice(Runner):
         {
             "option": "double",
             "type": "bool",
-            "label": "Scale up display by 2",
+            "label": _("Scale up display by 2"),
             "default": True,
         },
         {
@@ -60,7 +60,7 @@ class vice(Runner):
             "option": "renderer",
             "type": "choice",
             "label": _("Graphics renderer"),
-            "choices": [("OpenGL", "opengl"), ("Software", "software")],
+            "choices": [(_("OpenGL"), "opengl"), (_("Software"), "software")],
             "default": "opengl",
         },
         {
@@ -68,12 +68,12 @@ class vice(Runner):
             "type": "choice",
             "label": _("Machine"),
             "choices": [
-                ("C64", "c64"),
-                ("C128", "c128"),
-                ("vic20", "vic20"),
-                ("PET", "pet"),
-                ("Plus/4", "plus4"),
-                ("CBM-II", "cbmii"),
+                (_("C64"), "c64"),
+                (_("C128"), "c128"),
+                (_("vic20"), "vic20"),
+                (_("PET"), "pet"),
+                (_("Plus/4"), "plus4"),
+                (_("CBM-II"), "cbmii"),
             ],
             "default": "c64",
         },
@@ -111,7 +111,7 @@ class vice(Runner):
             if not system.path_exists(lib_dir):
                 lib_dir = os.path.join(settings.RUNNER_DIR, "vice/lib64/vice")
             if not system.path_exists(lib_dir):
-                logger.error("Missing lib folder in the Vice runner")
+                logger.error(_("Missing lib folder in the Vice runner"))
             else:
                 system.merge_folders(lib_dir, config_path)
             if callback:
@@ -174,7 +174,7 @@ class vice(Runner):
 
         rom = self.game_config.get("main_file")
         if not rom:
-            return {"error": "CUSTOM", "text": "No rom provided"}
+            return {"error": "CUSTOM", "text": _("No rom provided")}
         if not system.path_exists(rom):
             return {"error": "FILE_NOT_FOUND", "file": rom}
 

@@ -1,3 +1,4 @@
+from gettext import gettext as _
 import gi
 
 gi.require_version("GnomeKeyring", "1.0")
@@ -17,7 +18,7 @@ def store_credentials(name, username, password):
     result = GnomeKeyring.item_create_sync(
         KEYRING_NAME,
         GnomeKeyring.ItemType.NETWORK_PASSWORD,
-        "%s credentials for %s" % (name, username),
+        _("%s credentials for %s") % (name, username),
         attrs,
         password,
         True,

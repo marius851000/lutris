@@ -3,6 +3,8 @@ import os
 import time
 import json
 from urllib.parse import urlencode, urlparse, parse_qsl
+from gettext import gettext as _
+
 from lutris import settings
 from lutris import pga
 from lutris import api
@@ -58,7 +60,7 @@ class GogService:
             try:
                 os.remove(auth_file)
             except OSError:
-                logger.warning("Unable to remove %s", auth_file)
+                logger.warning(_("Unable to remove %s"), auth_file)
 
     def is_authenticated(self):
         return all([os.path.exists(path) for path in self.credential_files])
@@ -80,7 +82,7 @@ class GogService:
             parsed_url = urlparse(url)
             response_params = dict(parse_qsl(parsed_url.query))
             if "code" not in response_params:
-                logger.error("code not received from GOG")
+                logger.error(_("code not received from GOG"))
                 logger.error(response_params)
                 return
             extra_params = {
@@ -103,9 +105,9 @@ class GogService:
 
     def load_cookies(self):
         """Load cookies from disk"""
-        logger.debug("Loading cookies from %s", self.credentials_path)
+        logger.debug(_("Loading cookies from %s"), self.credentials_path)
         if not os.path.exists(self.credentials_path):
-            logger.debug("No cookies found, please authenticate first")
+            logger.debug(_("No cookies found, please authenticate first"))
             return
         cookiejar = WebkitCookieJar(self.credentials_path)
         cookiejar.load()
@@ -114,7 +116,7 @@ class GogService:
     def load_token(self):
         """Load token from disk"""
         if not os.path.exists(self.token_path):
-            raise AuthenticationError("No GOG token available")
+            raise AuthenticationError(_("No GOG token available"))
         with open(self.token_path) as token_file:
             token_content = json.loads(token_file.read())
         return token_content
@@ -155,7 +157,7 @@ class GogService:
         """Return the user's library of GOG games"""
 
         if system.path_exists(self.cache_path) and not force_reload:
-            logger.debug("Returning cached GOG library")
+            logger.debug(_("Returning cached GOG library"))
             with open(self.cache_path, 'r') as gog_cache:
                 return json.load(gog_cache)
 
@@ -173,7 +175,7 @@ class GogService:
 
     def get_products_page(self, page=1, search=None):
         if not self.is_authenticated():
-            raise RuntimeError("User is not logged in")
+            raise RuntimeError(_("User is not logged in"))
         params = {"mediaType": "1"}
         if page:
             params["page"] = page
@@ -184,13 +186,13 @@ class GogService:
 
     def get_game_details(self, product_id):
         """Return game information for a given game"""
-        logger.info("Getting game details for %s", product_id)
+        logger.info(_("Getting game details for %s"), product_id)
         url = "{}/products/{}?expand=downloads".format(self.api_url, product_id)
         return self.make_api_request(url)
 
     def get_download_info(self, downlink):
         """Return file download information"""
-        logger.info("Getting download info for %s", downlink)
+        logger.info(_("Getting download info for %s"), downlink)
         response = self.make_api_request(downlink)
         for field in ("checksum", "downlink"):
             field_url = response[field]

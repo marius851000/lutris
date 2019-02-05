@@ -10,7 +10,7 @@ from lutris.util import jobs, system
 from lutris.util.downloader import Downloader
 from lutris.util.extract import extract_archive
 from lutris.util.log import logger
-
+from gettext import gettext as _
 
 class RunnerInstallDialog(Dialog):
     COL_VER = 0
@@ -29,7 +29,7 @@ class RunnerInstallDialog(Dialog):
         self.runner_info = api.get_runners(self.runner)
         if not self.runner_info:
             ErrorDialog(
-                "Unable to get runner versions, check your internet connection",
+                _("Unable to get runner versions, check your internet connection"),
                 parent=parent,
             )
             return
@@ -119,8 +119,8 @@ class RunnerInstallDialog(Dialog):
         if row[self.COL_VER] in self.installing:
             confirm_dlg = QuestionDialog(
                 {
-                    "question": "Do you want to cancel the download?",
-                    "title": "Download starting",
+                    "question": _("Do you want to cancel the download?"),
+                    "title": _("Download starting"),
                 }
             )
             if confirm_dlg.result == confirm_dlg.YES:
@@ -142,13 +142,13 @@ class RunnerInstallDialog(Dialog):
         system.remove_folder(self.get_runner_path(version, arch))
         row[self.COL_INSTALLED] = False
         if self.runner == "wine":
-            logger.debug("Clearing wine version cache")
+            logger.debug(_("Clearing wine version cache"))
             from lutris.util.wine.wine import get_wine_versions
             get_wine_versions.cache_clear()
 
     def install_runner(self, row):
         url = row[2]
-        logger.debug("Downloading %s", url)
+        logger.debug(_("Downloading %s"), url)
         dest_path = self.get_dest_path(row)
         downloader = Downloader(url, dest_path, overwrite=True)
         GLib.timeout_add(100, self.get_progress, downloader, row)
@@ -170,10 +170,10 @@ class RunnerInstallDialog(Dialog):
         else:
             row[4] = 1
             self.renderer_progress.props.pulse = random.randint(1, 100)
-            self.renderer_progress.props.text = "Downloading…"
+            self.renderer_progress.props.text = _("Downloading…")
         if downloader.state == downloader.COMPLETED:
             row[4] = 99
-            self.renderer_progress.props.text = "Extracting…"
+            self.renderer_progress.props.text = _("Extracting…")
             self.on_runner_downloaded(row)
             return False
         return True
@@ -181,7 +181,7 @@ class RunnerInstallDialog(Dialog):
     def on_runner_downloaded(self, row):
         version = row[0]
         architecture = row[1]
-        logger.debug("Runner %s for %s has finished downloading", version, architecture)
+        logger.debug(_("Runner %s for %s has finished downloading"), version, architecture)
         src = self.get_dest_path(row)
         dst = self.get_runner_path(version, architecture)
         jobs.AsyncCall(self.extract, self.on_extracted, src, dst, row)
@@ -194,7 +194,7 @@ class RunnerInstallDialog(Dialog):
     def on_extracted(self, row_info, error):
         """Called when a runner archive is extracted"""
         if error or not row_info:
-            ErrorDialog("Failed to retrieve the runner archive", parent=self)
+            ErrorDialog(_("Failed to retrieve the runner archive"), parent=self)
             return
         src, row = row_info
         os.remove(src)
@@ -203,7 +203,7 @@ class RunnerInstallDialog(Dialog):
         self.renderer_progress.props.text = ""
         self.installing.pop(row[self.COL_VER])
         if self.runner == "wine":
-            logger.debug("Clearing wine version cache")
+            logger.debug(_("Clearing wine version cache"))
             from lutris.util.wine.wine import get_wine_versions
             get_wine_versions.cache_clear()
 

@@ -7,7 +7,7 @@ from gettext import gettext as _
 class dolphin(Runner):
     description = _("Gamecube and Wii emulator")
     human_name = "Dolphin"
-    platforms = ["Nintendo Gamecube", "Nintendo Wii"]
+    platforms = [_("Nintendo Gamecube"), _("Nintendo Wii")]
     runnable_alone = True
     runner_executable = "dolphin/dolphin-emu"
     game_options = [
@@ -15,7 +15,7 @@ class dolphin(Runner):
             "option": "main_file",
             "type": "file",
             "default_path": "game_path",
-            "label": "ISO file",
+            "label": _("ISO file"),
         },
         {
             "option": "platform",

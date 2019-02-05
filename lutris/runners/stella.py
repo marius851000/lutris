@@ -6,7 +6,7 @@ from gettext import gettext as _
 class stella(Runner):
     description = _("Atari 2600 emulator")
     human_name = "Stella"
-    platforms = ["Atari 2600"]
+    platforms = [_("Atari 2600")]
     runnable_alone = True
     runner_executable = "stella/bin/stella"
     game_options = [

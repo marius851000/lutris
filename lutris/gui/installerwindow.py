@@ -19,7 +19,7 @@ from lutris.util import system
 from lutris.util import xdgshortcuts
 from lutris.util.log import logger
 from lutris.util.strings import add_url_tags, escape_gtk_label
-
+from gettext import gettext as _
 
 class InstallerWindow(Gtk.ApplicationWindow):
     """GUI for the install process."""
@@ -200,14 +200,14 @@ class InstallerWindow(Gtk.ApplicationWindow):
                 script[item] = script.get(item) or ""
             for item in ["name", "runner", "version"]:
                 if item not in script:
-                    logger.error("Invalid script: %s", script)
-                    raise ScriptingError('Missing field "%s" in install script' % item)
+                    logger.error(_("Invalid script: %s"), script)
+                    raise ScriptingError(_('Missing field "%s" in install script') % item)
 
     def choose_installer(self):
         """Stage where we choose an install script."""
         self.validate_scripts()
         base_script = self.scripts[0]
-        self.title_label.set_markup("<b>Install %s</b>" % base_script["name"])
+        self.title_label.set_markup(_("<b>Install %s</b>") % base_script["name"])
         installer_picker = InstallerPicker(self.scripts)
         installer_picker.connect("installer-selected", self.on_installer_selected)
         self.widget_box.pack_start(installer_picker, False, False, 0)
@@ -223,10 +223,10 @@ class InstallerWindow(Gtk.ApplicationWindow):
             if script["slug"] == script_slug:
                 install_script = script
         if not install_script:
-            raise ValueError("Could not find script %s" % script_slug)
+            raise ValueError(_("Could not find script %s") % script_slug)
         self.interpreter = interpreter.ScriptInterpreter(install_script, self)
         self.title_label.set_markup(
-            u"<b>Installing {}</b>".format(
+            _(u"<b>Installing {}</b>").format(
                 escape_gtk_label(self.interpreter.game_name)
             )
         )
@@ -321,10 +321,10 @@ class InstallerWindow(Gtk.ApplicationWindow):
         self.continue_button.set_sensitive(False)
 
         if action == "file":
-            title = "Select file"
+            title = _("Select file")
             action = Gtk.FileChooserAction.OPEN
         elif action == "folder":
-            title = "Select folder"
+            title = _("Select folder")
             action = Gtk.FileChooserAction.SELECT_FOLDER
 
         if self.location_entry:
@@ -341,7 +341,7 @@ class InstallerWindow(Gtk.ApplicationWindow):
         if os.path.isfile(file_path):
             self.selected_directory = os.path.dirname(file_path)
         else:
-            logger.warning("%s is not a file", file_path)
+            logger.warning(_("%s is not a file"), file_path)
             return
         self.interpreter.file_selected(file_path)
 
@@ -349,7 +349,7 @@ class InstallerWindow(Gtk.ApplicationWindow):
         self, file_uri, dest_file, callback=None, data=None, referer=None
     ):
         self.clean_widgets()
-        logger.debug("Downloading %s to %s", file_uri, dest_file)
+        logger.debug(_("Downloading %s to %s"), file_uri, dest_file)
         self.download_progress = DownloadProgressBox(
             {"url": file_uri, "dest": dest_file, "referer": referer}, cancelable=True
         )

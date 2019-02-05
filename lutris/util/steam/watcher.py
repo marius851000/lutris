@@ -1,4 +1,6 @@
 """Steam game library watcher"""
+from gettext import gettext as _
+
 # pylint: disable=too-few-public-methods
 from gi.repository import GLib, Gio
 from lutris.util.log import logger
@@ -13,7 +15,7 @@ class SteamWatcher:
             path = Gio.File.new_for_path(steam_path)
             try:
                 monitor = path.monitor_directory(Gio.FileMonitorFlags.NONE)
-                logger.debug("Watching Steam folder %s", steam_path)
+                logger.debug(_("Watching Steam folder %s"), steam_path)
                 monitor.connect("changed", self._on_directory_changed)
                 self.monitors.append(monitor)
             except GLib.Error as ex:

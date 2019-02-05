@@ -6,7 +6,7 @@ from lutris.game import Game
 from lutris import runners
 from lutris.game_actions import GameActions
 from lutris.gui.views import COL_ID
-
+from gettext import gettext as _
 
 class ContextualMenu(Gtk.Menu):
     def __init__(self, main_entries):
@@ -34,7 +34,7 @@ class ContextualMenu(Gtk.Menu):
             game = Game(game_row[COL_ID])
 
         if not game:
-            raise ValueError("Missing game")
+            raise ValueError(_("Missing game"))
 
         # Clear existing menu
         for item in self.get_children():

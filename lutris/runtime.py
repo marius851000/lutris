@@ -1,6 +1,7 @@
 """Runtime handling module"""
 import os
 import time
+from gettext import gettext as _
 
 from gi.repository import GLib
 from lutris.settings import RUNTIME_DIR, RUNTIME_URL
@@ -36,7 +37,7 @@ class Runtime:
     def set_updated_at(self):
         """Set the creation and modification time to now"""
         if not system.path_exists(self.local_runtime_path):
-            logger.error("No local runtime path in %s", self.local_runtime_path)
+            logger.error(_("No local runtime path in %s"), self.local_runtime_path)
             return None
         os.utime(self.local_runtime_path)
 
@@ -44,14 +45,14 @@ class Runtime:
         """Determine if the current runtime should be updated"""
         local_updated_at = self.get_updated_at()
         if not local_updated_at:
-            logger.warning("Runtime %s is not available locally", self.name)
+            logger.warning(_("Runtime %s is not available locally"), self.name)
             return True
 
         if local_updated_at and local_updated_at >= remote_updated_at:
             return False
 
         logger.debug(
-            "Runtime %s locally updated on %s, remote created on %s)",
+            _("Runtime %s locally updated on %s, remote created on %s"),
             self.name,
             time.strftime("%c", local_updated_at),
             time.strftime("%c", remote_updated_at),
@@ -80,7 +81,7 @@ class Runtime:
             downloader.CANCELLED,
             downloader.ERROR,
         ]:
-            logger.debug("Runtime update interrupted")
+            logger.debug(_("Runtime update interrupted"))
             return False
 
         downloader.check_progress()
@@ -109,7 +110,7 @@ class Runtime:
     def on_extracted(self, result, error):
         """Callback method when a runtime has extracted"""
         if error:
-            logger.error("Runtime update failed")
+            logger.error(_("Runtime update failed"))
             logger.error(error)
             return
         archive_path, destination_path = result
@@ -132,11 +133,11 @@ class RuntimeUpdater:
     def update(self):
         """Launch the update process"""
         if RUNTIME_DISABLED:
-            logger.debug("Runtime disabled, not updating it.")
+            logger.debug(_("Runtime disabled, not updating it."))
             return []
 
         if self.is_updating():
-            logger.debug("Runtime already updating")
+            logger.debug(_("Runtime already updating"))
             return []
 
         for remote_runtime in self._iter_remote_runtimes():
@@ -160,7 +161,7 @@ class RuntimeUpdater:
                     and runtime["name"] != "lib32"
             ):
                 logger.debug(
-                    "Skipping runtime %s for %s",
+                    _("Skipping runtime %s for %s"),
                     runtime["name"],
                     runtime["architecture"],
                 )
@@ -169,7 +170,7 @@ class RuntimeUpdater:
             # Skip 64bit runtimes on 32 bit systems
             if runtime["architecture"] == "x86_64" and not system.LINUX_SYSTEM.is_64_bit:
                 logger.debug(
-                    "Skipping runtime %s for %s",
+                    _("Skipping runtime %s for %s"),
                     runtime["name"],
                     runtime["architecture"],
                 )
@@ -179,7 +180,7 @@ class RuntimeUpdater:
 
     def notify_finish(self, runtime):
         """A runtime has finished downloading"""
-        logger.debug("Runtime %s is now updated and available", runtime.name)
+        logger.debug(_("Runtime %s is now updated and available"), runtime.name)
         self.current_updates -= 1
         if self.current_updates == 0:
             logger.info("Runtime updated")

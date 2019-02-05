@@ -7,68 +7,68 @@ from gettext import gettext as _
 
 class redream(Runner):
     human_name = "Redream"
-    description = "Sega Dreamcast emulator"
-    platforms = ["Sega Dreamcast"]
+    description = _("Sega Dreamcast emulator")
+    platforms = [_("Sega Dreamcast")]
     runner_executable = "redream/redream"
     game_options = [
         {
             "option": "main_file",
             "type": "file",
-            "label": "Disc image file",
-            "help": ("Game data file\n" "Supported formats: GDI, CDI, CHD"),
+            "label": _("Disc image file"),
+            "help": _("Game data file\n" "Supported formats: GDI, CDI, CHD"),
         }
     ]
     runner_options = [
-        {"option": "fs", "type": "bool", "label": "Fullscreen", "default": False},
+        {"option": "fs", "type": "bool", "label": _("Fullscreen"), "default": False},
         {
             "option": "ar",
             "type": "choice",
-            "label": "Aspect Ratio",
-            "choices": [("4:3", "4:3"), ("Stretch", "stretch")],
+            "label": _("Aspect Ratio"),
+            "choices": [(_("4:3"), "4:3"), (_("Stretch"), "stretch")],
             "default": "4:3",
         },
         {
             "option": "region",
             "type": "choice",
-            "label": "Region",
-            "choices": [("USA", "usa"), ("Europe", "europe"), ("Japan", "japan")],
+            "label": _("Region"),
+            "choices": [(_("USA"), "usa"), (_("Europe"), "europe"), (_("Japan"), "japan")],
             "default": "usa",
         },
         {
             "option": "language",
             "type": "choice",
-            "label": "System Language",
+            "label": _("System Language"),
             "choices": [
-                ("English", "english"),
-                ("German", "german"),
-                ("French", "french"),
-                ("Spanish", "spanish"),
-                ("Italian", "italian"),
-                ("Japanese", "japanese"),
+                (_("English"), "english"),
+                (_("German"), "german"),
+                (_("French"), "french"),
+                (_("Spanish"), "spanish"),
+                (_("Italian"), "italian"),
+                (_("Japanese"), "japanese"),
             ],
             "default": "english",
         },
         {
             "option": "broadcast",
             "type": "choice",
-            "label": "Television System",
+            "label": _("Television System"),
             "choices": [
-                ("NTSC", "ntsc"),
-                ("PAL", "pal"),
-                ("PAL-M (Brazil)", "pal_m"),
-                ("PAL-N (Argentina, Paraguay, Uruguay)", "pal_n"),
+                (_("NTSC"), "ntsc"),
+                (_("PAL"), "pal"),
+                (_("PAL-M (Brazil)"), "pal_m"),
+                (_("PAL-N (Argentina, Paraguay, Uruguay)"), "pal_n"),
             ],
             "default": "ntsc",
         },
         {
             "option": "time_sync",
             "type": "choice",
-            "label": "Time Sync",
+            "label": _("Time Sync"),
             "choices": [
-                ("Audio and video", "audio and video"),
-                ("Audio", "audio"),
-                ("Video", "video"),
-                ("None", "none"),
+                (_("Audio and video"), "audio and video"),
+                (_("Audio"), "audio"),
+                (_("Video"), "video"),
+                (_("None"), "none"),
             ],
             "default": "audio and video",
             "advanced": True,
@@ -76,7 +76,7 @@ class redream(Runner):
         {
             "option": "int_res",
             "type": "choice",
-            "label": "Internal Video Resolution Scale",
+            "label": _("Internal Video Resolution Scale"),
             "choices": [
                 ("×1", "1"),
                 ("×2", "2"),
@@ -89,7 +89,7 @@ class redream(Runner):
             ],
             "default": "2",
             "advanced": True,
-            "help": "Only available in premium version.",
+            "help": _("Only available in premium version."),
         },
     ]
 
@@ -97,8 +97,8 @@ class redream(Runner):
         def on_runner_installed(*args):
             dlg = QuestionDialog(
                 {
-                    "question": "Do you want to select a premium license file?",
-                    "title": "Use premium version?",
+                    "question": _("Do you want to select a premium license file?"),
+                    "title": _("Use premium version?"),
                 }
             )
             if dlg.result == dlg.YES:

@@ -31,6 +31,7 @@ from os.path import abspath, join
 
 import inspect
 import warnings
+from gettext import gettext as _
 
 from gi.repository import Gio
 from gi.repository import GLib
@@ -60,8 +61,8 @@ def _connect_func(builder, obj, signal_name, handler_name, connect_object, flags
 
     if template_inst is None:  # This should never happen
         errmsg = (
-            "Internal error: cannot find template instance! obj: %s; "
-            "signal: %s; handler: %s; connect_obj: %s; class: %s"
+            _("Internal error: cannot find template instance! obj: %s; "
+            "signal: %s; handler: %s; connect_obj: %s; class: %s")
             % (obj, signal_name, handler_name, connect_object, cls)
         )
         warnings.warn(errmsg, GtkTemplateWarning)
@@ -85,7 +86,7 @@ def _register_template(cls, template_bytes):
 
     if not hasattr(cls, "set_template"):
         ErrorDialog(
-            "Your Linux distribution is too old, Lutris won't function properly"
+            _("Your Linux distribution is too old, Lutris won't function properly")
         )
         raise TypeError("Requires PyGObject 3.13.2 or greater")
 
@@ -126,8 +127,8 @@ def _init_template(self, cls, base_init_template):
     # .. if you disagree, feel free to fix it and issue a PR :)
     if self.__class__ is not cls:
         raise TypeError(
-            "Inheritance from classes with @GtkTemplate decorators "
-            "is not allowed at this time"
+            _("Inheritance from classes with @GtkTemplate decorators "
+            "is not allowed at this time")
         )
 
     connected_signals = set()
@@ -146,16 +147,16 @@ def _init_template(self, cls, base_init_template):
             #      one is broken either -- but the stderr should show
             #      something useful with a Gtk-CRITICAL message)
             raise AttributeError(
-                "A missing child widget was set using "
+                _("A missing child widget was set using "
                 "GtkTemplate.Child and the entire "
-                "template is now broken (widgets: %s)"
+                "template is now broken (widgets: %s)")
                 % ", ".join(self.__gtemplate_widgets__)
             )
 
     for name in self.__gtemplate_methods__.difference(connected_signals):
         errmsg = (
-            "Signal '%s' was declared with @GtkTemplate.Callback "
-            + "but was not present in template"
+            _("Signal '%s' was declared with @GtkTemplate.Callback "
+            "but was not present in template")
         ) % name
         warnings.warn(errmsg, GtkTemplateWarning)
 
@@ -261,11 +262,11 @@ class _GtkTemplate:
     def __call__(self, cls):
 
         if not issubclass(cls, Gtk.Widget):
-            raise TypeError("Can only use @GtkTemplate on Widgets")
+            raise TypeError(_("Can only use @GtkTemplate on Widgets"))
 
         # Nested templates don't work
         if hasattr(cls, "__gtemplate_methods__"):
-            raise TypeError("Cannot nest template classes")
+            raise TypeError(_("Cannot nest template classes"))
 
         # Load the template either from a resource path or a file
         # - Prefer the resource path first

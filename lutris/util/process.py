@@ -1,5 +1,6 @@
 """Class to manipulate a process"""
 import os
+from gettext import gettext as _
 from lutris.util.log import logger
 from lutris.util.system import kill_pid, path_exists
 
@@ -14,7 +15,7 @@ class Process:
         try:
             self.pid = int(pid)
         except ValueError:
-            raise InvalidPid("'%s' is not a valid pid" % pid)
+            raise InvalidPid(_("'%s' is not a valid pid") % pid)
         self.children = []
         self.parent = None
         self.get_children()
@@ -33,7 +34,7 @@ class Process:
             try:
                 _stat = stat_file.readline()
             except (ProcessLookupError, FileNotFoundError):
-                logger.warning("Unable to read stat for process %s", self.pid)
+                logger.warning(_("Unable to read stat for process %s"), self.pid)
                 return None
         if parsed:
             return _stat[_stat.rfind(")") + 1:].split()

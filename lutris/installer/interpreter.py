@@ -38,6 +38,7 @@ from lutris.runners import (
     NonInstallableRunnerError,
     RunnerInstallationError,
 )
+from gettext import gettext as _
 
 
 def fetch_script(game_slug, revision=None):
@@ -48,12 +49,12 @@ def fetch_script(game_slug, revision=None):
     else:
         installer_url = settings.INSTALLER_URL % game_slug
         key = "results"
-    logger.debug("Fetching installer %s", installer_url)
+    logger.debug(_("Fetching installer %s"), installer_url)
     request = Request(installer_url)
     request.get()
     response = request.json
     if response is None:
-        raise RuntimeError("Couldn't get installer at %s" % installer_url)
+        raise RuntimeError(_("Couldn't get installer at %s") % installer_url)
 
     if key:
         return response[key]
@@ -62,7 +63,7 @@ def fetch_script(game_slug, revision=None):
 
 def read_script(filename):
     """Return scripts from a local file"""
-    logger.debug("Loading script(s) from %s", filename)
+    logger.debug(_("Loading script(s) from %s"), filename)
     scripts = yaml.safe_load(open(filename, "r").read())
     if isinstance(scripts, list):
         return scripts
@@ -114,7 +115,7 @@ class ScriptInterpreter(CommandsMixin):
         self.gog_data = {}
         self.script = installer.get("script")
         if not self.script:
-            raise ScriptingError("This installer doesn't have a 'script' section")
+            raise ScriptingError(_("This installer doesn't have a 'script' section"))
 
         self.script_pretty = json.dumps(self.script, indent=4)
 
@@ -191,23 +192,23 @@ class ScriptInterpreter(CommandsMixin):
         """Return True if script is usable."""
 
         if not isinstance(self.script, dict):
-            self.errors.append("Script must be a dictionary")
+            self.errors.append(_("Script must be a dictionary"))
             # Return early since the method assumes a dict
             return False
 
         # Check that installers contains all required fields
         for field in ("runner", "game_name", "game_slug"):
             if not hasattr(self, field) or not getattr(self, field):
-                self.errors.append("Missing field '%s'" % field)
+                self.errors.append(_("Missing field '%s'") % field)
 
         # Check that libretro installers have a core specified
         if self.runner == "libretro":
             if "game" not in self.script or "core" not in self.script["game"]:
-                self.errors.append("Missing libretro core in game section")
+                self.errors.append(_("Missing libretro core in game section"))
 
         # Check that installers don't contain both 'requires' and 'extends'
         if self.script.get("requires") and self.script.get("extends"):
-            self.errors.append("Scripts can't have both extends and requires")
+            self.errors.append(_("Scripts can't have both extends and requires"))
         return not bool(self.errors)
 
     @staticmethod
@@ -235,13 +236,13 @@ class ScriptInterpreter(CommandsMixin):
                 }
                 if not any(installed_binaries.values()):
                     raise ScriptingError(
-                        "This installer requires %s on your system"
-                        % " or ".join(dependency)
+                        _("This installer requires %s on your system")
+                        % _(" or ").join(dependency)
                     )
             else:
                 if not system.find_executable(dependency):
                     raise ScriptingError(
-                        "This installer requires %s on your system" % dependency
+                        _("This installer requires %s on your system") % dependency
                     )
 
     def _check_dependency(self):
@@ -255,7 +256,7 @@ class ScriptInterpreter(CommandsMixin):
             dependencies = [self.extends]
         else:
             dependencies = unpack_dependencies(self.requires)
-        error_message = "You need to install {} before"
+        error_message = _("You need to install {} before")
         for index, dependency in enumerate(dependencies):
             if isinstance(dependency, tuple):
                 dependency_choices = [
@@ -263,7 +264,7 @@ class ScriptInterpreter(CommandsMixin):
                 ]
                 installed_games = [dep for dep in dependency_choices if dep]
                 if not installed_games:
-                    raise ScriptingError(error_message.format(" or ".join(dependency)))
+                    raise ScriptingError(error_message.format(_(" or ").join(dependency)))
                 if index == 0:
                     self.target_path = installed_games[0]["directory"]
                     self.requires = installed_games[0]["installer_slug"]
@@ -281,7 +282,7 @@ class ScriptInterpreter(CommandsMixin):
 
     def swap_gog_game_files(self):
         if not self.gogid:
-            raise ScriptingError("The installer has no GOG ID!")
+            raise ScriptingError(_("The installer has no GOG ID!"))
         links = self.get_gog_download_links()
         installer_file_id = None
         if links:
@@ -297,13 +298,13 @@ class ScriptInterpreter(CommandsMixin):
                             and file_meta.get('url', '').startswith('N/A')
                         )
                 ):
-                    logger.debug("Removing file %s", file_id)
+                    logger.debug(_("Removing file %s"), file_id)
                     self.files.pop(index)
                     installer_file_id = file_id
                     break
 
         if not installer_file_id:
-            raise ScriptingError("Could not match a GOG installer file in the files")
+            raise ScriptingError(_("Could not match a GOG installer file in the files"))
 
         for index, link in enumerate(links):
 
@@ -314,7 +315,7 @@ class ScriptInterpreter(CommandsMixin):
             else:
                 file_id = "gog_file_%s" % index
 
-            logger.debug("Adding GOG file %s as %s", filename, file_id)
+            logger.debug(_("Adding GOG file %s as %s"), filename, file_id)
 
             self.files.append({
                 file_id: {
@@ -346,21 +347,21 @@ class ScriptInterpreter(CommandsMixin):
                     os.makedirs(self.target_path)
                 except PermissionError:
                     raise ScriptingError(
-                        "Lutris does not have the necessary permissions to install to path:",
+                        _("Lutris does not have the necessary permissions to install to path:"),
                         self.target_path,
                     )
                 self.reversion_data["created_main_dir"] = True
 
         if len(self.game_files) < len(self.files):
             logger.info(
-                "Downloading file %d of %d", len(self.game_files) + 1, len(self.files)
+                _("Downloading file %d of %d"), len(self.game_files) + 1, len(self.files)
             )
             file_index = len(self.game_files)
             try:
                 current_file = self.files[file_index]
             except KeyError:
                 raise ScriptingError(
-                    "Error getting file %d in %s" % file_index, self.files
+                    _("Error getting file %d in %s") % file_index, self.files
                 )
             self._download_file(current_file)
         else:
@@ -380,7 +381,7 @@ class ScriptInterpreter(CommandsMixin):
                      of local file.
         """
         if not isinstance(game_file, dict):
-            raise ScriptingError("Invalid file, check the installer script", game_file)
+            raise ScriptingError(_("Invalid file, check the installer script"), game_file)
         # Setup file_id, file_uri and local filename
         file_id = list(game_file.keys())[0]
         file_meta = game_file[file_id]
@@ -388,7 +389,7 @@ class ScriptInterpreter(CommandsMixin):
             for field in ("url", "filename"):
                 if field not in file_meta:
                     raise ScriptingError(
-                        "missing field `%s` for file `%s`" % (field, file_id)
+                        _("missing field `%s` for file `%s`") % (field, file_id)
                     )
             file_uri = file_meta["url"]
             filename = file_meta["filename"]
@@ -409,7 +410,7 @@ class ScriptInterpreter(CommandsMixin):
 
         if not filename:
             raise ScriptingError(
-                "No filename provided, please provide 'url' and 'filename' parameters in the script"
+                _("No filename provided, please provide 'url' and 'filename' parameters in the script")
             )
 
         # Check for file availability in PGA
@@ -420,7 +421,7 @@ class ScriptInterpreter(CommandsMixin):
         # Setup destination path
         dest_file = os.path.join(self.cache_path, filename)
 
-        logger.debug("Downloading [%s]: %s to %s", file_id, file_uri, dest_file)
+        logger.debug(_("Downloading [%s]: %s to %s"), file_id, file_uri, dest_file)
 
         if file_uri.startswith("N/A"):
             # Ask the user where the file is located
@@ -428,7 +429,7 @@ class ScriptInterpreter(CommandsMixin):
             if len(parts) == 2:
                 message = parts[1]
             else:
-                message = "Please select file '%s'" % file_id
+                message = _("Please select file '%s'") % file_id
             self.current_file_id = file_id
             self.parent.ask_user_for_file(message)
             return
@@ -462,7 +463,7 @@ class ScriptInterpreter(CommandsMixin):
         try:
             hash_type, expected_hash = checksum.split(':', 1)
         except ValueError:
-            raise ScriptingError("Invalid checksum, expected format (type:hash) ", dest_file_uri)
+            raise ScriptingError(_("Invalid checksum, expected format (type:hash) "), dest_file_uri)
 
         if system.get_file_checksum(dest_file, hash_type) != expected_hash:
             raise ScriptingError(hash_type.capitalize() + " checksum mismatch ", dest_file_uri)
@@ -515,7 +516,7 @@ class ScriptInterpreter(CommandsMixin):
 
     def install_runner(self, runner):
         """Install runner required by the install script"""
-        logger.debug("Installing %s", runner.name)
+        logger.debug(_("Installing %s"), runner.name)
         try:
             runner.install(
                 version=self._get_runner_version(),
@@ -532,14 +533,14 @@ class ScriptInterpreter(CommandsMixin):
             runner = import_runner(runner_name)
         except InvalidRunner:
             GLib.idle_add(self.parent.cancel_button.set_sensitive, True)
-            raise ScriptingError("Invalid runner provided %s" % runner_name)
+            raise ScriptingError(_("Invalid runner provided %s") % runner_name)
         return runner
 
     def file_selected(self, file_path):
         """Continue install after a file has been selected by the user"""
         file_id = self.current_file_id
         if not file_path or not os.path.exists(file_path):
-            raise ScriptingError("Can't continue installation without file", file_id)
+            raise ScriptingError(_("Can't continue installation without file"), file_id)
         self.game_files[file_id] = file_path
         self.prepare_game_files()
 
@@ -560,7 +561,7 @@ class ScriptInterpreter(CommandsMixin):
             try:
                 self.steam_data["appid"] = self.script["game"]["appid"]
             except KeyError:
-                raise ScriptingError("Missing appid for steam game")
+                raise ScriptingError(_("Missing appid for steam game"))
 
             if "arch" in self.script["game"]:
                 self.steam_data["arch"] = self.script["game"]["arch"]
@@ -578,7 +579,7 @@ class ScriptInterpreter(CommandsMixin):
         if result == "STOP" or self.cancelled:
             return
 
-        self.parent.set_status("Installing game data")
+        self.parent.set_status(_("Installing game data"))
         self.parent.add_spinner()
         self.parent.continue_button.hide()
 
@@ -589,7 +590,7 @@ class ScriptInterpreter(CommandsMixin):
             try:
                 command = commands[self.current_command]
             except KeyError:
-                raise ScriptingError("Installer commands are not formatted correctly")
+                raise ScriptingError(_("Installer commands are not formatted correctly"))
             self.current_command += 1
             method, params = self._map_command(command)
             if isinstance(params, dict):
@@ -598,7 +599,7 @@ class ScriptInterpreter(CommandsMixin):
                 status_text = None
             if status_text:
                 self.parent.set_status(status_text)
-            logger.debug("Installer command: %s", command)
+            logger.debug(_("Installer command: %s"), command)
             AsyncCall(method, self._iter_commands, params)
         else:
             self._finish_install()
@@ -620,7 +621,7 @@ class ScriptInterpreter(CommandsMixin):
         method."""
         command_name, command_params = self._get_command_name_and_params(command_data)
         if not hasattr(self, command_name):
-            raise ScriptingError('The command "%s" does not exist.' % command_name)
+            raise ScriptingError(_('The command "%s" does not exist.') % command_name)
         return getattr(self, command_name), command_params
 
     # ----------------
@@ -640,13 +641,13 @@ class ScriptInterpreter(CommandsMixin):
         self._write_config()
         if path and not os.path.isfile(path):
             self.parent.set_status(
-                "The executable at path %s can't be found, please check the destination folder.\n"
+                _("The executable at path %s can't be found, please check the destination folder.\n"
                 "Check the destination folder, "
-                "some parts of the installation process may have not completed successfully." % path
+                "some parts of the installation process may have not completed successfully.") % path
             )
-            logger.warning("No executable found at specified location %s", path)
+            logger.warning(_("No executable found at specified location %s"), path)
         else:
-            self.parent.set_status("Installation finished!")
+            self.parent.set_status(_("Installation finished!"))
 
         self.parent.on_install_finished()
 
@@ -657,7 +658,7 @@ class ScriptInterpreter(CommandsMixin):
         """
         if self.extends:
             logger.info(
-                "This is an extension to %s, not creating a new game entry",
+                _("This is an extension to %s, not creating a new game entry"),
                 self.extends,
             )
             return
@@ -692,7 +693,7 @@ class ScriptInterpreter(CommandsMixin):
         game.set_platform_from_runner()
         game.save()
 
-        logger.debug("Saved game entry %s (%d)", self.game_slug, self.game_id)
+        logger.debug(_("Saved game entry %s (%d)"), self.game_slug, self.game_id)
 
         # Config update
         if "system" in self.script:
@@ -725,7 +726,7 @@ class ScriptInterpreter(CommandsMixin):
             try:
                 config["game"].update(self.script["game"])
             except ValueError:
-                raise ScriptingError("Invalid 'game' section", self.script["game"])
+                raise ScriptingError(_("Invalid 'game' section"), self.script["game"])
             config["game"] = self._substitute_config(config["game"])
 
         yaml_config = yaml.safe_dump(config, default_flow_style=False)
@@ -737,7 +738,7 @@ class ScriptInterpreter(CommandsMixin):
         config = {}
         for key in script_config:
             if not isinstance(key, str):
-                raise ScriptingError("Game config key must be a string", key)
+                raise ScriptingError(_("Game config key must be a string"), key)
             value = script_config[key]
             if isinstance(value, list):
                 config[key] = [self._substitute(i) for i in value]
@@ -764,7 +765,7 @@ class ScriptInterpreter(CommandsMixin):
 
     def revert(self):
         """Revert installation in case of an error"""
-        logger.debug("Install cancelled")
+        logger.debug(_("Install cancelled"))
         self.cancelled = True
 
         if self.abort_current_task:
@@ -826,7 +827,7 @@ class ScriptInterpreter(CommandsMixin):
         appid = self.steam_data["appid"]
 
         if not steam_runner.get_game_path_from_appid(appid):
-            logger.debug("Installing steam game %s", appid)
+            logger.debug(_("Installing steam game %s"), appid)
             steam_runner.config = LutrisConfig(runner_slug=steam_runner.name)
             if "arch" in self.steam_data:
                 steam_runner.config.game_config["arch"] = self.steam_data["arch"]
@@ -870,12 +871,12 @@ class ScriptInterpreter(CommandsMixin):
             steam_runner.steam_data_dir, appid, self.install_start_time
         )
         if states != self.prev_states:
-            logger.debug("Steam installation status:")
+            logger.debug(_("Steam installation status:"))
             logger.debug(states)
         self.prev_states = states
 
         if states and states[-1].startswith("Fully Installed"):
-            logger.debug("Steam game has finished installing")
+            logger.debug(_("Steam game has finished installing"))
             self._on_steam_game_installed()
             return False
         return True
@@ -903,7 +904,7 @@ class ScriptInterpreter(CommandsMixin):
     def _append_steam_data_to_files(self, runner_class):
         data_path = self._get_steam_game_path(runner_class)
         if not data_path or not os.path.exists(data_path):
-            raise ScriptingError("Unable to get Steam data for game")
+            raise ScriptingError(_("Unable to get Steam data for game"))
         self.game_files[self.steam_data["file_id"]] = os.path.abspath(
             os.path.join(data_path, self.steam_data["steam_rel_path"])
         )
@@ -926,7 +927,7 @@ class ScriptInterpreter(CommandsMixin):
             parts = file_uri.split(":", 2)
             steam_rel_path = parts[2].strip()
         except IndexError:
-            raise ScriptingError("Malformed steam path: %s" % file_uri)
+            raise ScriptingError(_("Malformed steam path: %s") % file_uri)
         if steam_rel_path == "/":
             steam_rel_path = "."
         self.steam_data = {
@@ -935,17 +936,17 @@ class ScriptInterpreter(CommandsMixin):
             "file_id": file_id,
         }
 
-        logger.debug("Getting Steam data for appid %s", self.steam_data["appid"])
+        logger.debug(_("Getting Steam data for appid %s"), self.steam_data["appid"])
 
         self.parent.clean_widgets()
         self.parent.add_spinner()
         if parts[0] == "$WINESTEAM":
-            self.parent.set_status("Getting Wine Steam game data")
+            self.parent.set_status(_("Getting Wine Steam game data"))
             self.steam_data["platform"] = "windows"
             self.install_steam_game(winesteam.winesteam, is_game_files=True)
         else:
             # Getting data from Linux Steam
-            self.parent.set_status("Getting Steam game data")
+            self.parent.set_status(_("Getting Steam game data"))
             self.steam_data["platform"] = "linux"
             self.install_steam_game(steam.steam, is_game_files=True)
 
@@ -982,21 +983,21 @@ class ScriptInterpreter(CommandsMixin):
         """Return a list of downloadable links for a GOG game"""
         gog_service = GogService()
         if not gog_service.is_available():
-            logger.info("You are not connected to GOG")
+            logger.info(_("You are not connected to GOG"))
             connect_gog()
         gog_installers = self.get_gog_installers(gog_service)
         if len(gog_installers) > 1:
-            raise ScriptingError("Don't know how to deal with multiple installers yet.")
+            raise ScriptingError(_("Don't know how to deal with multiple installers yet."))
         installer = gog_installers[0]
         download_links = []
         for game_file in installer.get('files', []):
             downlink = game_file.get("downlink")
             if not downlink:
-                logger.error("No download information for %s", installer)
+                logger.error(_("No download information for %s"), installer)
                 continue
             download_info = gog_service.get_download_info(downlink)
             for field in ('checksum', 'downlink'):
                 url = download_info[field]
-                logger.info("Adding %s to download links", url)
+                logger.info(_("Adding %s to download links"), url)
                 download_links.append(download_info[field])
         return download_links

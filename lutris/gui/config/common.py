@@ -65,7 +65,7 @@ class GameDialogCommon:
         info_box.pack_start(self._get_year_box(), False, False, 5)  # Year
 
         info_sw = self.build_scrolled_window(info_box)
-        self._add_notebook_tab(info_sw, "Game info")
+        self._add_notebook_tab(info_sw, _("Game info"))
 
     def _get_name_box(self):
         box = Gtk.Box(spacing=12, margin_right=12, margin_left=12)
@@ -92,7 +92,7 @@ class GameDialogCommon:
         self.slug_entry.connect("activate", self.on_slug_entry_activate)
         slug_box.pack_start(self.slug_entry, True, True, 0)
 
-        self.slug_change_button = Gtk.Button("Change")
+        self.slug_change_button = Gtk.Button(_("Change"))
         self.slug_change_button.connect("clicked", self.on_slug_change_clicked)
         slug_box.pack_start(self.slug_change_button, False, False, 0)
 
@@ -107,7 +107,7 @@ class GameDialogCommon:
         self.runner_dropdown = self._get_runner_dropdown()
         runner_box.pack_start(self.runner_dropdown, True, True, 0)
 
-        install_runners_btn = Gtk.Button("Install runners")
+        install_runners_btn = Gtk.Button(_("Install runners"))
         install_runners_btn.connect("clicked", self.on_install_runners_clicked)
         runner_box.pack_start(install_runners_btn, True, True, 0)
 
@@ -210,7 +210,7 @@ class GameDialogCommon:
 
     def on_slug_change_clicked(self, widget):
         if self.slug_entry.get_sensitive() is False:
-            widget.set_label("Apply")
+            widget.set_label(_("Apply"))
             self.slug_entry.set_sensitive(True)
         else:
             self.change_game_slug()
@@ -221,7 +221,7 @@ class GameDialogCommon:
     def change_game_slug(self):
         self.slug = self.slug_entry.get_text()
         self.slug_entry.set_sensitive(False)
-        self.slug_change_button.set_label("Change")
+        self.slug_change_button.set_label(_("Change"))
 
     def on_install_runners_clicked(self, _button):
         runners_dialog = gui.runnersdialog.RunnersDialog()
@@ -357,7 +357,7 @@ class GameDialogCommon:
             self.runner_name in ("steam", "winesteam")
             and self.lutris_config.game_config.get("appid") is None
         ):
-            ErrorDialog("Steam AppId not provided")
+            ErrorDialog(_("Steam AppId not provided"))
             return False
         return True
 
@@ -397,7 +397,7 @@ class GameDialogCommon:
             try:
                 int(fps_limit)
             except ValueError:
-                ErrorDialog("Fps limit only accept numbers")
+                ErrorDialog(_("Fps limit only accept numbers"))
                 return
 
         self.game.directory = runner.game_path
@@ -425,7 +425,7 @@ class GameDialogCommon:
         )
 
         image_filter = Gtk.FileFilter()
-        image_filter.set_name("Images")
+        image_filter.set_name(_("Images"))
         image_filter.add_pixbuf_formats()
         dialog.add_filter(image_filter)
 
@@ -459,6 +459,6 @@ class GameDialogCommon:
             self.game.has_custom_icon = False
             dest_path = datapath.get_icon_path(self.game.slug)
         else:
-            raise ValueError("Unsupported image type %s", image_type)
+            raise ValueError(_("Unsupported image type %s"), image_type)
         os.remove(dest_path)
         self._set_image(image_type)

@@ -9,12 +9,12 @@ from gettext import gettext as _
 class scummvm(Runner):
     description = _("Runs various 2D point-and-click adventure games.")
     human_name = "ScummVM"
-    platforms = ["Linux"]
+    platforms = [_("Linux")]
     runnable_alone = True
     runner_executable = "scummvm/bin/scummvm"
     game_options = [
-        {"option": "game_id", "type": "string", "label": "Game identifier"},
-        {"option": "path", "type": "directory_chooser", "label": "Game files location"},
+        {"option": "game_id", "type": "string", "label": _("Game identifier")},
+        {"option": "path", "type": "directory_chooser", "label": _("Game files location")},
         {
             "option": "subtitles",
             "label": _("Enable subtitles (if the game has voice)"),
@@ -60,7 +60,7 @@ class scummvm(Runner):
                 ("tv2x", "tv2x"),
                 ("dotmatrix", "dotmatrix"),
             ],
-            "help": (
+            "help": _(
                 "The algorithm used to scale up the game's base "
                 "resolution, resulting in different visual styles. "
             ),

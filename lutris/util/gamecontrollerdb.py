@@ -1,4 +1,5 @@
 import os
+from gettext import gettext as _
 from lutris.settings import RUNTIME_DIR
 from lutris.util import system
 from lutris.util.log import logger
@@ -47,7 +48,7 @@ class ControllerMapping:
                 continue
             xinput_key, sdl_key = key_map.split(":")
             if xinput_key not in self.valid_keys:
-                logger.warning("Unrecognized key %s", xinput_key)
+                logger.warning(_("Unrecognized key %s"), xinput_key)
                 continue
             self.keys[xinput_key] = sdl_key
 

@@ -3,6 +3,7 @@
 import os
 from os.path import join
 import time
+from gettext import gettext as _
 
 from lutris import pga, settings, sysoptions
 from lutris.runners import import_runner, InvalidRunner
@@ -200,9 +201,9 @@ class LutrisConfig:
         """Delete the configuration file from disk."""
         if path_exists(self.game_config_path):
             os.remove(self.game_config_path)
-            logger.debug("Removed config %s", self.game_config_path)
+            logger.debug(_("Removed config %s"), self.game_config_path)
         else:
-            logger.debug("No config file at %s", self.game_config_path)
+            logger.debug(_("No config file at %s"), self.game_config_path)
 
     def save(self):
         """Save configuration file according to its type"""
@@ -217,7 +218,7 @@ class LutrisConfig:
             config = self.game_level
             config_path = self.game_config_path
         else:
-            raise ValueError("Invalid config level '%s'" % self.level)
+            raise ValueError(_("Invalid config level '%s'") % self.level)
         write_yaml_to_file(config_path, config)
         self.update_cascaded_config()
 

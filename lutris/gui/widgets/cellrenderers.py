@@ -1,5 +1,5 @@
 from gi.repository import Gtk, Pango, GObject
-
+from gettext import gettext as _
 
 class GridViewCellRendererText(Gtk.CellRendererText):
     """CellRendererText adjusted for grid view display, removes extra padding"""
@@ -18,7 +18,7 @@ class CellRendererButton(Gtk.CellRenderer):
     value = GObject.Property(
         type=str,
         nick="value",
-        blurb="what data to render",
+        blurb=_("what data to render"),
         flags=(GObject.PARAM_READWRITE | GObject.PARAM_CONSTRUCT),
     )
 

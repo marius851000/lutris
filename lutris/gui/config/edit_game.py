@@ -1,13 +1,13 @@
 from lutris.gui.widgets.dialogs import Dialog
 from lutris.gui.config.common import GameDialogCommon
 from lutris.gui.config import DIALOG_WIDTH, DIALOG_HEIGHT
-
+from gettext import gettext as _
 
 class EditGameConfigDialog(Dialog, GameDialogCommon):
     """Game config edit dialog."""
 
     def __init__(self, parent, game, callback):
-        super().__init__("Configure %s" % game.name, parent=parent)
+        super().__init__(_("Configure %s") % game.name, parent=parent)
         self.game = game
         self.lutris_config = game.config
         self.game_config_id = game.config.game_config_id

@@ -9,7 +9,7 @@ class zdoom(Runner):
     # http://zdoom.org/wiki/Command_line_parameters
     description = _("ZDoom DOOM Game Engine")
     human_name = "ZDoom"
-    platforms = ["Linux"]
+    platforms = [_("Linux")]
     runner_executable = "zdoom/zdoom"
     game_options = [
         {
@@ -47,8 +47,8 @@ class zdoom(Runner):
         },
     ]
     runner_options = [
-        {"option": "2", "label": "Pixel Doubling", "type": "bool", "default": False},
-        {"option": "4", "label": "Pixel Quadrupling", "type": "bool", "default": False},
+        {"option": "2", "label": _("Pixel Doubling"), "type": "bool", "default": False},
+        {"option": "4", "label": _("Pixel Quadrupling"), "type": "bool", "default": False},
         {
             "option": "nostartup",
             "label": _("Disable Startup Screens"),
@@ -61,19 +61,19 @@ class zdoom(Runner):
             "type": "choice",
             "default": "",
             "choices": {
-                ("None", ""),
-                ("I'm Too Young To Die (1)", "1"),
-                ("Hey, Not Too Rough (2)", "2"),
-                ("Hurt Me Plenty (3)", "3"),
-                ("Ultra-Violence (4)", "4"),
-                ("Nightmare! (5)", "5"),
+                (_("None"), ""),
+                (_("I'm Too Young To Die (1)"), "1"),
+                (_("Hey, Not Too Rough (2)"), "2"),
+                (_("Hurt Me Plenty (3)"), "3"),
+                (_("Ultra-Violence (4)"), "4"),
+                (_("Nightmare! (5)"), "5"),
             },
         },
         {
             "option": "config",
-            "label": "Config file",
+            "label": _("Config file"),
             "type": "file",
-            "help": (
+            "help": _(
                 "Used to load a user-created configuration file. If specified, "
                 "the file must contain the wad directory list or launch will fail."
             ),
@@ -98,7 +98,7 @@ class zdoom(Runner):
 
     def prelaunch(self):
         if not system.LINUX_SYSTEM.get_soundfonts():
-            logger.warning("FluidSynth is not installed, you might not have any music")
+            logger.warning(_("FluidSynth is not installed, you might not have any music"))
         return True
 
     def play(self):

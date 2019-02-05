@@ -4,19 +4,24 @@ from gettext import gettext as _
 
 class dgen(Runner):
     human_name = "DGen"
-    description = "Sega Genesis emulator"
+    description = _("Sega Genesis emulator")
     platforms = ["Sega Genesis"]
     runner_executable = "dgen/bin/dgen"
     game_options = [
         {
             "option": "main_file",
             "type": "file",
-            "label": "ROM file",
-            "help": "The game data, commonly called a ROM image.",
+            "label": _("ROM file"),
+            "help": _("The game data, commonly called a ROM image."),
         }
     ]
     runner_options = [
-        {"option": "fullscreen", "type": "bool", "label": "Fullscreen", "default": True}
+        {
+            "option": "fullscreen",
+            "type": "bool",
+            "label": _("Fullscreen"),
+            "default": True
+        }
     ]
 
     def play(self):

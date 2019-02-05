@@ -14,7 +14,7 @@ SNES9X_DIR = os.path.join(settings.DATA_DIR, "runners/snes9x")
 class snes9x(Runner):
     description = _("Super Nintendo emulator")
     human_name = "Snes9x"
-    platforms = ["Nintendo SNES"]
+    platforms = [_("Nintendo SNES")]
     runnable_alone = True
     runner_executable = "snes9x/bin/snes9x-gtk"
     game_options = [
@@ -23,12 +23,12 @@ class snes9x(Runner):
             "type": "file",
             "default_path": "game_path",
             "label": "ROM file",
-            "help": "The game data, commonly called a ROM image.",
+            "help": _("The game data, commonly called a ROM image."),
         }
     ]
 
     runner_options = [
-        {"option": "fullscreen", "type": "bool", "label": "Fullscreen", "default": "1"},
+        {"option": "fullscreen", "type": "bool", "label": _("Fullscreen"), "default": "1"},
         {
             "option": "maintain_aspect_ratio",
             "type": "bool",
@@ -45,9 +45,9 @@ class snes9x(Runner):
         {
             "option": "sound_driver",
             "type": "choice",
-            "label": "Sound driver",
+            "label": _("Sound driver"),
             "advanced": True,
-            "choices": (("SDL", "1"), ("ALSA", "2"), ("OSS", "0")),
+            "choices": ((_("SDL"), "1"), (_("ALSA"), "2"), (_("OSS"), "0")),
             "default": "1",
         },
     ]
@@ -57,7 +57,7 @@ class snes9x(Runner):
         if not system.path_exists(config_file):
             subprocess.Popen([self.get_executable(), "-help"])
         if not system.path_exists(config_file):
-            logger.error("Snes9x config file creation failed")
+            logger.error(_("Snes9x config file creation failed"))
             return
         tree = etree.parse(config_file)
         node = tree.find("./preferences/option[@name='%s']" % option)

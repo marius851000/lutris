@@ -7,26 +7,26 @@ class fsuae(Runner):
     human_name = "FS-UAE"
     description = "Amiga emulator"
     platforms = [
-        "Amiga 500",
-        "Amiga 500+",
-        "Amiga 600",
-        "Amiga 1000",
-        "Amiga 1200",
-        "Amiga 1200",
-        "Amiga 4000",
-        "Amiga CD32",
-        "Commodore CDTV",
+        _("Amiga 500"),
+        _("Amiga 500+"),
+        _("Amiga 600"),
+        _("Amiga 1000"),
+        _("Amiga 1200"),
+        _("Amiga 1200"),
+        _("Amiga 4000"),
+        _("Amiga CD32"),
+        _("Commodore CDTV"),
     ]
     model_choices = [
-        ("Amiga 500", "A500"),
-        ("Amiga 500+ with 1 MB chip RAM", "A500+"),
-        ("Amiga 600 with 1 MB chip RAM", "A600"),
-        ("Amiga 1000 with 512 KB chip RAM", "A1000"),
-        ("Amiga 1200 with 2 MB chip RAM", "A1200"),
-        ("Amiga 1200 but with 68020 processor", "A1200/020"),
-        ("Amiga 4000 with 2 MB chip RAM and a 68040", "A4000/040"),
-        ("Amiga CD32", "CD32"),
-        ("Commodore CDTV", "CDTV"),
+        (_("Amiga 500"), "A500"),
+        (_("Amiga 500+ with 1 MB chip RAM"), "A500+"),
+        (_("Amiga 600 with 1 MB chip RAM"), "A600"),
+        (_("Amiga 1000 with 512 KB chip RAM"), "A1000"),
+        (_("Amiga 1200 with 2 MB chip RAM"), "A1200"),
+        (_("Amiga 1200 but with 68020 processor"), "A1200/020"),
+        (_("Amiga 4000 with 2 MB chip RAM and a 68040"), "A4000/040"),
+        (_("Amiga CD32"), "CD32"),
+        (_("Commodore CDTV"), "CDTV"),
     ]
     memory_choices = [
         ("0", "0"),
@@ -77,9 +77,9 @@ class fsuae(Runner):
         {
             "option": "main_file",
             "type": "file",
-            "label": "Boot disk",
+            "label": _("Boot disk"),
             "default_path": "game_path",
-            "help": (
+            "help": _(
                 "The main floppy disk file with the game data. \n"
                 "FS-UAE supports floppy images in multiple file formats: "
                 "ADF, IPF, DMS are the most common. ADZ (compressed ADF) "
@@ -90,9 +90,9 @@ class fsuae(Runner):
         {
             "option": "disks",
             "type": "multiple",
-            "label": "Additionnal floppies",
+            "label": _("Additionnal floppies"),
             "default_path": "game_path",
-            "help": "The additional floppy disk image(s).",
+            "help": _("The additional floppy disk image(s)."),
         },
     ]
 
@@ -103,13 +103,13 @@ class fsuae(Runner):
             "type": "choice",
             "choices": model_choices,
             "default": "A500",
-            "help": "Specify the Amiga model you want to emulate.",
+            "help": _("Specify the Amiga model you want to emulate."),
         },
         {
             "option": "kickstart_file",
             "label": _("Kickstart ROMs location"),
             "type": "file",
-            "help": (
+            "help": _(
                 "Choose the folder containing original Amiga kickstart "
                 "ROMs. Refer to FS-UAE documentation to find how to "
                 "acquire them. Without these, FS-UAE uses a bundled "
@@ -119,36 +119,36 @@ class fsuae(Runner):
         },
         {
             "option": "kickstart_ext_file",
-            "label": "Extended Kickstart location",
+            "label": _("Extended Kickstart location"),
             "type": "file",
-            "help": "Location of extended Kickstart used for CD32",
+            "help": _("Location of extended Kickstart used for CD32"),
         },
         {
             "option": "fmemory",
-            "label": "Fast Memory",
+            "label": _("Fast Memory"),
             "type": "choice",
             "choices": memory_choices,
             "default": "0",
-            "help": "Specify how much Fast Memory the Amiga model should have.",
+            "help": _("Specify how much Fast Memory the Amiga model should have."),
         },
         {
             "option": "fdvolume",
-            "label": "Floppy Drive Volume",
+            "label": _("Floppy Drive Volume"),
             "type": "choice",
             "choices": flsound_choices,
             "default": "0",
-            "help": (
+            "help": _(
                 "Set volume to 0 to disable floppy drive clicks "
                 "when the drive is empty. Max volume is 100."
             )
         },
         {
             "option": "fdspeed",
-            "label": "Floppy Drive Speed",
+            "label": _("Floppy Drive Speed"),
             "type": "choice",
             "choices": flspeed_choices,
             "default": "100",
-            "help": (
+            "help": _(
                 "Set the speed of the emulated floppy drives, in percent. "
                 "For example, you can specify 800 to get an 8x increase in "
                 "speed. Use 0 to specify turbo mode. Turbo mode means that "
@@ -157,22 +157,22 @@ class fsuae(Runner):
         },
         {
             "option": "grafixcard",
-            "label": "Graphics Card",
+            "label": _("Graphics Card"),
             "type": "choice",
             "choices": gpucard_choices,
             "default": "0",
-            "help": (
+            "help": _(
                 "Use this option to enable a graphics card. This option is none by default, in "
                 "which case only chipset graphics (OCS/ECS/AGA) support is available."
             )
         },
         {
             "option": "grafixmemory",
-            "label": "Graphics Card RAM",
+            "label": _("Graphics Card RAM"),
             "type": "choice",
             "choices": gpumem_choices,
             "default": "0",
-            "help": (
+            "help": _(
                 "Override the amount of graphics memory on the graphics card. The 0 MB option is "
                 "not really valid, but exists for user interface reasons."
             )
@@ -185,13 +185,13 @@ class fsuae(Runner):
         },
         {
             "option": "jitcompiler",
-            "label": "JIT Compiler",
+            "label": _("JIT Compiler"),
             "type": "bool",
             "default": False,
         },
         {
             "option": "bsdsocket",
-            "label": "UAE bsdsocket.library",
+            "label": _("UAE bsdsocket.library"),
             "type": "bool",
             "default": False,
         },
@@ -200,7 +200,7 @@ class fsuae(Runner):
             "label": _("Scanlines display style"),
             "type": "bool",
             "default": False,
-            "help": (
+            "help": _(
                 "Activates a display filter adding scanlines to imitate "
                 "the displays of yesteryear."
             ),

@@ -1,7 +1,8 @@
 import unicodedata
 import re
 import math
-
+from gettext import gettext as _
+from gettext import ngettext as _n
 
 def slugify(value):
     """Remove special characters from a string and slugify it.
@@ -105,22 +106,22 @@ def escape_gtk_label(string):
 def get_formatted_playtime(playtime):
     """Return a human readable value of the play time"""
     if not playtime:
-        return "No play time recorded"
+        return _("No play time recorded")
 
     try:
         playtime = float(playtime)
     except TypeError:
-        return "Invalid playtime %s" % playtime
+        return _("Invalid playtime %s") % playtime
     hours = math.floor(playtime)
 
     if hours:
-        hours_text = "%d hour%s" % (hours, "s" if hours > 1 else "")
+        hours_text = _n("%d hour", "%d hours", hours) % hours
     else:
         hours_text = ""
 
     minutes = int((playtime - hours) * 60)
     if minutes:
-        minutes_text = "%d minute%s" % (minutes, "s" if minutes > 1 else "")
+        minutes_text = _n("%d minute", "%d minutes", minutes) % minutes
     else:
         minutes_text = ""
 

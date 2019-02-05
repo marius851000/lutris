@@ -6,6 +6,7 @@ import shutil
 import shlex
 import math
 from time import sleep
+from gettext import gettext as _
 
 from lutris import pga, settings
 from lutris.util import system, datapath, downloader
@@ -17,16 +18,16 @@ DOWNLOAD_URL = "https://github.com/daniel-j/lutris-pico-8-runner/archive/master.
 
 # pylint: disable=C0103
 class pico8(Runner):
-    description = "Runs PICO-8 fantasy console cartridges"
+    description = _("Runs PICO-8 fantasy console cartridges")
     multiple_versions = False
     human_name = "PICO-8"
-    platforms = ["PICO-8"]
+    platforms = [_("PICO-8")]
     game_options = [
         {
             "option": "main_file",
             "type": "string",
-            "label": "Cartridge file/url/id",
-            "help": "You can put a .p8.png file path, url, or BBS cartridge id here.",
+            "label": _("Cartridge file/url/id"),
+            "help": _("You can put a .p8.png file path, url, or BBS cartridge id here."),
         }
     ]
 
@@ -34,37 +35,37 @@ class pico8(Runner):
         {
             "option": "fullscreen",
             "type": "bool",
-            "label": "Fullscreen",
+            "label": _("Fullscreen"),
             "default": True,
-            "help": "Launch in fullscreen.",
+            "help": _("Launch in fullscreen."),
         },
         {
             "option": "window_size",
-            "label": "Window size",
+            "label": _("Window size"),
             "type": "string",
             "default": "640x512",
-            "help": "The initial size of the game window.",
+            "help": _("The initial size of the game window."),
         },
         {
             "option": "splore",
             "type": "bool",
-            "label": "Start in splore mode",
+            "label": _("Start in splore mode"),
             "default": False,
         },
         {
             "option": "args",
             "type": "string",
-            "label": "Extra arguments",
+            "label": _("Extra arguments"),
             "default": "",
-            "help": "Extra arguments to the executable",
+            "help": _("Extra arguments to the executable"),
             "advanced": True,
         },
         {
             "option": "engine",
             "type": "string",
-            "label": "Engine (web only)",
+            "label": _("Engine (web only)"),
             "default": "pico8_0111g_4",
-            "help": "Name of engine (will be downloaded) or local file path",
+            "help": _("Name of engine (will be downloaded) or local file path"),
         },
     ]
 
@@ -214,7 +215,7 @@ class pico8(Runner):
                 # Wait for download to complete or continue if it exists (to work in offline mode)
                 while not os.path.exists(cartPath):
                     if downloadCompleted or dl.state == downloader.Downloader.ERROR:
-                        logger.error("Could not download cartridge from " + downloadUrl)
+                        logger.error(_("Could not download cartridge from %s") % downloadUrl)
                         return False
                     sleep(0.1)
 
@@ -247,7 +248,7 @@ class pico8(Runner):
                 # Waits for download to complete
                 while not os.path.exists(enginePath):
                     if downloadCompleted or dl.state == downloader.Downloader.ERROR:
-                        logger.error("Could not download engine from " + downloadUrl)
+                        logger.error(_("Could not download engine from %s") % downloadUrl)
                         return False
                     sleep(0.1)
 

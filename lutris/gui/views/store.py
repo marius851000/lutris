@@ -9,6 +9,7 @@ from lutris.util import system
 from lutris import api
 from lutris.util.jobs import AsyncCall
 from lutris.gui.views.pga_game import PgaGame
+from gettext import gettext as _
 from . import (
     COL_ID,
     COL_SLUG,
@@ -26,7 +27,7 @@ from . import (
     COL_PLAYTIME,
     COL_PLAYTIME_TEXT
 )
-
+from gettext import gettext as _
 
 class GameStore(GObject.Object):
     __gsignals__ = {
@@ -144,7 +145,7 @@ class GameStore(GObject.Object):
         if not missing_media_slugs:
             return
         logger.debug(
-            "Requesting missing icons from API for %d games", len(missing_media_slugs)
+            _("Requesting missing icons from API for %d games"), len(missing_media_slugs)
         )
         lutris_media = api.get_api_games(missing_media_slugs)
         if not lutris_media:
@@ -210,7 +211,7 @@ class GameStore(GObject.Object):
         if game_index:
             self.games.pop(game_index)
         else:
-            logger.warning("Can't find game %s in game list", game_id)
+            logger.warning(_("Can't find game %s in game list"), game_id)
         row = self.get_row_by_id(game_id)
         self.store.remove(row.iter)
 
@@ -223,7 +224,7 @@ class GameStore(GObject.Object):
         game = PgaGame(pga_game)
         row = self.get_row_by_id(game.id)
         if not row:
-            raise ValueError("No existing row for game %s" % game.slug)
+            raise ValueError(_("No existing row for game %s") % game.slug)
         row[COL_ID] = game.id
         row[COL_SLUG] = game.slug
         row[COL_NAME] = game.name

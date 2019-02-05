@@ -1,4 +1,5 @@
 import time
+from gettext import gettext as _
 from http.cookiejar import MozillaCookieJar, Cookie, _warn_unhandled_exception
 
 
@@ -78,5 +79,5 @@ class WebkitCookieJar(MozillaCookieJar):
         except Exception:
             _warn_unhandled_exception()
             raise OSError(
-                "invalid Netscape format cookies file %r: %r" % (filename, line)
+                _("invalid Netscape format cookies file %r: %r") % (filename, line)
             )

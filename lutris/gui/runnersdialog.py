@@ -13,7 +13,7 @@ from lutris.gui.dialogs import ErrorDialog, GtkBuilderDialog, DownloadDialog
 from lutris.gui.config.runner import RunnerConfigDialog
 from lutris.gui.runnerinstalldialog import RunnerInstallDialog
 from lutris.gui.widgets.utils import get_icon, ICON_SIZE, get_builder_from_file
-
+from gettext import gettext as _
 
 def simple_downloader(url, destination, callback, callback_args=None):
     """Default downloader used for runners"""
@@ -121,7 +121,7 @@ class RunnersDialog(GtkBuilderDialog):
         self.configure_button.show()
 
     def on_versions_clicked(self, widget, runner, runner_label):
-        dlg_title = "Manage %s versions" % runner.name
+        dlg_title = _("Manage %s versions") % runner.name
         versions_dialog = RunnerInstallDialog(dlg_title, self.dialog, runner.name)
         versions_dialog.connect("destroy", self.set_install_state, runner, runner_label)
 
@@ -147,7 +147,7 @@ class RunnersDialog(GtkBuilderDialog):
 
     def on_remove_clicked(self, widget, runner, runner_label):
         if not runner.is_installed():
-            logger.warning("Runner %s is not installed", runner)
+            logger.warning(_("Runner %s is not installed"), runner)
             return
 
         if runner.multiple_versions:

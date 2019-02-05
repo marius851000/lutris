@@ -1,6 +1,7 @@
 """Process monitor management"""
 import os
 import shlex
+from gettext import gettext as _
 
 from lutris.util.log import logger
 from lutris.util.process import Process
@@ -89,9 +90,9 @@ class ProcessMonitor:
         added = [p for p in new if p.pid not in oldpids]
         removed = [p for p in old if p.pid not in newpids]
         if added:
-            logger.debug("New %s processes: %s", label, ', '.join(map(str, added)))
+            logger.debug(_("New %s processes: %s"), label, ', '.join(map(str, added)))
         if removed:
-            logger.debug("New %s processes: %s", label, ', '.join(map(str, removed)))
+            logger.debug(_("New %s processes: %s"), label, ', '.join(map(str, removed)))
 
     def refresh_process_status(self):
         """Return status of a process"""
@@ -100,7 +101,7 @@ class ProcessMonitor:
 
         for child in self.iter_children(Process(os.getpid())):
             if child.state == 'Z':  # should never happen anymore...
-                logger.debug("Unexpected zombie process %s", child)
+                logger.debug(_("Unexpected zombie process %s"), child)
                 try:
                     os.wait3(os.WNOHANG)
                 except ChildProcessError:

@@ -4,6 +4,8 @@ Everything in this module should rely on /proc or /sys only, no executable calls
 """
 import os
 import re
+from gettext import gettext as _
+
 from lutris.util.log import logger
 
 
@@ -53,7 +55,7 @@ def is_nvidia():
 def get_gpus():
     """Return GPUs connected to the system"""
     if not os.path.exists("/sys/class/drm"):
-        logger.error("No GPU available on this system!")
+        logger.error(_("No GPU available on this system!"))
         return
     for cardname in os.listdir("/sys/class/drm/"):
         if re.match(r"^card\d$", cardname):
@@ -83,13 +85,13 @@ def check_driver():
     if is_nvidia():
         driver_info = get_nvidia_driver_info()
         # pylint: disable=logging-format-interpolation
-        logger.info("Using {vendor} drivers {version} for {arch}".format(**driver_info["nvrm"]))
+        logger.info(_("Using {vendor} drivers {version} for {arch}").format(**driver_info["nvrm"]))
         gpus = get_nvidia_gpu_ids()
         for gpu_id in gpus:
             gpu_info = get_nvidia_gpu_info(gpu_id)
-            logger.info("GPU: %s", gpu_info.get("Model"))
+            logger.info(_("GPU: %s"), gpu_info.get("Model"))
     for card in get_gpus():
         # pylint: disable=logging-format-interpolation
         logger.info(
-            "GPU: {PCI_ID} {PCI_SUBSYS_ID} using {DRIVER} driver".format(**get_gpu_info(card))
+            _("GPU: {PCI_ID} {PCI_SUBSYS_ID} using {DRIVER} driver").format(**get_gpu_info(card))
         )

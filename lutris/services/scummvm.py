@@ -1,6 +1,8 @@
 import re
 import os
 from configparser import ConfigParser
+from gettext import gettext as _
+
 from lutris import pga
 from lutris.util.log import logger
 from lutris.util.strings import slugify
@@ -18,7 +20,7 @@ SCUMMVM_CONFIG_FILE = os.path.join(
 
 def mark_as_installed(scummvm_id, name, path):
     """Add scummvm from the auto-import"""
-    logger.info("Setting %s as installed", name)
+    logger.info(_("Setting %s as installed"), name)
     slug = slugify(name)
     config_id = make_game_config_id(slug)
     game_id = pga.add_or_update(
@@ -37,13 +39,13 @@ def mark_as_installed(scummvm_id, name, path):
 
 
 def mark_as_uninstalled(game_info):
-    logger.info("Uninstalling %s", game_info["name"])
+    logger.info(_("Uninstalling %s"), game_info["name"])
     return pga.add_or_update(id=game_info["id"], installed=0)
 
 
 def get_scummvm_games():
     if not system.path_exists(SCUMMVM_CONFIG_FILE):
-        logger.info("No ScummVM config found")
+        logger.info(_("No ScummVM config found"))
         return []
     config = ConfigParser()
     config.read(SCUMMVM_CONFIG_FILE)

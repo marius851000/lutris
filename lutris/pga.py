@@ -4,6 +4,7 @@ import os
 import math
 import time
 from itertools import chain
+from gettext import gettext as _
 
 from lutris.util.strings import slugify
 from lutris.util.log import logger
@@ -115,7 +116,7 @@ def migrate(table, schema):
         columns = [col["name"] for col in existing_schema]
         for field in schema:
             if field["name"] not in columns:
-                logger.info("Migrating %s field %s", table, field["name"])
+                logger.info(_("Migrating %s field %s"), table, field["name"])
                 migrated_fields.append(field["name"])
                 sql.add_field(PGA_DB, table, field)
     else:
@@ -196,9 +197,9 @@ def get_games_where(**conditions):
                 condition_values.append(value)
             if extra_condition == "in":
                 if not hasattr(value, "__iter__"):
-                    raise ValueError("Value should be an iterable (%s given)" % value)
+                    raise ValueError(_("Value should be an iterable (%s given)") % value)
                 if len(value) > 999:
-                    raise ValueError("SQLite limnited to a maximum of 999 parameters.")
+                    raise ValueError(_("SQLite limnited to a maximum of 999 parameters."))
                 if value:
                     condition_fields.append(
                         "{} in ({})".format(field, ", ".join("?" * len(value)) or "")
@@ -234,7 +235,7 @@ def get_games_by_ids(game_ids):
 def get_game_by_field(value, field="slug"):
     """Query a game based on a database field"""
     if field not in ("slug", "installer_slug", "id", "configpath", "steamid"):
-        raise ValueError("Can't query by field '%s'" % field)
+        raise ValueError(_("Can't query by field '%s'") % field)
     game_result = sql.db_select(PGA_DB, "games", condition=(field, value))
     if game_result:
         return game_result[0]
@@ -311,7 +312,7 @@ def delete_source(uri):
 
 def read_sources():
     with sql.db_cursor(PGA_DB) as cursor:
-        rows = cursor.execute("select uri from sources")
+        rows = cursor.execute(_("select uri from sources"))
         results = rows.fetchall()
     return [row[0] for row in results]
 
@@ -332,10 +333,10 @@ def check_for_file(game, file_id):
             source = source[7:]
         else:
             protocol = source[:7]
-            logger.warning("PGA source protocol %s not implemented", protocol)
+            logger.warning(_("PGA source protocol %s not implemented"), protocol)
             continue
         if not system.path_exists(source):
-            logger.info("PGA source %s unavailable", source)
+            logger.info(_("PGA source %s unavailable"), source)
             continue
         game_dir = os.path.join(source, game)
         if not system.path_exists(game_dir):
@@ -407,8 +408,8 @@ def fix_playtime(game):
     """Fix a temporary glitch that happened with the playtime implementation"""
     broken_playtime = game["playtime"]
     if not broken_playtime.endswith(" hrs"):
-        logger.error("I don't know how to fix this playtime: %s", broken_playtime)
+        logger.error(_("I don't know how to fix this playtime: %s"), broken_playtime)
         return
-    logger.warning("OMG, %s what have you done?! (%s)", game["name"], broken_playtime)
+    logger.warning(_("OMG, %s what have you done?! (%s)"), game["name"], broken_playtime)
     playtime = broken_playtime.split()[0]
     sql.db_update(PGA_DB, "games", {"playtime": playtime}, ("id", game["id"]))

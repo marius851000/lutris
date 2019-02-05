@@ -38,7 +38,7 @@ class browser(Runner):
             return {
                 "error": "CUSTOM",
                 "text": (
-                    "The web address is empty, \n" "verify the game's configuration."
+                    _("The web address is empty, \n" "verify the game's configuration.")
                 ),
             }
         return {"command": [self.get_executable(), url]}

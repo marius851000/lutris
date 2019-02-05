@@ -47,8 +47,8 @@ def kill():
 class winesteam(wine.wine):
     description = _("Runs Steam for Windows games")
     multiple_versions = False
-    human_name = "Wine Steam"
-    platforms = ["Windows"]
+    human_name = _("Wine Steam")
+    platforms = [_("Windows")]
     runnable_alone = True
     depends_on = wine.wine
     default_arch = WINE_DEFAULT_ARCH
@@ -84,7 +84,7 @@ class winesteam(wine.wine):
             "option": "arch",
             "type": "choice",
             "label": _("Prefix architecture"),
-            "choices": [("Auto", "auto"), ("32-bit", "win32"), ("64-bit", "win64")],
+            "choices": [(_("Auto"), "auto"), (_("32-bit"), "win32"), (_("64-bit"), "win64")],
             "default": "auto",
             "help": _(
                 "The architecture of the Windows environment.\n"
@@ -115,15 +115,15 @@ class winesteam(wine.wine):
         {
             "option": "steamless_binary",
             "type": "file",
-            "label": "Game binary path",
+            "label": _("Game binary path"),
             "advanced": True,
-            "help": "Path to the game executable (Required by DRM free mode)"
+            "help": _("Path to the game executable (Required by DRM free mode)")
         }
     ]
 
     def __init__(self, config=None):
         super(winesteam, self).__init__(config)
-        self.own_game_remove_method = "Remove game data (through Wine Steam)"
+        self.own_game_remove_method = _("Remove game data (through Wine Steam)")
         self.no_game_remove_warning = True
         winesteam_options = [
             {
@@ -147,7 +147,7 @@ class winesteam(wine.wine):
             {
                 "option": "args",
                 "type": "string",
-                "label": "Arguments",
+                "label": _("Arguments"),
                 "advanced": True,
                 "help": ("Extra command line arguments used when " "launching Steam"),
             },
@@ -162,9 +162,9 @@ class winesteam(wine.wine):
             {
                 "option": "default_win64_prefix",
                 "type": "directory_chooser",
-                "label": "Default Wine prefix (64bit)",
+                "label": _("Default Wine prefix (64bit)"),
                 "default": os.path.join(settings.RUNNER_DIR, "winesteam/prefix64"),
-                "help": "Default prefix location for Steam (64 bit)",
+                "help": _("Default prefix location for Steam (64 bit)"),
                 "advanced": True,
             },
         ]
@@ -172,7 +172,7 @@ class winesteam(wine.wine):
             self.runner_options.insert(0, option)
 
     def __repr__(self):
-        return "Winesteam runner (%s)" % self.config
+        return _("Winesteam runner (%s)") % self.config
 
     @property
     def appid(self):
@@ -317,12 +317,12 @@ class winesteam(wine.wine):
     def get_game_path_from_appid(self, appid):
         """Return the game directory"""
         for apps_path in self.get_steamapps_dirs():
-            logger.debug("Checking for game %s in %s", appid, apps_path)
+            logger.debug(_("Checking for game %s in %s"), appid, apps_path)
             game_path = get_path_from_appmanifest(apps_path, appid)
             if game_path:
-                logger.debug("Game found in %s", game_path)
+                logger.debug(_("Game found in %s"), game_path)
                 return game_path
-        logger.warning("Data path for SteamApp %s not found.", appid)
+        logger.warning(_("Data path for SteamApp %s not found."), appid)
 
     def get_steamapps_dirs(self):
         """Return a list of the Steam library main + custom folders."""
@@ -361,7 +361,7 @@ class winesteam(wine.wine):
             prefix_path (str): Destination of the default prefix
             arch (str): Optional architecture for the prefix, defaults to win64
         """
-        logger.debug("Creating default winesteam prefix")
+        logger.debug(_("Creating default winesteam prefix"))
         arch = arch or self.default_arch
 
         if not system.path_exists(os.path.dirname(prefix_dir)):
@@ -383,13 +383,13 @@ class winesteam(wine.wine):
 
     def install_game(self, appid, generate_acf=False):
         if not appid:
-            raise ValueError("Missing appid in winesteam.install_game")
+            raise ValueError(_("Missing appid in winesteam.install_game"))
         command = self.launch_args + ["steam://install/%s" % appid]
         subprocess.Popen(command, env=self.get_env())
 
     def validate_game(self, appid):
         if not appid:
-            raise ValueError("Missing appid in winesteam.validate_game")
+            raise ValueError(_("Missing appid in winesteam.validate_game"))
         command = self.launch_args + ["steam://validate/%s" % appid]
         subprocess.Popen(command, env=self.get_env())
 
@@ -404,13 +404,13 @@ class winesteam(wine.wine):
 
         # Stop existing winesteam to prevent Wine prefix/version problems
         if is_running():
-            logger.info("Waiting for Steam to shutdown...")
+            logger.info(_("Waiting for Steam to shutdown..."))
             self.shutdown()
             if not has_steam_shutdown():
-                logger.info("Forcing Steam shutdown")
+                logger.info(_("Forcing Steam shutdown"))
                 kill()
                 if not has_steam_shutdown(5):
-                    raise RuntimeError("Failed to shut down Wine Steam :(")
+                    raise RuntimeError(_("Failed to shut down Wine Steam :("))
 
     def prelaunch(self):
         super().prelaunch()
@@ -429,7 +429,7 @@ class winesteam(wine.wine):
         if self.game_config.get("run_without_steam") and game_binary:
             # Start without steam
             if not system.path_exists(game_binary):
-                raise FileNotFoundError(2, "Game binary not found", game_binary)
+                raise FileNotFoundError(2, _("Game binary not found"), game_binary)
             command = [self.get_executable(), game_binary]
             for arg in shlex.split(game_args):
                 command.append(arg)
@@ -459,19 +459,19 @@ class winesteam(wine.wine):
             return {"error": "FILE_NOT_FOUND", "file": ex.filename}
 
     def shutdown(self):
-        logger.warning("Steam shutdown has not been implemented "
-                       "(well it was but then we removed it and now we need it back)")
+        logger.warning(_("Steam shutdown has not been implemented "
+                       "(well it was but then we removed it and now we need it back)"))
 
     def stop(self):
         if bool(self.runner_config.get("quit_steam_on_exit")):
-            logger.debug("Game configured to stop Steam on exit")
+            logger.debug(_("Game configured to stop Steam on exit"))
             self.shutdown()
             return True
         return False
 
     def remove_game_data(self, appid=None, **kwargs):
         if not self.is_installed():
-            logger.warning("Trying to remove a winesteam game but it's not installed.")
+            logger.warning(_("Trying to remove a winesteam game but it's not installed."))
             return False
         self.force_shutdown()
         thread = MonitoredCommand(

@@ -60,8 +60,6 @@ class Application(Gtk.Application):
             flags=Gio.ApplicationFlags.HANDLES_COMMAND_LINE,
         )
         logger.info("Running Lutris %s", settings.VERSION)
-        gettext.bindtextdomain("lutris", "/usr/share/locale")
-        gettext.textdomain("lutris")
 
         check_config()
         migrate()
@@ -71,7 +69,7 @@ class Application(Gtk.Application):
         check_vulkan()
         init_dxvk_versions()
 
-        GLib.set_application_name(_("Lutris"))
+        GLib.set_application_name("Lutris")
         self.running_games = []
         self.window = None
         self.tray = None
@@ -79,7 +77,7 @@ class Application(Gtk.Application):
 
         if os.geteuid() == 0:
             ErrorDialog(
-                "Running Lutris as root is not recommended and may cause unexpected issues"
+                _("Running Lutris as root is not recommended and may cause unexpected issues")
             )
 
         try:
@@ -93,22 +91,22 @@ class Application(Gtk.Application):
             self.add_arguments()
         else:
             ErrorDialog(
-                "Your Linux distribution is too old, Lutris won't function properly"
+                _("Your Linux distribution is too old, Lutris won't function properly")
             )
 
     def add_arguments(self):
         if hasattr(self, "set_option_context_summary"):
             self.set_option_context_summary(
-                "Run a game directly by adding the parameter lutris:rungame/game-identifier.\n"
+                _("Run a game directly by adding the parameter lutris:rungame/game-identifier.\n"
                 "If several games share the same identifier you can use the numerical ID "
                 "(displayed when running lutris --list-games) and add "
                 "lutris:rungameid/numerical-id.\n"
-                "To install a game, add lutris:install/game-identifier."
+                "To install a game, add lutris:install/game-identifier.")
             )
         else:
             logger.warning(
-                "GLib.set_option_context_summary missing, "
-                "was added in GLib 2.56 (Released 2018-03-12)"
+                _("GLib.set_option_context_summary missing, "
+                "was added in GLib 2.56 (Released 2018-03-12)")
             )
         self.add_main_option(
             "version",
@@ -286,7 +284,7 @@ class Application(Gtk.Application):
             url = options.lookup_value(GLib.OPTION_REMAINING)
             installer_info = self.get_lutris_action(url)
         except ValueError:
-            self._print(command_line, "%s is not a valid URI" % url.get_strv())
+            self._print(command_line, _("%s is not a valid URI") % url.get_strv())
             return 1
         game_slug = installer_info["game_slug"]
         action = installer_info["action"]
@@ -298,7 +296,7 @@ class Application(Gtk.Application):
             installer_file = os.path.abspath(installer_file)
             action = "install"
             if not os.path.isfile(installer_file):
-                self._print(command_line, "No such file: %s" % installer_file)
+                self._print(command_line, _("No such file: %s") % installer_file)
                 return 1
 
         # Graphical commands
@@ -351,7 +349,7 @@ class Application(Gtk.Application):
             )
         elif action in ("rungame", "rungameid"):
             if not db_game or not db_game["id"]:
-                logger.warning("No game found in library")
+                logger.warning(_("No game found in library"))
                 return 0
 
             logger.info("Launching %s", db_game["name"])
@@ -368,7 +366,7 @@ class Application(Gtk.Application):
 
     def launch(self, game):
         """Launch a Lutris game"""
-        logger.debug("Adding game %s (%s) to running games", game, id(game))
+        logger.debug(_("Adding game %s (%s) to running games"), game, id(game))
         self.running_games.append(game)
         game.play()
 
@@ -439,7 +437,7 @@ class Application(Gtk.Application):
         """Execute an arbitrary command in a Lutris context
         with the runtime enabled and monitored by a MonitoredCommand
         """
-        logger.info("Running command '%s'", command)
+        logger.info(_("Running command '%s'"), command)
         monitored_command = exec_command(command)
         try:
             GLib.MainLoop().run()
@@ -453,7 +451,7 @@ class Application(Gtk.Application):
                 self._print(command_line, path)
 
     def do_shutdown(self):
-        logger.info("Shutting down Lutris")
+        logger.info(_("Shutting down Lutris"))
         Gtk.Application.do_shutdown(self)
         if self.window:
             self.window.destroy()

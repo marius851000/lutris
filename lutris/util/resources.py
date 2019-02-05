@@ -2,6 +2,7 @@
 import os
 import concurrent.futures
 from urllib.parse import urlparse, parse_qsl
+from gettext import gettext as _
 from gi.repository import GLib
 
 from lutris import settings
@@ -46,7 +47,7 @@ def fetch_icons(lutris_media, callback):
             try:
                 future.result()
             except Exception as ex:  # pylint: disable=broad-except
-                logger.exception('%r generated an exception: %s', slug, ex)
+                logger.exception(_('%r generated an exception: %s'), slug, ex)
             else:
                 GLib.idle_add(callback, slug, priority=GLib.PRIORITY_LOW)
 
@@ -87,7 +88,7 @@ def parse_installer_url(url):
     try:
         parsed_url = urlparse(url, scheme="lutris")
     except Exception:  # pylint: disable=broad-except
-        logger.warning("Unable to parse url %s", url)
+        logger.warning(_("Unable to parse url %s"), url)
         return False
     if parsed_url.scheme != "lutris":
         return False
@@ -106,7 +107,7 @@ def parse_installer_url(url):
     elif len(url_parts) == 1:
         game_slug = url_parts[0]
     else:
-        raise ValueError("Invalid lutris url %s" % url)
+        raise ValueError(_("Invalid lutris url %s") % url)
 
     revision = None
     if parsed_url.query:

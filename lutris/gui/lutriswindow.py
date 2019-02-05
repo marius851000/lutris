@@ -448,7 +448,7 @@ class LutrisWindow(Gtk.ApplicationWindow):
                 for game_id in updated_ids.difference(added_ids):
                     self.game_store.update_game_by_id(game_id)
             else:
-                logger.error("No results returned when syncing the library")
+                logger.error(_("No results returned when syncing the library"))
             self.sync_label.set_label("Synchronize library")
             self.sync_spinner.props.active = False
             self.sync_button.set_sensitive(True)
@@ -503,7 +503,7 @@ class LutrisWindow(Gtk.ApplicationWindow):
         self.sync_button.props.visible = is_connected
         if is_connected:
             self.connection_label.set_text(username)
-            logger.info("Connected to lutris.net as %s", username)
+            logger.info(_("Connected to lutris.net as %s"), username)
 
     @GtkTemplate.Callback
     def on_resize(self, widget, *_args):
@@ -591,7 +591,7 @@ class LutrisWindow(Gtk.ApplicationWindow):
 
     def on_game_error(self, game, error):
         """Called when a game has sent the 'game-error' signal"""
-        logger.error("%s crashed", game)
+        logger.error(_("%s crashed"), game)
         dialogs.ErrorDialog(error, parent=self)
 
     def game_selection_changed(self, widget):
@@ -610,7 +610,7 @@ class LutrisWindow(Gtk.ApplicationWindow):
     def on_game_installed(self, view, game_id):
         """Callback to handle newly installed games"""
         if not isinstance(game_id, int):
-            raise ValueError("game_id must be an int")
+            raise ValueError(_("game_id must be an int"))
         self.game_store.add_or_update(game_id)
         self.sidebar_listbox.update()
 

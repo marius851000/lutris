@@ -1,5 +1,6 @@
 import os
 import sys
+from gettext import gettext as _
 from lutris import settings
 from lutris.util import system
 
@@ -21,7 +22,7 @@ def get():
             os.path.dirname(os.path.dirname(lutris_module)), "share/lutris"
         )
     if not system.path_exists(data_path):
-        raise IOError("data_path can't be found at : %s" % data_path)
+        raise IOError(_("data_path can't be found at : %s") % data_path)
     return data_path
 
 

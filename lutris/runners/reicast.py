@@ -11,8 +11,8 @@ from gettext import gettext as _
 
 class reicast(Runner):
     human_name = "Reicast"
-    description = "Sega Dreamcast emulator"
-    platforms = ["Sega Dreamcast"]
+    description = _("Sega Dreamcast emulator")
+    platforms = [_("Sega Dreamcast")]
     runner_executable = "reicast/reicast.elf"
 
     joypads = None
@@ -21,8 +21,8 @@ class reicast(Runner):
         {
             "option": "iso",
             "type": "file",
-            "label": "Disc image file",
-            "help": ("The game data.\n" "Supported formats: ISO, CDI"),
+            "label": _("Disc image file"),
+            "help": _("The game data.\n" "Supported formats: ISO, CDI"),
         }
     ]
 
@@ -33,34 +33,34 @@ class reicast(Runner):
             {
                 "option": "fullscreen",
                 "type": "bool",
-                "label": "Fullscreen",
+                "label": _("Fullscreen"),
                 "default": False,
             },
             {
                 "option": "device_id_1",
                 "type": "choice",
-                "label": "Joypad 1",
+                "label": _("Joypad 1"),
                 "choices": self.get_joypads,
                 "default": "-1",
             },
             {
                 "option": "device_id_2",
                 "type": "choice",
-                "label": "Joypad 2",
+                "label": _("Joypad 2"),
                 "choices": self.get_joypads,
                 "default": "-1",
             },
             {
                 "option": "device_id_3",
                 "type": "choice",
-                "label": "Joypad 3",
+                "label": _("Joypad 3"),
                 "choices": self.get_joypads,
                 "default": "-1",
             },
             {
                 "option": "device_id_4",
                 "type": "choice",
-                "label": "Joypad 4",
+                "label": _("Joypad 4"),
                 "choices": self.get_joypads,
                 "default": "-1",
             },
@@ -75,7 +75,7 @@ class reicast(Runner):
 
             system.create_folder("~/.reicast/data")
             NoticeDialog(
-                "You have to copy valid BIOS files to ~/.reicast/data " "before playing"
+                _("You have to copy valid BIOS files to ~/.reicast/data " "before playing")
             )
 
         super(reicast, self).install(version, downloader, on_runner_installed)

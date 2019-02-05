@@ -1,14 +1,15 @@
 """Internal settings."""
 import os
+from gettext import gettext as _
 from gi.repository import GLib
 from lutris.util.settings import SettingsIO
 from lutris import __version__
 
-PROJECT = "Lutris"
+PROJECT = _("Lutris")
 VERSION = __version__
-COPYRIGHT = "(c) 2010-2018 Lutris Gaming Platform"
+COPYRIGHT = _("(c) 2010-2018 Lutris Gaming Platform")
 AUTHORS = [
-    "The Lutris team"
+    _("The Lutris team")
 ]
 
 # Paths

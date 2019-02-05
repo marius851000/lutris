@@ -2,6 +2,7 @@
 integration once in a while, it could prove itself useful."""
 import os
 import sys
+from gettext import gettext as _
 
 from gi.repository import Gio
 
@@ -21,4 +22,4 @@ def register_url_handler():
         settings = Gio.Settings.new(base_key)
         settings.set_string("command", executable)
     else:
-        logger.warning("Schema not installed, cannot register url-handler")
+        logger.warning(_("Schema not installed, cannot register url-handler"))

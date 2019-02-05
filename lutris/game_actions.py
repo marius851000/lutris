@@ -1,6 +1,7 @@
 """Handle game specific actions"""
 import os
 import signal
+from gettext import gettext as _
 from gi.repository import Gio
 from lutris.command import MonitoredCommand
 from lutris.game import Game
@@ -50,63 +51,63 @@ class GameActions:
         """Return a list of game actions and their callbacks"""
         return [
             (
-                "play", "Play",
+                "play", _("Play"),
                 self.on_game_run
             ),
             (
-                "stop", "Stop",
+                "stop", _("Stop"),
                 self.on_stop
             ),
             (
-                "show_logs", "Show logs",
+                "show_logs", _("Show logs"),
                 self.on_show_logs
             ),
             (
-                "install", "Install",
+                "install", _("Install"),
                 self.on_install_clicked
             ),
             (
-                "add", "Add installed game",
+                "add", _("Add installed game"),
                 self.on_add_manually
             ),
             (
-                "configure", "Configure",
+                "configure", _("Configure"),
                 self.on_edit_game_configuration
             ),
             (
-                "execute-script", "Execute script",
+                "execute-script", _("Execute script"),
                 self.on_execute_script_clicked
             ),
             (
-                "browse", "Browse files",
+                "browse", _("Browse files"),
                 self.on_browse_files
             ),
             (
-                "desktop-shortcut", "Create desktop shortcut",
+                "desktop-shortcut", _("Create desktop shortcut"),
                 self.on_create_desktop_shortcut,
             ),
             (
-                "rm-desktop-shortcut", "Delete desktop shortcut",
+                "rm-desktop-shortcut", _("Delete desktop shortcut"),
                 self.on_remove_desktop_shortcut,
             ),
             (
-                "menu-shortcut", "Create application menu shortcut",
+                "menu-shortcut", _("Create application menu shortcut"),
                 self.on_create_menu_shortcut,
             ),
             (
-                "rm-menu-shortcut", "Delete application menu shortcut",
+                "rm-menu-shortcut", _("Delete application menu shortcut"),
                 self.on_remove_menu_shortcut,
             ),
             (
-                "install_more", "Install another version",
+                "install_more", _("Install another version"),
                 self.on_install_clicked
             ),
             (
-                "remove", "Remove",
+                "remove", _("Remove"),
                 self.on_remove_game
             ),
             (
-                "view", "View on Lutris.net",
+                "view", _("View on Lutris.net"),
                 self.on_view_game
             ),
         ]
@@ -163,14 +164,14 @@ class GameActions:
                 self.application.running_games.index(self.game)
             )
         except ValueError:
-            logger.warning("%s not in running game list", self.game_id)
+            logger.warning(_("%s not in running game list"), self.game_id)
             return
 
         try:
             os.kill(game.game_thread.game_process.pid, signal.SIGTERM)
         except ProcessLookupError:
             pass
-        logger.debug("Removed game with ID %s from running games", self.game_id)
+        logger.debug(_("Removed game with ID %s from running games"), self.game_id)
 
     def on_show_logs(self, _widget):
         """Display game log in a LogDialog"""
@@ -225,17 +226,17 @@ class GameActions:
                 include_processes=[os.path.basename(manual_command)],
                 cwd=self.game.directory,
             ).start()
-            logger.info("Running %s in the background", manual_command)
+            logger.info(_("Running %s in the background"), manual_command)
 
     def on_browse_files(self, _widget):
         """Callback to open a game folder in the file browser"""
         path = self.game.get_browse_dir()
         if not path:
-            dialogs.NoticeDialog("This game has no installation directory")
+            dialogs.NoticeDialog(_("This game has no installation directory"))
         elif path_exists(path):
             open_uri("file://%s" % path)
         else:
-            dialogs.NoticeDialog("Can't open %s \nThe folder doesn't exist." % path)
+            dialogs.NoticeDialog(_("Can't open %s \nThe folder doesn't exist.") % path)
 
     def on_create_menu_shortcut(self, *_args):
         """Add the selected game to the system's Games menu."""

@@ -3,7 +3,7 @@ from gi.repository import Gtk
 
 from lutris import pga
 from lutris.gui.widgets.utils import get_pixbuf_for_game
-
+from gettext import gettext as _
 
 class LutrisTray(Gtk.StatusIcon):
     """Lutris tray icon"""
@@ -29,7 +29,7 @@ class LutrisTray(Gtk.StatusIcon):
         self.menu.append(Gtk.SeparatorMenuItem())
 
         quit_menu = Gtk.MenuItem()
-        quit_menu.set_label("Quit")
+        quit_menu.set_label(_("Quit"))
         quit_menu.connect("activate", self.on_quit_application)
         self.menu.append(quit_menu)
         self.menu.show_all()

@@ -10,15 +10,15 @@ RESIDUALVM_CONFIG_FILE = os.path.join(os.path.expanduser("~"), ".residualvmrc")
 
 class residualvm(Runner):
     human_name = "ResidualVM"
-    platforms = ["Linux"]  # TODO
-    description = (
+    platforms = [_("Linux")]  # TODO
+    description = _(
         "Runs various 3D point-and-click adventure games, "
         "like Grim Fandango and Escape from Monkey Island."
     )
     runner_executable = "residualvm/residualvm"
     game_options = [
-        {"option": "game_id", "type": "string", "label": "Game identifier"},
-        {"option": "path", "type": "directory_chooser", "label": "Game files location"},
+        {"option": "game_id", "type": "string", "label": _("Game identifier")},
+        {"option": "path", "type": "directory_chooser", "label": _("Game files location")},
         {
             "option": "subtitles",
             "label": _("Enable subtitles (if the game has voice)"),
@@ -35,9 +35,9 @@ class residualvm(Runner):
         },
         {
             "option": "renderer",
-            "label": "Renderer",
+            "label": _("Renderer"),
             "type": "choice",
-            "choices": (("OpenGL", "0"), ("OpenGL shaders", "1"), ("Software", "2")),
+            "choices": ((_("OpenGL"), "0"), (_("OpenGL shaders"), "1"), (_("Software"), "2")),
             "default": "OpenGL",
         },
         {

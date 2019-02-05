@@ -1,3 +1,4 @@
+from gettext import gettext as _
 from lutris.util import system
 
 
@@ -6,9 +7,9 @@ class RetroConfig:
 
     def __init__(self, config_path):
         if not config_path:
-            raise ValueError("Config path is mandatory")
+            raise ValueError(_("Config path is mandatory"))
         if not system.path_exists(config_path):
-            raise OSError("Specified config file {} does not exist".format(config_path))
+            raise OSError(_("Specified config file {} does not exist").format(config_path))
         self.config_path = config_path
         self.config = []
         with open(config_path, "r") as config_file:

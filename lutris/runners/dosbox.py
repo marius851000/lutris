@@ -15,7 +15,7 @@ class dosbox(Runner):
         {
             "option": "main_file",
             "type": "file",
-            "label": "Main file",
+            "label": _("Main file"),
             "help": (
                 "The CONF, EXE, COM or BAT file to launch.\n"
                 "It can be left blank if the launch of the executable is "
@@ -25,25 +25,25 @@ class dosbox(Runner):
         {
             "option": "config_file",
             "type": "file",
-            "label": "Configuration file",
+            "label": _("Configuration file"),
             "help": (
-                "Start Dosbox with the options specified in this file. \n"
+                _("Start Dosbox with the options specified in this file. \n"
                 "It can have a section in which you can put commands "
                 "to execute on startup. Read Dosbox's documentation "
-                "for more information."
+                "for more information.")
             ),
         },
         {
             "option": "args",
             "type": "string",
-            "label": "Command arguments",
-            "help": ("Command line arguments used when launching " "DOSBox"),
+            "label": _("Command arguments"),
+            "help": _("Command line arguments used when launching " "DOSBox"),
         },
         {
             "option": "working_dir",
             "type": "directory_chooser",
-            "label": "Working directory",
-            "help": (
+            "label": _("Working directory"),
+            "help": _(
                 "The location where the game is run from.\n"
                 "By default, Lutris uses the directory of the "
                 "executable."
@@ -78,7 +78,7 @@ class dosbox(Runner):
             "type": "choice",
             "choices": scaler_modes,
             "default": "normal3x",
-            "help": (
+            "help": _(
                 "The algorithm used to scale up the game's base "
                 "resolution, resulting in different visual styles. "
             ),
@@ -88,14 +88,14 @@ class dosbox(Runner):
             "label": _("Exit Dosbox with the game"),
             "type": "bool",
             "default": True,
-            "help": "Shut down Dosbox when the game is quit.",
+            "help": _("Shut down Dosbox when the game is quit."),
         },
         {
             "option": "fullscreen",
             "label": _("Open game in fullscreen"),
             "type": "bool",
             "default": False,
-            "help": "Tells Dosbox to launch the game in fullscreen.",
+            "help": _("Tells Dosbox to launch the game in fullscreen."),
         },
     ]
 

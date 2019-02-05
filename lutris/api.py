@@ -10,7 +10,7 @@ import socket
 from lutris import settings
 from lutris.util import http, system
 from lutris.util.log import logger
-
+from gettext import gettext as _
 
 API_KEY_FILE_PATH = os.path.join(settings.CACHE_DIR, "auth-token")
 
@@ -32,7 +32,7 @@ def connect(username, password):
     try:
         request = urllib.request.urlopen(login_url, credentials, 10)
     except (socket.timeout, urllib.error.URLError) as ex:
-        logger.error("Unable to connect to server (%s): %s", login_url, ex)
+        logger.error(_("Unable to connect to server (%s): %s"), login_url, ex)
         return False
     response = json.loads(request.read().decode())
     if "token" in response:
@@ -51,7 +51,7 @@ def disconnect():
 
 def get_library():
     """Return the remote library as a list of dicts."""
-    logger.debug("Fetching game library")
+    logger.debug(_("Fetching game library"))
     credentials = read_api_key()
     if not credentials:
         return []
@@ -91,13 +91,13 @@ def get_game_api_page(game_ids, page="1", query_type="games"):
     if game_ids:
         payload = json.dumps({query_type: game_ids, "page": page}).encode("utf-8")
     else:
-        raise ValueError("No game id provided will fetch all games from the API")
+        raise ValueError(_("No game id provided will fetch all games from the API"))
     response.get(data=payload)
     response_data = response.json
-    logger.debug("Loaded %s games from page %s", len(response_data.get("results")), page)
+    logger.debug(_("Loaded %s games from page %s"), len(response_data.get("results")), page)
 
     if not response_data:
-        logger.warning("Unable to get games from API, status code: %s", response.status_code)
+        logger.warning(_("Unable to get games from API, status code: %s"), response.status_code)
         return None
     return response_data
 
@@ -111,12 +111,12 @@ def get_api_games(game_slugs=None, page="1", query_type="games"):
         if page_match:
             next_page = page_match.group(1)
         else:
-            logger.error("No page found in %s", response_data["next"])
+            logger.error(_("No page found in %s"), response_data["next"])
             break
-        logger.debug("Current page is %s, next page is %s", page, next_page)
+        logger.debug(_("Current page is %s, next page is %s"), page, next_page)
         response_data = get_game_api_page(game_slugs, page=next_page, query_type=query_type)
         if not response_data.get("results"):
-            logger.warning("Unable to get response for page %s", next_page)
+            logger.warning(_("Unable to get response for page %s"), next_page)
             break
         else:
             results += response_data.get("results")

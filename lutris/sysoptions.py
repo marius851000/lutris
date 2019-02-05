@@ -9,11 +9,11 @@ from gettext import gettext as _
 
 def get_optirun_choices():
     """Return menu choices (label, value) for Optimus"""
-    choices = [("Off", "off")]
+    choices = [(_("Off"), "off")]
     if system.find_executable("primusrun"):
-        choices.append(("primusrun", "primusrun"))
+        choices.append((_("primusrun"), "primusrun"))
     if system.find_executable("optirun"):
-        choices.append(("optirun/virtualgl", "optirun"))
+        choices.append((_("optirun/virtualgl"), "optirun"))
     return choices
 
 
@@ -327,10 +327,10 @@ system_options = [  # pylint: disable=invalid-name
         "label": _("Use Xephyr"),
         "type": "choice",
         "choices": (
-            ("Off", "off"),
-            ("8BPP (256 colors)", "8bpp"),
-            ("16BPP (65536 colors)", "16bpp"),
-            ("24BPP (16M colors)", "24bpp"),
+            (_("Off"), "off"),
+            (_("8BPP (256 colors)"), "8bpp"),
+            (_("16BPP (65536 colors)"), "16bpp"),
+            (_("24BPP (16M colors)"), "24bpp"),
         ),
         "default": "off",
         "advanced": True,

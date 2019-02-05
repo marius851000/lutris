@@ -1,6 +1,7 @@
 import os
 import time
 import queue
+from gettext import gettext as _
 
 from lutris.util import http, jobs
 from lutris.util.log import logger
@@ -47,7 +48,7 @@ class Downloader:
 
     def start(self):
         """Start download job."""
-        logger.debug("Starting download of:\n %s", self.url)
+        logger.debug(_("Starting download of:\n %s"), self.url)
         self.state = self.DOWNLOADING
         self.last_check_time = time.time()
         if self.overwrite and os.path.isfile(self.dest):
@@ -76,7 +77,7 @@ class Downloader:
 
     def cancel(self):
         """Request download stop and remove destination file."""
-        logger.debug("Download of %s cancelled", self.url)
+        logger.debug(_("Download of %s cancelled"), self.url)
         self.state = self.CANCELLED
         if self.stop_request:
             self.stop_request.set()
@@ -95,11 +96,11 @@ class Downloader:
         if self.state == self.CANCELLED:
             return
 
-        logger.debug("Finished downloading %s", self.url)
+        logger.debug(_("Finished downloading %s"), self.url)
         while self.queue.qsize():
             self.check_progress()
         if not self.downloaded_size:
-            logger.warning("Downloaded file is empty")
+            logger.warning(_("Downloaded file is empty"))
 
         if not self.full_size:
             self.progress_fraction = 1.0

@@ -11,83 +11,83 @@ from gettext import gettext as _
 # Second element is the core identifier
 # Third element is the platform's long name
 LIBRETRO_CORES = [
-    ("4do (3DO)", "4do", "3DO"),
-    ("atari800 (Atari 800/5200)", "atari800", "Atari 800/5200"),
-    ("blueMSX (MSX/MSX2/MSX2+)", "bluemsx", "MSX/MSX2/MSX2+"),
-    ("Caprice32 (Amstrad CPC)", "cap32", "Amstrad CPC"),
-    ("ChaiLove", "chailove", "ChaiLove"),
-    ("Citra (Nintendo 3DS)", "citra", "Nintendo 3DS"),
-    ("Citra Canary (Nintendo 3DS)", "citra_canary", "Nintendo 3DS"),
-    ("CrocoDS (Amstrad CPC)", "crocods", "Amstrad CPC"),
-    ("Daphne (Arcade)", "daphne", "Arcade"),
-    ("DesmuME (Nintendo DS)", "desmume", "Nintendo DS"),
-    ("Dolphin (Nintendo Wii/Gamecube)", "dolphin", "Nintendo Wii/Gamecube"),
-    ("EightyOne (Sinclair ZX81)", "81", "Sinclair ZX81"),
-    ("FB Alpha (Arcade)", "fbalpha", "Arcade"),
-    ("FCEUmm (Nintendo Entertainment System)", "fceumm", "Nintendo NES"),
-    ("fMSX (MSX/MSX2/MSX2+)", "fmsx", "MSX/MSX2/MSX2+"),
-    ("FreeJ2ME (J2ME)", "freej2me", "J2ME"),
-    ("Fuse (ZX Spectrum)", "fuse", "Sinclair ZX Spectrum"),
-    ("Gambatte (Game Boy Color)", "gambatte", "Nintendo Game Boy Color"),
-    ("Gearboy (Game Boy Color)", "gearboy", "Nintendo Game Boy Color"),
+    (_("4do (3DO)"), "4do", _("3DO")),
+    (_("atari800 (Atari 800/5200)"), "atari800", _("Atari 800/5200")),
+    (_("blueMSX (MSX/MSX2/MSX2+)"), "bluemsx", _("MSX/MSX2/MSX2+")),
+    (_("Caprice32 (Amstrad CPC)"), "cap32", _("Amstrad CPC")),
+    (_("ChaiLove"), "chailove", _("ChaiLove")),
+    (_("Citra (Nintendo 3DS)"), "citra", _("Nintendo 3DS")),
+    (_("Citra Canary (Nintendo 3DS)"), "citra_canary", _("Nintendo 3DS")),
+    (_("CrocoDS (Amstrad CPC)"), "crocods", _("Amstrad CPC")),
+    (_("Daphne (Arcade)"), "daphne", _("Arcade")),
+    (_("DesmuME (Nintendo DS)"), "desmume", _("Nintendo DS")),
+    (_("Dolphin (Nintendo Wii/Gamecube)"), "dolphin", _("Nintendo Wii/Gamecube")),
+    (_("EightyOne (Sinclair ZX81)"), "81", _("Sinclair ZX81")),
+    (_("FB Alpha (Arcade)"), "fbalpha", _("Arcade")),
+    (_("FCEUmm (Nintendo Entertainment System)"), "fceumm", _("Nintendo NES")),
+    (_("fMSX (MSX/MSX2/MSX2+)"), "fmsx", _("MSX/MSX2/MSX2+")),
+    (_("FreeJ2ME (J2ME)"), "freej2me", _("J2ME")),
+    (_("Fuse (ZX Spectrum)"), "fuse", _("Sinclair ZX Spectrum")),
+    (_("Gambatte (Game Boy Color)"), "gambatte", _("Nintendo Game Boy Color")),
+    (_("Gearboy (Game Boy Color)"), "gearboy", _("Nintendo Game Boy Color")),
     (
-        "Gearsystem (Sega Maste System/Gamegear)",
+        _("Gearsystem (Sega Maste System/Gamegear)"),
         "gearsystem",
-        "Sega Maste System/Gamegear",
+        _("Sega Maste System/Gamegear"),
     ),
-    ("Genesis Plus GX (Sega Genesis)", "genesis_plus_gx", "Sega Genesis"),
-    ("Handy (Atari Lynx)", "handy", "Atari Lynx"),
-    ("Hatari (Atari ST/STE/TT/Falcon)", "hatari", "Atari ST/STE/TT/Falcon"),
-    ("higan accuracy(Super Nintendo)", "higan_sfc", "Nintendo SNES"),
-    ("higan balanced(Super Nintendo)", "higan_sfc_balanced", "Nintendo SNES"),
-    ("Kronos (Sega Saturn)", "kronos", "Sega Saturn"),
-    ("MAME (Arcade)", "mame", "Arcade"),
-    ("Mednafen GBA (Game Boy Advance)", "mednafen_gba", "Nintendo Game Boy Advance"),
-    ("Mednafen NGP (SNK Neo Geo Pocket)", "mednafen_ngp", "SNK Neo Geo Pocket"),
+    (_("Genesis Plus GX (Sega Genesis)"), "genesis_plus_gx", _("Sega Genesis")),
+    (_("Handy (Atari Lynx)"), "handy", _("Atari Lynx")),
+    (_("Hatari (Atari ST/STE/TT/Falcon)"), "hatari", _("Atari ST/STE/TT/Falcon")),
+    (_("higan accuracy(Super Nintendo)"), "higan_sfc", _("Nintendo SNES")),
+    (_("higan balanced(Super Nintendo)"), "higan_sfc_balanced", _("Nintendo SNES")),
+    (_("Kronos (Sega Saturn)"), "kronos", _("Sega Saturn")),
+    (_("MAME (Arcade)"), "mame", _("Arcade")),
+    (_("Mednafen GBA (Game Boy Advance)"), "mednafen_gba", _("Nintendo Game Boy Advance")),
+    (_("Mednafen NGP (SNK Neo Geo Pocket)"), "mednafen_ngp", _("SNK Neo Geo Pocket")),
     (
-        "Mednafen PCE FAST (TurboGrafx-16)",
+        _("Mednafen PCE FAST (TurboGrafx-16)"),
         "mednafen_pce_fast",
-        "NEC PC Engine (TurboGrafx-16)",
+        _("NEC PC Engine (TurboGrafx-16)"),
     ),
-    ("Mednafen PCFX (NEC PC-FX)", "mednafen_pcfx", "NEC PC-FX"),
-    ("Mednafen Saturn (Sega Saturn)", "mednafen_saturn", "Sega Saturn"),
+    (_("Mednafen PCFX (NEC PC-FX)"), "mednafen_pcfx", _("NEC PC-FX")),
+    (_("Mednafen Saturn (Sega Saturn)"), "mednafen_saturn", _("Sega Saturn")),
     (
-        "Mednafen SGX (NEC PC Engine SuperGrafx)",
+        _("Mednafen SGX (NEC PC Engine SuperGrafx)"),
         "mednafen_supergrafx",
-        "NEC PC Engine (SuperGrafx)",
+        _("NEC PC Engine (SuperGrafx)"),
     ),
-    ("Mednafen WSWAN (Bandai WonderSwan)", "mednafen_wswan", "Bandai WonderSwan"),
-    ("Mednafen PSX (Sony Playstation)", "mednafen_psx", "Sony PlayStation"),
-    ("Mednafen PSX OpenGL (Sony Playstation)", "mednafen_psx_hw", "Sony PlayStation"),
-    ("Mesen (Nintendo Entertainment System)", "mesen", "Nintendo NES"),
-    ("mGBA (Game Boy Advance)", "mgba", "Nintendo Game Boy Advance"),
-    ("Mupen64Plus (Nintendo 64)", "mupen64plus", "Nintendo N64"),
-    ("Nestopia (Nintendo Entertainment System)", "nestopia", "Nintendo NES"),
-    ("Neko Project 2 (NEC PC-98)", "nekop2", "NEC PC-98"),
-    ("Neko Project II kai (NEC PC-98)", "np2kai", "NEC PC-98"),
-    ("O2EM (Magnavox Odyssey²)", "o2em", "Magnavox Odyssey²"),
-    ("ParaLLEl N64 (Nintendo 64)", "parallel_n64", "Nintendo N64"),
-    ("PCSX Rearmed (Sony Playstation)", "pcsx_rearmed", "Sony PlayStation"),
-    ("PicoDrive (Sega Genesis)", "picodrive", "Sega Genesis"),
-    ("Portable SHARP X68000 Emulator (SHARP X68000)", "px68k", "Sharp X68000"),
-    ("PPSSPP (PlayStation Portable)", "ppsspp", "Sony PlayStation Portable"),
-    ("ProSystem (Atari 7800)", "prosystem", "Atari 7800"),
-    ("Redream (Sega Dreamcast)", "redream", "Sega Dreamcast"),
-    ("Reicast (Sega Dreamcast)", "reicast", "Sega Dreamcast"),
-    ("RPG Maker 2000/2003 (EasyRPG)", "easyrpg", "RPG Maker 2000/2003 Game Engine"),
-    ("Snes9x (Super Nintendo)", "snes9x", "Nintendo SNES"),
-    ("Snes9x2010 (Super Nintendo)", "snes9x2010", "Nintendo SNES"),
-    ("Stella (Atari 2600)", "stella", "Atari 2600"),
-    ("Uzem (Uzebox)", "uzem", "Uzebox"),
-    ("VecX (Vectrex)", "vecx", "Vectrex"),
-    ("Yabause (Sega Saturn)", "yabause", "Sega Saturn"),
-    ("VBA Next (Game Boy Advance)", "vba_next", "Nintendo Game Boy Advance"),
-    ("VBA-M (Game Boy Advance)", "vbam", "Nintendo Game Boy Advance"),
-    ("Virtual Jaguar (Atari Jaguar)", "virtualjaguar", "Atari Jaguar"),
-    ("VICE (Commodore 128)", "vice_x128", "Commodore 128"),
-    ("VICE (Commodore 16/Plus/4)", "vice_xplus4", "Commodore 16/Plus/4"),
-    ("VICE (Commodore 64)", "vice_x64", "Commodore 64"),
-    ("VICE (Commodore VIC-20)", "vice_xvic", "Commodore VIC-20"),
+    (_("Mednafen WSWAN (Bandai WonderSwan)"), "mednafen_wswan", _("Bandai WonderSwan")),
+    (_("Mednafen PSX (Sony Playstation)"), "mednafen_psx", _("Sony PlayStation")),
+    (_("Mednafen PSX OpenGL (Sony Playstation)"), "mednafen_psx_hw", _("Sony PlayStation")),
+    (_("Mesen (Nintendo Entertainment System)"), "mesen", _("Nintendo NES")),
+    (_("mGBA (Game Boy Advance)"), "mgba", _("Nintendo Game Boy Advance")),
+    (_("Mupen64Plus (Nintendo 64)"), "mupen64plus", _("Nintendo N64")),
+    (_("Nestopia (Nintendo Entertainment System)"), "nestopia", _("Nintendo NES")),
+    (_("Neko Project 2 (NEC PC-98)"), "nekop2", _("NEC PC-98")),
+    (_("Neko Project II kai (NEC PC-98)"), "np2kai", _("NEC PC-98")),
+    (_("O2EM (Magnavox Odyssey²)"), "o2em", _("Magnavox Odyssey²")),
+    (_("ParaLLEl N64 (Nintendo 64)"), "parallel_n64", _("Nintendo N64")),
+    (_("PCSX Rearmed (Sony Playstation)"), "pcsx_rearmed", _("Sony PlayStation")),
+    (_("PicoDrive (Sega Genesis)"), "picodrive", _("Sega Genesis")),
+    (_("Portable SHARP X68000 Emulator (SHARP X68000)"), "px68k", _("Sharp X68000")),
+    (_("PPSSPP (PlayStation Portable)"), "ppsspp", _("Sony PlayStation Portable")),
+    (_("ProSystem (Atari 7800)"), "prosystem", _("Atari 7800")),
+    (_("Redream (Sega Dreamcast)"), "redream", _("Sega Dreamcast")),
+    (_("Reicast (Sega Dreamcast)"), "reicast", _("Sega Dreamcast")),
+    (_("RPG Maker 2000/2003 (EasyRPG)"), "easyrpg", _("RPG Maker 2000/2003 Game Engine")),
+    (_("Snes9x (Super Nintendo)"), "snes9x", _("Nintendo SNES")),
+    (_("Snes9x2010 (Super Nintendo)"), "snes9x2010", _("Nintendo SNES")),
+    (_("Stella (Atari 2600)"), "stella", _("Atari 2600")),
+    (_("Uzem (Uzebox)"), "uzem", _("Uzebox")),
+    (_("VecX (Vectrex)"), "vecx", _("Vectrex")),
+    (_("Yabause (Sega Saturn)"), "yabause", _("Sega Saturn")),
+    (_("VBA Next (Game Boy Advance)"), "vba_next", _("Nintendo Game Boy Advance")),
+    (_("VBA-M (Game Boy Advance)"), "vbam", _("Nintendo Game Boy Advance")),
+    (_("Virtual Jaguar (Atari Jaguar)"), "virtualjaguar", _("Atari Jaguar")),
+    (_("VICE (Commodore 128)"), "vice_x128", _("Commodore 128")),
+    (_("VICE (Commodore 16/Plus/4)"), "vice_xplus4", _("Commodore 16/Plus/4")),
+    (_("VICE (Commodore 64)"), "vice_x64", _("Commodore 64")),
+    (_("VICE (Commodore VIC-20)"), "vice_xvic", _("Commodore VIC-20")),
 ]
 
 
@@ -110,7 +110,7 @@ class libretro(Runner):
         {
             "option": "core",
             "type": "choice",
-            "label": "Core",
+            "label": _("Core"),
             "choices": get_core_choices(),
         },
     ]
@@ -119,19 +119,19 @@ class libretro(Runner):
         {
             "option": "config_file",
             "type": "file",
-            "label": "Config file",
+            "label": _("Config file"),
             "default": get_default_config_path("retroarch.cfg"),
         },
         {
             "option": "fullscreen",
             "type": "bool",
-            "label": "Fullscreen",
+            "label": _("Fullscreen"),
             "default": True,
         },
         {
             "option": "verbose",
             "type": "bool",
-            "label": "Verbose logging",
+            "label": _("Verbose logging"),
             "default": False,
         },
     ]
@@ -208,7 +208,7 @@ class libretro(Runner):
         # Create retroarch.cfg if it doesn't exist.
         if not system.path_exists(config_file):
             f = open(config_file, "w")
-            f.write("# Lutris RetroArch Configuration")
+            f.write(_("# Lutris RetroArch Configuration"))
             f.close()
 
             # Build the default config settings.
@@ -257,16 +257,16 @@ class libretro(Runner):
                     if firmware_filename in checksums:
                         checksum = system.get_md5_hash(firmware_path)
                         if checksum == checksums[firmware_filename]:
-                            checksum_status = "Checksum good"
+                            checksum_status = _("Checksum good")
                         else:
-                            checksum_status = "Checksum failed"
+                            checksum_status = _("Checksum failed")
                     else:
-                        checksum_status = "No checksum info"
+                        checksum_status = _("No checksum info")
                     logger.info(
-                        "Firmware '%s' found (%s)", firmware_filename, checksum_status
+                        _("Firmware '%s' found (%s)"), firmware_filename, checksum_status
                     )
                 else:
-                    logger.warning("Firmware '%s' not found!", firmware_filename)
+                    logger.warning(_("Firmware '%s' not found!"), firmware_filename)
 
                 # Before closing issue #431
                 # TODO check for firmware*_opt and display an error message if
@@ -302,7 +302,7 @@ class libretro(Runner):
         if not core:
             return {
                 "error": "CUSTOM",
-                "text": "No core has been selected for this game",
+                "text": _("No core has been selected for this game"),
             }
         command.append("--libretro={}".format(self.get_core_path(core)))
 
@@ -313,7 +313,7 @@ class libretro(Runner):
         # Main file
         file = self.game_config.get("main_file")
         if not file:
-            return {"error": "CUSTOM", "text": "No game file specified"}
+            return {"error": "CUSTOM", "text": _("No game file specified")}
         if not system.path_exists(file):
             return {"error": "FILE_NOT_FOUND", "file": file}
         command.append(file)

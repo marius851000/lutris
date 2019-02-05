@@ -48,7 +48,7 @@ def set_regedit(
         reg_file.write(
             'REGEDIT4\n\n[%s]\n"%s"=%s\n' % (path, key, formatted_value[type])
         )
-    logger.debug("Setting [%s]:%s=%s", path, key, formatted_value[type])
+    logger.debug(_("Setting [%s]:%s=%s"), path, key, formatted_value[type])
     set_regedit_file(reg_path, wine_path=wine_path, prefix=prefix, arch=arch)
     os.remove(reg_path)
 
@@ -93,8 +93,8 @@ def create_prefix(
 ):
     """Create a new Wine prefix."""
     if not prefix:
-        raise ValueError("No Wine prefix path given")
-    logger.info("Creating a %s prefix in %s", arch, prefix)
+        raise ValueError(_("No Wine prefix path given"))
+    logger.info(_("Creating a %s prefix in %s"), arch, prefix)
 
     # Avoid issue of 64bit Wine refusing to create win32 prefix
     # over an existing empty folder.
@@ -105,13 +105,13 @@ def create_prefix(
         wine = import_runner("wine")
         wine_path = wine().get_executable()
     if not wine_path:
-        logger.error("Wine not found, can't create prefix")
+        logger.error(_("Wine not found, can't create prefix"))
         return
     wineboot_path = os.path.join(os.path.dirname(wine_path), "wineboot")
     if not system.path_exists(wineboot_path):
         logger.error(
-            "No wineboot executable found in %s, "
-            "your wine installation is most likely broken",
+            _("No wineboot executable found in %s, "
+            "your wine installation is most likely broken"),
             wine_path,
         )
         return
@@ -133,10 +133,10 @@ def create_prefix(
         if system.path_exists(os.path.join(prefix, "user.reg")):
             break
         if loop_index == 20:
-            logger.warning("Wine prefix creation is taking longer than expected...")
+            logger.warning(_("Wine prefix creation is taking longer than expected..."))
     if not os.path.exists(os.path.join(prefix, "user.reg")):
         logger.error(
-            "No user.reg found after prefix creation. " "Prefix might not be valid"
+            _("No user.reg found after prefix creation. " "Prefix might not be valid")
         )
         return
     logger.info("%s Prefix created in %s", arch, prefix)
@@ -145,7 +145,7 @@ def create_prefix(
     if 'steamapps/common' in prefix.lower():
         from lutris.runners.winesteam import winesteam
         runner = winesteam()
-        logger.info("Transfering Steam information from default prefix to new prefix")
+        logger.info(_("Transfering Steam information from default prefix to new prefix"))
         dest_path = '/tmp/steam.reg'
         default_prefix = runner.get_default_prefix(runner.default_arch)
         wineexec(
@@ -162,7 +162,7 @@ def create_prefix(
         os.remove(dest_path)
         steam_drive_path = os.path.join(prefix, 'dosdevices', 's:')
         if not system.path_exists(steam_drive_path):
-            logger.info("Linking Steam default prefix to drive S:")
+            logger.info(_("Linking Steam default prefix to drive S:"))
             os.symlink(os.path.join(default_prefix, 'drive_c'), steam_drive_path)
 
 
@@ -179,15 +179,15 @@ def winekill(prefix, arch=WINE_DEFAULT_ARCH, wine_path=None, env=None, initial_p
         env = {"WINEARCH": arch, "WINEPREFIX": prefix}
     command = [os.path.join(wine_root, "wineserver"), "-k"]
 
-    logger.debug("Killing all wine processes: %s", command)
-    logger.debug("\tWine prefix: %s", prefix)
-    logger.debug("\tWine arch: %s", arch)
+    logger.debug(_("Killing all wine processes: %s"), command)
+    logger.debug(_("\tWine prefix: %s"), prefix)
+    logger.debug(_("\tWine arch: %s"), arch)
     if initial_pids:
-        logger.debug("\tInitial pids: %s", initial_pids)
+        logger.debug(_("\tInitial pids: %s"), initial_pids)
 
     system.execute(command, env=env, quiet=True)
 
-    logger.debug("Waiting for wine processes to terminate")
+    logger.debug(_("Waiting for wine processes to terminate"))
     # Wineserver needs time to terminate processes
     num_cycles = 0
     while True:
@@ -200,12 +200,12 @@ def winekill(prefix, arch=WINE_DEFAULT_ARCH, wine_path=None, env=None, initial_p
             break
         if num_cycles > 20:
             logger.warning(
-                "Some wine processes are still running: %s",
+                _("Some wine processes are still running: %s"),
                 ", ".join(running_processes),
             )
             break
         time.sleep(0.1)
-    logger.debug("Done waiting.")
+    logger.debug(_("Done waiting."))
 
 
 def wineexec(
@@ -250,7 +250,7 @@ def wineexec(
         wine = import_runner("wine")
         wine_path = wine().get_executable()
     if not wine_path:
-        raise RuntimeError("Wine is not installed")
+        raise RuntimeError(_("Wine is not installed"))
 
     if not working_dir:
         if os.path.isfile(executable):
@@ -329,7 +329,7 @@ def winetricks(
     winetricks_path = os.path.join(settings.RUNTIME_DIR, "winetricks/winetricks")
     if not system.path_exists(winetricks_path):
         logger.warning(
-            "Could not find local winetricks install, falling back to bundled version"
+            _("Could not find local winetricks install, falling back to bundled version")
         )
         winetricks_path = os.path.join(datapath.get(), "bin/winetricks")
     if wine_path:
@@ -357,7 +357,7 @@ def winetricks(
 def winecfg(wine_path=None, prefix=None, arch=WINE_DEFAULT_ARCH, config=None):
     """Execute winecfg."""
     if not wine_path:
-        logger.debug("winecfg: Reverting to default wine")
+        logger.debug(_("winecfg: Reverting to default wine"))
         wine = import_runner("wine")
         wine_path = wine().get_executable()
 
@@ -377,7 +377,7 @@ def winecfg(wine_path=None, prefix=None, arch=WINE_DEFAULT_ARCH, config=None):
 
 def joycpl(wine_path=None, prefix=None, config=None):
     """Execute Joystick control panel."""
-    logger.debug("What is config and why do we need it? %s", config)
+    logger.debug(_("What is config and why do we need it? %s"), config)
     arch = detect_arch(prefix, wine_path)
     wineexec("control", prefix=prefix, wine_path=wine_path, arch=arch, args="joy.cpl")
 

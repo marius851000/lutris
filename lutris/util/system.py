@@ -12,6 +12,7 @@ import subprocess
 import sys
 import traceback
 from collections import defaultdict
+from gettext import gettext as _
 
 from lutris.util import drivers
 from lutris.util.log import logger
@@ -152,7 +153,7 @@ class LinuxSystem:
             return "i386"
         if "armv7" in machine:
             return "armv7"
-        logger.warning("Unsupported architecture %s", machine)
+        logger.warning(_("Unsupported architecture %s"), machine)
 
     @property
     def runtime_architectures(self):
@@ -252,7 +253,7 @@ def check_libs(all_components=False):
     for req in components:
         for index, arch in enumerate(LINUX_SYSTEM.runtime_architectures):
             for lib in missing_libs[req][index]:
-                logger.error("%s %s missing (needed by %s)", arch, lib, req.lower())
+                logger.error(_("%s %s missing (needed by %s)"), arch, lib, req.lower())
 
 
 def execute(command, env=None, cwd=None, log_errors=False, quiet=False, shell=False):
@@ -272,14 +273,14 @@ def execute(command, env=None, cwd=None, log_errors=False, quiet=False, shell=Fa
 
     # Check if the executable exists
     if not command:
-        logger.error("No executable provided!")
+        logger.error(_("No executable provided!"))
         return
     if os.path.isabs(command[0]) and not path_exists(command[0]):
-        logger.error("No executable found in %s", command)
+        logger.error(_("No executable found in %s"), command)
         return
 
     if not quiet:
-        logger.debug("Executing %s", " ".join(command))
+        logger.debug(_("Executing %s"), " ".join(command))
 
     # Set up environment
     existing_env = os.environ.copy()
@@ -307,7 +308,7 @@ def execute(command, env=None, cwd=None, log_errors=False, quiet=False, shell=Fa
             cwd=cwd,
         ).communicate()
     except (OSError, TypeError) as ex:
-        logger.error("Could not run command %s (env: %s): %s", command, env, ex)
+        logger.error(_("Could not run command %s (env: %s): %s"), command, env, ex)
         return
     finally:
         if stderr_needs_closing:
@@ -325,7 +326,7 @@ def get_md5_hash(filename):
             for chunk in iter(lambda: _file.read(8192), b""):
                 md5.update(chunk)
     except IOError:
-        print("Error reading %s" % filename)
+        print(_("Error reading %s") % filename)
         return False
     return md5.hexdigest()
 
@@ -375,7 +376,7 @@ def kill_pid(pid):
     try:
         os.kill(pid, signal.SIGKILL)
     except OSError:
-        logger.error("Could not kill process %s", pid)
+        logger.error(_("Could not kill process %s"), pid)
 
 
 def get_command_line(pid):
@@ -392,7 +393,7 @@ def get_command_line(pid):
 def python_identifier(unsafe_string):
     """Converts a string to something that can be used as a python variable"""
     if not isinstance(unsafe_string, str):
-        logger.error("Cannot convert %s to a python identifier", type(unsafe_string))
+        logger.error(_("Cannot convert %s to a python identifier"), type(unsafe_string))
         return
 
     def _dashrepl(matchobj):
@@ -431,14 +432,14 @@ def substitute(string_template, variables):
 
 def merge_folders(source, destination):
     """Merges the content of source to destination"""
-    logger.debug("Merging %s into %s", source, destination)
+    logger.debug(_("Merging %s into %s"), source, destination)
     source = os.path.abspath(source)
     for (dirpath, dirnames, filenames) in os.walk(source):
         source_relpath = dirpath[len(source):].strip("/")
         dst_abspath = os.path.join(destination, source_relpath)
         for dirname in dirnames:
             new_dir = os.path.join(dst_abspath, dirname)
-            logger.debug("creating dir: %s", new_dir)
+            logger.debug(_("creating dir: %s"), new_dir)
             try:
                 os.mkdir(new_dir)
             except OSError:
@@ -455,11 +456,11 @@ def merge_folders(source, destination):
 def remove_folder(path):
     """Delete a folder specified by path"""
     if not os.path.exists(path):
-        logger.warning("Non existent path: %s", path)
+        logger.warning(_("Non existent path: %s"), path)
         return
-    logger.debug("Removing folder %s", path)
+    logger.debug(_("Removing folder %s"), path)
     if os.path.samefile(os.path.expanduser("~"), path):
-        raise RuntimeError("Lutris tried to erase home directory!")
+        raise RuntimeError(_("Lutris tried to erase home directory!"))
     shutil.rmtree(path)
 
 
@@ -510,7 +511,7 @@ def fix_path_case(path):
         try:
             path_contents = os.listdir(current_path)
         except OSError:
-            logger.error("Can't read contents of %s", current_path)
+            logger.error(_("Can't read contents of %s"), current_path)
             path_contents = []
         for filename in path_contents:
             if filename.lower() == part.lower():
@@ -525,11 +526,11 @@ def fix_path_case(path):
 def get_pids_using_file(path):
     """Return a set of pids using file `path`."""
     if not os.path.exists(path):
-        logger.error("Can't return PIDs using non existing file: %s", path)
+        logger.error(_("Can't return PIDs using non existing file: %s"), path)
         return set()
     fuser_path = find_executable("fuser")
     if not fuser_path:
-        logger.warning("fuser not available, please install psmisc")
+        logger.warning(_("fuser not available, please install psmisc"))
         return set([])
     fuser_output = execute([fuser_path, path], quiet=True)
     return set(fuser_output.split())
@@ -545,7 +546,7 @@ def get_default_terminal():
     terms = get_terminal_apps()
     if terms:
         return terms[0]
-    logger.error("Couldn't find a terminal emulator.")
+    logger.error(_("Couldn't find a terminal emulator."))
 
 
 def reverse_expanduser(path):
@@ -571,7 +572,7 @@ def path_exists(path, check_symlinks=False):
     if os.path.exists(path):
         return True
     if os.path.islink(path):
-        logger.warning("%s is a broken link")
+        logger.warning(_("%s is a broken link"))
         return not check_symlinks
 
 
@@ -667,7 +668,7 @@ def find_lib(libname):
             if libname in out:
                 lib_paths.append(out.split("=> ")[1])
     else:
-        logger.error("ldconfig not found, can't search for lib %s", libname)
+        logger.error(_("ldconfig not found, can't search for lib %s"), libname)
     return lib_paths
 
 

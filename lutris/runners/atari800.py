@@ -11,14 +11,14 @@ from gettext import gettext as _
 class atari800(Runner):
     human_name = "Atari800"
     platforms = [
-        "Atari 8bit computers"
+        _("Atari 8bit computers")
     ]  # FIXME try to determine the actual computer used
     runner_executable = "atari800/bin/atari800"
     bios_url = (
         "http://kent.dl.sourceforge.net/project/atari800/"
         "ROM/Original%20XL%20ROM/xf25.zip"
     )
-    description = "Atari 400,800 and XL emulator"
+    description = _("Atari 400,800 and XL emulator")
     bios_checksums = {
         "xlxe_rom": "06daac977823773a3eea3422fd26a703",
         "basic_rom": "0bac0c6a50104045d902df4503a4c30b",
@@ -54,7 +54,7 @@ class atari800(Runner):
         {
             "option": "bios_path",
             "type": "directory_chooser",
-            "label": "Bios location",
+            "label": _("Bios location"),
             "help": _(
                 "A folder containing the Atari 800 bios files.\n"
                 "They are provided by Lutris so you shouldn't have to "
@@ -65,11 +65,11 @@ class atari800(Runner):
             "option": "machine",
             "type": "choice",
             "choices": [
-                ("Emulate Atari 800", "atari"),
-                ("Emulate Atari 800 XL", "xl"),
-                ("Emulate Atari 320 XE (Compy Shop)", "320xe"),
-                ("Emulate Atari 320 XE (Rambo)", "rambo"),
-                ("Emulate Atari 5200", "5200"),
+                (_("Emulate Atari 800"), "atari"),
+                (_("Emulate Atari 800 XL"), "xl"),
+                (_("Emulate Atari 320 XE (Compy Shop)"), "320xe"),
+                (_("Emulate Atari 320 XE (Rambo)"), "rambo"),
+                (_("Emulate Atari 5200"), "5200"),
             ],
             "default": "atari",
             "label": _("Machine"),
@@ -96,7 +96,7 @@ class atari800(Runner):
             dlg = DownloadDialog(self.bios_url, bios_archive)
             dlg.run()
             if not system.path_exists(bios_archive):
-                ErrorDialog("Could not download Atari800 BIOS archive")
+                ErrorDialog(_("Could not download Atari800 BIOS archive"))
                 return
             extract.extract_archive(bios_archive, config_path)
             os.remove(bios_archive)
@@ -115,7 +115,7 @@ class atari800(Runner):
             real_hash = system.get_md5_hash(os.path.join(bios_path, filename))
             for bios_file, checksum in self.bios_checksums.items():
                 if real_hash == checksum:
-                    logging.debug("%s Checksum : OK", filename)
+                    logging.debug(_("%s Checksum : OK", filename))
                     good_bios[bios_file] = filename
         return good_bios
 

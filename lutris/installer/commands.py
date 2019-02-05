@@ -20,19 +20,21 @@ from lutris.util import selective_merge
 from lutris.runners import import_task
 from lutris.command import MonitoredCommand
 
+from gettext import gettext as _
+
 
 class CommandsMixin:
     """The directives for the `installer:` part of the install script."""
 
     def __init__(self):
         if isinstance(self, CommandsMixin):
-            raise RuntimeError("This class is a mixin")
+            raise RuntimeError(_("This class is a mixin"))
 
     def _get_runner_version(self):
         if self.runner in ("wine", "winesteam"):
             if self.script.get(self.runner):
                 wine_version = self.script[self.runner].get("version")
-                logger.debug("Install script uses Wine %s", wine_version)
+                logger.debug(_("Install script uses Wine %s"), wine_version)
                 return wine_version
         if self.runner == "libretro":
             return self.script["game"]["core"]
@@ -51,14 +53,14 @@ class CommandsMixin:
                         param_present = True
                 if not param_present:
                     raise ScriptingError(
-                        "One of %s parameter is mandatory for the %s command"
+                        _("One of %s param_(eter is mandatory for the %s command")
                         % (" or ".join(param), command_name),
                         command_data,
                     )
             else:
                 if param not in command_data:
                     raise ScriptingError(
-                        "The %s parameter is mandatory for the %s command"
+                        _("The %s parameter is mandatory for the %s command")
                         % (param, command_name),
                         command_data,
                     )
@@ -79,8 +81,8 @@ class CommandsMixin:
             self._check_required_params([("file", "command")], data, "execute")
             if "command" in data and "file" in data:
                 raise ScriptingError(
-                    "Parameters file and command can't be used "
-                    "at the same time for the execute command",
+                    _("Parameters file and command can't be used "
+                    "at the same time for the execute command"),
                     data,
                 )
             file_ref = data.get("file", "")
@@ -105,7 +107,7 @@ class CommandsMixin:
             include_processes = []
             exclude_processes = []
         else:
-            raise ScriptingError("No parameters supplied to execute command.", data)
+            raise ScriptingError(_("No parameters supplied to execute command."), data)
 
         if command:
             file_ref = "bash"
@@ -117,9 +119,9 @@ class CommandsMixin:
 
         exec_path = system.find_executable(file_ref)
         if not exec_path:
-            raise ScriptingError("Unable to find executable %s" % file_ref)
+            raise ScriptingError(_("Unable to find executable %s") % file_ref)
         if not os.access(exec_path, os.X_OK):
-            logger.warning("Making %s executable", exec_path)
+            logger.warning(_("Making %s executable"), exec_path)
             self.chmodx(exec_path)
 
         if terminal:
@@ -148,17 +150,17 @@ class CommandsMixin:
         filename = self._get_file(src_param)
 
         if not os.path.exists(filename):
-            raise ScriptingError("%s does not exists" % filename)
+            raise ScriptingError(_("%s does not exists") % filename)
         if "dst" in data:
             dest_path = self._substitute(data["dst"])
         else:
             dest_path = self.target_path
-        msg = "Extracting %s" % os.path.basename(filename)
+        msg = _("Extracting %s") % os.path.basename(filename)
         logger.debug(msg)
         GLib.idle_add(self.parent.set_status, msg)
         merge_single = "nomerge" not in data
         extractor = data.get("format")
-        logger.debug("extracting file %s to %s", filename, dest_path)
+        logger.debug(_("extracting file %s to %s"), filename, dest_path)
 
         self._killable_process(
             extract.extract_archive, filename, dest_path, merge_single, extractor
@@ -221,7 +223,7 @@ class CommandsMixin:
             required_abspath = os.path.join(drive, requires)
             required_abspath = system.fix_path_case(required_abspath)
             if required_abspath:
-                logger.debug("Found %s on cdrom %s", requires, drive)
+                logger.debug(_("Found %s on cdrom %s"), requires, drive)
                 self.game_disc = drive
                 self._iter_commands()
                 break
@@ -232,17 +234,17 @@ class CommandsMixin:
         try:
             os.makedirs(directory)
         except OSError:
-            logger.debug("Directory %s already exists", directory)
+            logger.debug(_("Directory %s already exists"), directory)
         else:
-            logger.debug("Created directory %s", directory)
+            logger.debug(_("Created directory %s"), directory)
 
     def merge(self, params):
         """Merge the contents given by src to destination folder dst"""
         self._check_required_params(["src", "dst"], params, "merge")
         src, dst = self._get_move_paths(params)
-        logger.debug("Merging %s into %s", src, dst)
+        logger.debug(_("Merging %s into %s"), src, dst)
         if not os.path.exists(src):
-            raise ScriptingError("Source does not exist: %s" % src, params)
+            raise ScriptingError(_("Source does not exist: %s") % src, params)
         if not os.path.exists(dst):
             os.makedirs(dst)
         if os.path.isfile(src):
@@ -266,26 +268,26 @@ class CommandsMixin:
         """Move a file or directory into a destination folder."""
         self._check_required_params(["src", "dst"], params, "move")
         src, dst = self._get_move_paths(params)
-        logger.debug("Moving %s to %s", src, dst)
+        logger.debug(_("Moving %s to %s"), src, dst)
         if not os.path.exists(src):
-            raise ScriptingError("I can't move %s, it does not exist" % src)
+            raise ScriptingError(_("Can't move %s, it does not exist") % src)
         if os.path.isfile(src):
             src_filename = os.path.basename(src)
             src_dir = os.path.dirname(src)
             dst_path = os.path.join(dst, src_filename)
             if src_dir == dst:
-                logger.info("Source file is the same as destination, skipping")
+                logger.info(_("Source file is the same as destination, skipping"))
             elif os.path.exists(dst_path):
                 # May not be the best choice, but it's the safest.
                 # Maybe should display confirmation dialog (Overwrite / Skip) ?
-                logger.info("Destination file exists, skipping")
+                logger.info(_("Destination file exists, skipping"))
             else:
                 self._killable_process(shutil.move, src, dst)
         else:
             try:
                 self._killable_process(shutil.move, src, dst)
             except shutil.Error:
-                raise ScriptingError("Can't move %s \nto destination %s" % (src, dst))
+                raise ScriptingError(_("Can't move %s \nto destination %s") % (src, dst))
         if os.path.isfile(src) and params["src"] in self.game_files.keys():
             # Change game file reference so it can be used as executable
             self.game_files["src"] = src
@@ -295,14 +297,14 @@ class CommandsMixin:
         self._check_required_params(["src", "dst"], params, "rename")
         src, dst = self._get_move_paths(params)
         if not os.path.exists(src):
-            raise ScriptingError("Rename error, source path does not exist: %s" % src)
+            raise ScriptingError(_("Rename error, source path does not exist: %s") % src)
         if os.path.isdir(dst):
             try:
                 os.rmdir(dst)  # Remove if empty
             except OSError:
                 pass
         if os.path.exists(dst):
-            raise ScriptingError("Rename error, destination already exists: %s" % src)
+            raise ScriptingError(_("Rename error, destination already exists: %s") % src)
         dst_dir = os.path.dirname(dst)
 
         # Pre-move on dest filesystem to avoid error with
@@ -318,21 +320,21 @@ class CommandsMixin:
         try:
             src_ref = params["src"]
         except KeyError:
-            raise ScriptingError("Missing parameter src")
+            raise ScriptingError(_("Missing parameter src"))
         src = self.game_files.get(src_ref) or self._substitute(src_ref)
         if not src:
-            raise ScriptingError("Wrong value for 'src' param", src_ref)
+            raise ScriptingError(_("Wrong value for 'src' param"), src_ref)
         dst_ref = params["dst"]
         dst = self._substitute(dst_ref)
         if not dst:
-            raise ScriptingError("Wrong value for 'dst' param", dst_ref)
+            raise ScriptingError(_("Wrong value for 'dst' param"), dst_ref)
         return src.rstrip("/"), dst.rstrip("/")
 
     def substitute_vars(self, data):
         """Subsitute variable names found in given file."""
         self._check_required_params("file", data, "substitute_vars")
         filename = self._substitute(data["file"])
-        logger.debug("Substituting variables for file %s", filename)
+        logger.debug(_("Substituting variables for file %s"), filename)
         tmp_filename = filename + ".tmp"
         with open(filename, "r") as source_file:
             with open(tmp_filename, "w") as dest_file:
@@ -418,7 +420,7 @@ class CommandsMixin:
 
         mode = params.get("mode", "w")
         if not mode.startswith(("a", "w")):
-            raise ScriptingError("Wrong value for write_file mode: '%s'" % mode)
+            raise ScriptingError(_("Wrong value for write_file mode: '%s'") % mode)
 
         with open(dest_file_path, mode) as dest_file:
             dest_file.write(self._substitute(params["content"]))
@@ -448,7 +450,7 @@ class CommandsMixin:
                 try:
                     json_data = json.load(json_file)
                 except ValueError:
-                    logger.error("Failed to parse JSON from file %s", filename)
+                    logger.error(_("Failed to parse JSON from file %s"), filename)
 
             json_data = selective_merge(json_data, params.get("data", {}))
             json_file.seek(0)

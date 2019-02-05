@@ -3,6 +3,7 @@ import os
 import re
 import subprocess
 from collections import namedtuple
+from gettext import gettext as _
 
 from gi.repository import Gdk, GnomeDesktop, GLib
 
@@ -12,7 +13,7 @@ from lutris.util.log import logger
 
 def _get_vidmodes():
     """Return video modes from XrandR"""
-    logger.debug("Retrieving video modes from XrandR")
+    logger.debug(_("Retrieving video modes from XrandR"))
     xrandr_output = subprocess.check_output(["xrandr"])
     return xrandr_output.decode().split("\n")
 
@@ -32,7 +33,7 @@ def get_outputs():
     primary = None
     name = None
     if not vid_modes:
-        logger.error("xrandr didn't return anything")
+        logger.error(_("xrandr didn't return anything"))
         return []
     for line in vid_modes:
         if "connected" in line:
@@ -74,11 +75,11 @@ def get_output_names():
 def turn_off_except(display):
     """Use XrandR to turn off displays except the one referenced by `display`"""
     if not display:
-        logger.error("No active display given, no turning off every display")
+        logger.error(_("No active display given, no turning off every display"))
         return
     for output in get_outputs():
         if output.name != display:
-            logger.info("Turning off %s", output[0])
+            logger.info(_("Turning off %s"), output[0])
             subprocess.Popen(["xrandr", "--output", output.name, "--off"])
 
 
@@ -120,19 +121,19 @@ def change_resolution(resolution):
     by get_outputs().
     """
     if not resolution:
-        logger.warning("No resolution provided")
+        logger.warning(_("No resolution provided"))
         return
     if isinstance(resolution, str):
-        logger.debug("Switching resolution to %s", resolution)
+        logger.debug(_("Switching resolution to %s"), resolution)
 
         if resolution not in get_resolutions():
-            logger.warning("Resolution %s doesn't exist.", resolution)
+            logger.warning(_("Resolution %s doesn't exist."), resolution)
         else:
-            logger.info("Changing resolution to %s", resolution)
+            logger.info(_("Changing resolution to %s"), resolution)
             subprocess.Popen(["xrandr", "-s", resolution])
     else:
         for display in resolution:
-            logger.debug("Switching to %s on %s", display.mode, display.name)
+            logger.debug(_("Switching to %s on %s"), display.mode, display.name)
 
             if display.rotation is not None and display.rotation in (
                 "normal",
@@ -143,7 +144,7 @@ def change_resolution(resolution):
                 rotation = display.rotation
             else:
                 rotation = "normal"
-            logger.info("Switching resolution of %s to %s", display.name, display.mode)
+            logger.info(_("Switching resolution of %s to %s"), display.name, display.mode)
             subprocess.Popen(
                 [
                     "xrandr",
@@ -167,9 +168,9 @@ def restore_gamma():
     try:
         subprocess.Popen([xgamma_path, "-gamma", "1.0"])
     except (FileNotFoundError, TypeError):
-        logger.warning("xgamma is not available on your system")
+        logger.warning(_("xgamma is not available on your system"))
     except PermissionError:
-        logger.warning("you do not have permission to call xgamma")
+        logger.warning(_("you do not have permission to call xgamma"))
 
 
 def get_xrandr_version():
@@ -182,11 +183,11 @@ def get_xrandr_version():
     )
     position = xrandr_output.find(pattern) + len(pattern)
     version_str = xrandr_output[position:].strip().split(".")
-    logger.debug("Found XrandR version %s", version_str)
+    logger.debug(_("Found XrandR version %s"), version_str)
     try:
         return {"major": int(version_str[0]), "minor": int(version_str[1])}
     except ValueError:
-        logger.error("Can't find version in: %s", xrandr_output)
+        logger.error(_("Can't find version in: %s"), xrandr_output)
         return {"major": 0, "minor": 0}
 
 
@@ -198,7 +199,7 @@ def _get_graphics_adapters():
     """
     lspci_path = system.find_executable("lspci")
     if not lspci_path:
-        logger.warning("lspci is not available. List of graphics cards not available")
+        logger.warning(_("lspci is not available. List of graphics cards not available"))
         return []
     return [
         (pci_id, vga_desc.split(": ")[1])
@@ -251,7 +252,7 @@ def get_resolution_choices():
     """
     resolutions = DISPLAY_MANAGER.get_resolutions()
     resolution_choices = list(zip(resolutions, resolutions))
-    resolution_choices.insert(0, ("Keep current", "off"))
+    resolution_choices.insert(0, (_("Keep current"), "off"))
     return resolution_choices
 
 
@@ -259,8 +260,8 @@ def get_output_choices():
     """Return list of outputs for drop-downs"""
     displays = DISPLAY_MANAGER.get_display_names()
     output_choices = list(zip(displays, displays))
-    output_choices.insert(0, ("Off", "off"))
-    output_choices.insert(1, ("Primary", "primary"))
+    output_choices.insert(0, (_("Off"), "off"))
+    output_choices.insert(1, (_("Primary"), "primary"))
     return output_choices
 
 
@@ -268,7 +269,7 @@ def get_output_list():
     """Return a list of output with their index.
     This is used to indicate to SDL 1.2 which monitor to use.
     """
-    choices = [("Off", "off")]
+    choices = [(_("Off"), "off")]
     displays = DISPLAY_MANAGER.get_display_names()
     for index, output in enumerate(displays):
         # Display name can't be used because they might not be in the right order

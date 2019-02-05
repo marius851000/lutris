@@ -4,18 +4,18 @@ from gettext import gettext as _
 
 class higan(Runner):
     human_name = "higan"
-    description = "Multi-system emulator including NES, GB(A), PC Engine " "support."
+    description = _("Multi-system emulator including NES, GB(A), PC Engine " "support.")
     platforms = [
-        "Nintendo Game Boy (Color)",
-        "Nintendo Game Boy Advance",
-        "Sega Game Gear",
-        "Sega Genesis/Mega Drive",
-        "Sega Master System",
-        "Nintendo NES",
-        "NEC PC Engine TurboGrafx-16",
-        "NEC PC Engine SuperGrafx",
-        "Nintendo SNES",
-        "Bandai WonderSwan",
+        _("Nintendo Game Boy (Color)"),
+        _("Nintendo Game Boy Advance"),
+        _("Sega Game Gear"),
+        _("Sega Genesis/Mega Drive"),
+        _("Sega Master System"),
+        _("Nintendo NES"),
+        _("NEC PC Engine TurboGrafx-16"),
+        _("NEC PC Engine SuperGrafx"),
+        _("Nintendo SNES"),
+        _("Bandai WonderSwan"),
     ]
     runner_executable = "higan/bin/higan"
     game_options = [
@@ -36,7 +36,7 @@ class higan(Runner):
             "type": "directory_chooser",
             "label": _("Secondary ROM directory"),
             "advanced": True,
-            "help": (
+            "help": _(
                 "The game data directory for the secondary cart slot"
                 "on either the Sufami Turbo, Satellaview or Super Game Boy."
             ),
@@ -46,20 +46,25 @@ class higan(Runner):
             "type": "directory_chooser",
             "label": _("Tertiary ROM directory"),
             "advanced": True,
-            "help": "The game data directory for the tertiary cart slot on the Sufami Turbo.",
+            "help": _("The game data directory for the tertiary cart slot on the Sufami Turbo."),
         },
     ]
     runner_options = [
-        {"option": "fs", "type": "bool", "label": "Fullscreen", "default": False},
+        {
+            "option": "fs",
+            "type": "bool",
+            "label": _("Fullscreen"),
+            "default": False
+        },
         {
             "option": "region",
             "type": "choice",
-            "label": "Region",
+            "label": _("Region"),
             "choices": [
-                ("Auto", "auto"),
-                ("NTSC-U", "NTSC-U"),
-                ("PAL", "PAL"),
-                ("NTSC-J", "NTSC-J"),
+                (_("Auto"), "auto"),
+                (_("NTSC-U"), "NTSC-U"),
+                (_("PAL"), "PAL"),
+                (_("NTSC-J"), "NTSC-J"),
             ],
             "default": "auto",
             "help": _("The region of the console."),

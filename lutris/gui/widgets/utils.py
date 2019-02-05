@@ -7,7 +7,7 @@ from lutris.util.log import logger
 from lutris.util import datapath
 from lutris.util import system
 from lutris import settings
-
+from gettext import gettext as _
 
 UNAVAILABLE_GAME_OVERLAY = os.path.join(datapath.get(), "media/unavailable.png")
 
@@ -34,7 +34,7 @@ def get_pixbuf(image, size, fallback=None):
         try:
             return GdkPixbuf.Pixbuf.new_from_file_at_size(image, width, heigth)
         except GLib.GError:
-            logger.error("Unable to load icon from image %s", image)
+            logger.error(_("Unable to load icon from image %s"), image)
     if system.path_exists(fallback):
         return GdkPixbuf.Pixbuf.new_from_file_at_size(fallback, width, heigth)
     if image and not image.startswith("/"):
@@ -60,7 +60,7 @@ def get_icon(icon_name, format="image", size=None, icon_type="runner"):
     filename = icon_name.lower().replace(" ", "") + ".png"
     icon_path = os.path.join(datapath.get(), "media/" + icon_type + "_icons", filename)
     if not os.path.exists(icon_path):
-        logger.error("Unable to find icon '%s'", icon_path)
+        logger.error(_("Unable to find icon '%s'"), icon_path)
         return None
     if format == "image":
         icon = Gtk.Image()
@@ -71,7 +71,7 @@ def get_icon(icon_name, format="image", size=None, icon_type="runner"):
         return icon
     elif format == "pixbuf" and size:
         return get_pixbuf(icon_path, size)
-    raise ValueError("Invalid arguments")
+    raise ValueError(_("Invalid arguments"))
 
 
 def get_overlay(overlay_path, size):
@@ -93,7 +93,7 @@ def get_pixbuf_for_game(game_slug, icon_type, is_installed=True):
         default_icon_path = DEFAULT_ICON
         icon_path = datapath.get_icon_path(game_slug)
     else:
-        logger.error("Invalid icon type '%s'", icon_type)
+        logger.error(_("Invalid icon type '%s'"), icon_type)
         return None
 
     size = IMAGE_SIZES[icon_type]
@@ -173,7 +173,7 @@ def get_pixbuf_for_panel(game_slug):
 def get_builder_from_file(glade_file):
     ui_filename = os.path.join(datapath.get(), "ui", glade_file)
     if not os.path.exists(ui_filename):
-        raise ValueError("ui file does not exists: %s" % ui_filename)
+        raise ValueError(_("ui file does not exists: %s") % ui_filename)
 
     builder = Gtk.Builder()
     builder.add_from_file(ui_filename)

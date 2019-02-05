@@ -117,7 +117,7 @@ class Runner:
                 {
                     "option": "runner_executable",
                     "type": "file",
-                    "label": "Custom executable for the runner",
+                    "label": _("Custom executable for the runner"),
                     "advanced": True,
                 }
             )
@@ -129,7 +129,7 @@ class Runner:
             if os.path.isfile(runner_executable):
                 return runner_executable
         if not self.runner_executable:
-            raise ValueError("runner_executable not set for {}".format(self.name))
+            raise ValueError(_("runner_executable not set for {}").format(self.name))
         return os.path.join(settings.RUNNER_DIR, self.runner_executable)
 
     def get_env(self, os_env=False):
@@ -176,7 +176,7 @@ class Runner:
 
     def play(self):
         """Dummy method, must be implemented by derived runners."""
-        raise NotImplementedError("Implement the play method in your runner")
+        raise NotImplementedError(_("Implement the play method in your runner"))
 
     def get_run_data(self):
         """Return dict with command (exe & args list) and env vars (dict).
@@ -193,7 +193,7 @@ class Runner:
             return
         if not self.is_installed():
             if not self.install_dialog():
-                logger.info("Runner install cancelled")
+                logger.info(_("Runner install cancelled"))
                 return
 
         command_data = self.get_run_data()
@@ -208,10 +208,10 @@ class Runner:
 
     def use_runtime(self):
         if runtime.RUNTIME_DISABLED:
-            logger.info("Runtime disabled by environment")
+            logger.info(_("Runtime disabled by environment"))
             return False
         if self.system_config.get("disable_runtime"):
-            logger.info("Runtime disabled by system configuration")
+            logger.info(_("Runtime disabled by system configuration"))
             return False
         return True
 
@@ -247,9 +247,9 @@ class Runner:
     def get_runner_info(self, version=None):
         runner_api_url = "{}/api/runners/{}".format(settings.SITE_URL, self.name)
         logger.info(
-            "Getting runner information for %s%s",
+            _("Getting runner information for %s%s"),
             self.name,
-            "(version: %s)" % version if version else "",
+            _("(version: %s)") % version if version else "",
         )
         request = Request(runner_api_url)
         response = request.get()
@@ -282,7 +282,7 @@ class Runner:
     def install(self, version=None, downloader=None, callback=None):
         """Install runner using package management systems."""
         logger.debug(
-            "Installing %s (version=%s, downloader=%s, callback=%s)",
+            _("Installing %s (version=%s, downloader=%s, callback=%s)"),
             self.name,
             version,
             downloader,
@@ -291,12 +291,12 @@ class Runner:
         runner_info = self.get_runner_info(version)
         if not runner_info:
             raise RunnerInstallationError(
-                "{} is not available for the {} architecture".format(
+                _("{} is not available for the {} architecture").format(
                     self.name, self.arch
                 )
             )
         if not downloader:
-            raise RuntimeError("Missing mandatory downloader for runner %s" % self)
+            raise RuntimeError(_("Missing mandatory downloader for runner %s") % self)
         opts = {
             "downloader": downloader,
             "callback": callback
@@ -331,16 +331,16 @@ class Runner:
 
     def extract(self, archive=None, dest=None, merge_single=None, callback=None):
         if not system.path_exists(archive):
-            raise RunnerInstallationError("Failed to extract {}".format(archive))
+            raise RunnerInstallationError(_("Failed to extract {}").format(archive))
         try:
             extract_archive(archive, dest, merge_single=merge_single)
         except EOFError:
-            logger.error("Failed to extract the archive %s file may be corrupt", archive)
+            logger.error(_("Failed to extract the archive %s file may be corrupt"), archive)
             return
         os.remove(archive)
 
         if self.name == "wine":
-            logger.debug("Clearing wine version cache")
+            logger.debug(_("Clearing wine version cache"))
             from lutris.util.wine.wine import get_wine_versions
             get_wine_versions.cache_clear()
 

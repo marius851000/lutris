@@ -3,9 +3,9 @@ from lutris.util import system
 from gettext import gettext as _
 
 class virtualjaguar(Runner):
-    description = _("Atari Jaguar emulator")
+    description = _(_("Atari Jaguar emulator"))
     human_name = "Virtual Jaguar"
-    platforms = ["Atari Jaguar"]
+    platforms = [_("Atari Jaguar")]
     runnable_alone = True
     runner_executable = "virtualjaguar/virtualjaguar"
     game_options = [
@@ -22,7 +22,7 @@ class virtualjaguar(Runner):
     ]
 
     runner_options = [
-        {"option": "fullscreen", "type": "bool", "label": "Fullscreen", "default": "1"}
+        {"option": "fullscreen", "type": "bool", "label": _("Fullscreen"), "default": "1"}
     ]
 
     def play(self):

@@ -1,6 +1,6 @@
 from gi.repository import Gtk
 from lutris.gui.widgets.dialogs import Dialog
-
+from gettext import gettext as _
 
 class LogTextView(Gtk.TextView):
     def __init__(self, buffer, autoscroll=True):
@@ -27,7 +27,7 @@ class LogTextView(Gtk.TextView):
 
 class LogDialog(Dialog):
     def __init__(self, title, buffer, parent):
-        super().__init__(title, parent, 0, ("_OK", Gtk.ResponseType.OK))
+        super().__init__(title, parent, 0, (_("_OK"), Gtk.ResponseType.OK))
         self.set_size_request(640, 480)
         self.grid = Gtk.Grid()
         self.buffer = buffer

@@ -4,6 +4,7 @@ import json
 import time
 import shlex
 import subprocess
+from gettext import gettext as _
 
 from gi.repository import GLib, Gtk, GObject
 
@@ -63,7 +64,7 @@ class Game(GObject.Object):
         try:
             self.playtime = float(game_data.get("playtime") or 0.0)
         except ValueError:
-            logger.error("Invalid playtime value %s", game_data.get("playtime"))
+            logger.error(_("Invalid playtime value %s"), game_data.get("playtime"))
 
         self.load_config()
         self.game_thread = None
@@ -132,13 +133,13 @@ class Game(GObject.Object):
         if not self.is_installed:
             return
         if not self.runner_name:
-            logger.error("Incomplete data for %s", self.slug)
+            logger.error(_("Incomplete data for %s"), self.slug)
             return
         try:
             runner_class = import_runner(self.runner_name)
         except InvalidRunner:
             logger.error(
-                "Unable to import runner %s for %s", self.runner_name, self.slug
+                _("Unable to import runner %s for %s"), self.runner_name, self.slug
             )
         else:
             self.runner = runner_class(self.config)
@@ -157,7 +158,7 @@ class Game(GObject.Object):
 
     def remove(self, from_library=False, from_disk=False):
         if from_disk and self.runner:
-            logger.debug("Removing game %s from disk", self.id)
+            logger.debug(_("Removing game %s from disk"), self.id)
             self.runner.remove_game_data(game_path=self.directory)
 
         # Do not keep multiple copies of the same game
@@ -166,7 +167,7 @@ class Game(GObject.Object):
             from_library = True
 
         if from_library:
-            logger.debug("Removing game %s from library", self.id)
+            logger.debug(_("Removing game %s from library"), self.id)
             pga.delete_game(self.id)
         else:
             pga.set_uninstalled(self.id)
@@ -180,7 +181,7 @@ class Game(GObject.Object):
             return
         self.platform = self.runner.get_platform()
         if not self.platform:
-            logger.warning("Can't get platform for runner %s", self.runner.human_name)
+            logger.warning(_("Can't get platform for runner %s"), self.runner.human_name)
 
     def save(self, metadata_only=False):
         """
@@ -188,7 +189,7 @@ class Game(GObject.Object):
         do not save the config. This is useful when exiting the game since the
         config might have changed and we don't want to override the changes.
         """
-        logger.debug("Saving %s", self)
+        logger.debug(_("Saving %s"), self)
         if not metadata_only:
             self.config.save()
         self.id = pga.add_or_update(
@@ -240,7 +241,7 @@ class Game(GObject.Object):
             return
 
         if hasattr(self.runner, "prelaunch"):
-            logger.debug("Prelaunching %s", self.runner)
+            logger.debug(_("Prelaunching %s"), self.runner)
             try:
                 jobs.AsyncCall(self.runner.prelaunch, self.configure_game)
             except Exception as ex:
@@ -261,8 +262,8 @@ class Game(GObject.Object):
             logger.error(error)
             dialogs.ErrorDialog(str(error))
         if not prelaunched:
-            logger.error("Game prelaunch unsuccessful")
-            dialogs.ErrorDialog("An error prevented the game from running")
+            logger.error(_("Game prelaunch unsuccessful"))
+            dialogs.ErrorDialog(_("An error prevented the game from running"))
             self.state = self.STATE_STOPPED
             self.emit('game-stop')
             return
@@ -272,12 +273,12 @@ class Game(GObject.Object):
         )
 
         gameplay_info = self.runner.play()
-        logger.debug("Launching %s: %s", self.name, gameplay_info)
+        logger.debug(_("Launching %s: %s"), self.name, gameplay_info)
         if "error" in gameplay_info:
             self.show_error_message(gameplay_info)
             self.state = self.STATE_STOPPED
             return
-        logger.debug("Game info: %s", json.dumps(gameplay_info, indent=2))
+        logger.debug(_("Game info: %s"), json.dumps(gameplay_info, indent=2))
 
         env = {}
         sdl_gamecontrollerconfig = system_config.get("sdl_gamecontrollerconfig")
@@ -300,7 +301,7 @@ class Game(GObject.Object):
                         restrict_to_display = output.name
                         break
                 if not restrict_to_display:
-                    logger.warning("No primary display set")
+                    logger.warning(_("No primary display set"))
             else:
                 found = False
                 for output in self.original_outputs:
@@ -308,7 +309,7 @@ class Game(GObject.Object):
                         found = True
                         break
                 if not found:
-                    logger.warning("Selected display %s not found", restrict_to_display)
+                    logger.warning(_("Selected display %s not found"), restrict_to_display)
                     restrict_to_display = None
             if restrict_to_display:
                 display.turn_off_except(restrict_to_display)
@@ -344,7 +345,7 @@ class Game(GObject.Object):
         if xephyr != "off":
             if not system.find_executable("Xephyr"):
                 raise GameConfigError(
-                    "Unable to find Xephyr, install it or disable the Xephyr option"
+                    _("Unable to find Xephyr, install it or disable the Xephyr option")
                 )
 
             xephyr_depth = "8" if xephyr == "8bpp" else "16"
@@ -393,7 +394,7 @@ class Game(GObject.Object):
 
         single_cpu = system_config.get("single_cpu") or False
         if single_cpu:
-            logger.info("The game will run on a single CPU core")
+            logger.info(_("The game will run on a single CPU core"))
             launch_arguments.insert(0, "0")
             launch_arguments.insert(0, "-c")
             launch_arguments.insert(0, "taskset")
@@ -403,9 +404,9 @@ class Game(GObject.Object):
             terminal = system_config.get("terminal_app", system.get_default_terminal())
             if terminal and not system.find_executable(terminal):
                 dialogs.ErrorDialog(
-                    "The selected terminal application "
+                    _("The selected terminal application "
                     "could not be launched:\n"
-                    "%s" % terminal
+                    "%s") % terminal
                 )
                 self.state = self.STATE_STOPPED
                 return
@@ -468,7 +469,7 @@ class Game(GObject.Object):
                 cwd=self.directory,
             )
             self.prelaunch_executor.start()
-            logger.info("Running %s in the background", prelaunch_command)
+            logger.info(_("Running %s in the background"), prelaunch_command)
         if system_config.get("prelaunch_wait"):
             self.heartbeat = GLib.timeout_add(HEARTBEAT_DELAY, self.prelaunch_beat)
         else:
@@ -523,7 +524,7 @@ class Game(GObject.Object):
         """Watch the game's process(es)."""
         if self.game_thread.error:
             dialogs.ErrorDialog(
-                "<b>Error lauching the game:</b>\n" + self.game_thread.error
+                _("<b>Error lauching the game:</b>\n") + self.game_thread.error
             )
             self.on_game_quit()
             return False
@@ -532,7 +533,7 @@ class Game(GObject.Object):
         # When that device is unplugged, the game is forced to quit.
         killswitch_engage = self.killswitch and not system.path_exists(self.killswitch)
         if not self.game_thread.is_running or killswitch_engage:
-            logger.debug("Game thread stopped")
+            logger.debug(_("Game thread stopped"))
             self.on_game_quit()
             return False
         return True
@@ -546,12 +547,12 @@ class Game(GObject.Object):
     def stop(self):
         """Stops the game"""
         if self.state == self.STATE_STOPPED:
-            logger.debug("Game already stopped")
+            logger.debug(_("Game already stopped"))
             return
 
         logger.info("Stopping %s", self)
         if self.runner.system_config.get("xboxdrv"):
-            logger.debug("Stopping xboxdrv")
+            logger.debug(_("Stopping xboxdrv"))
             self.xboxdrv_thread.stop()
         if self.game_thread:
             jobs.AsyncCall(self.game_thread.stop, None)
@@ -564,18 +565,18 @@ class Game(GObject.Object):
         self.stop_timer()
 
         if self.prelaunch_executor and self.prelaunch_executor.is_running:
-            logger.info("Stopping prelaunch script")
+            logger.info(_("Stopping prelaunch script"))
             self.prelaunch_executor.stop()
 
         self.heartbeat = None
         if self.state != self.STATE_STOPPED:
-            logger.warning("Game still running (state: %s)", self.state)
+            logger.warning(_("Game still running (state: %s)"), self.state)
             self.stop()
 
         # Check for post game script
         postexit_command = self.runner.system_config.get("postexit_command")
         if system.path_exists(postexit_command):
-            logger.info("Running post-exit command: %s", postexit_command)
+            logger.info(_("Running post-exit command: %s"), postexit_command)
             postexit_thread = MonitoredCommand(
                 [postexit_command],
                 include_processes=[os.path.basename(postexit_command)],
@@ -583,8 +584,8 @@ class Game(GObject.Object):
             )
             postexit_thread.start()
 
-        quit_time = time.strftime("%a, %d %b %Y %H:%M:%S", time.localtime())
-        logger.debug("%s stopped at %s", self.name, quit_time)
+        quit_time = time.strftime(_("%a, %d %b %Y %H:%M:%S"), time.localtime())
+        logger.debug(_("%s stopped at %s"), self.name, quit_time)
         self.lastplayed = int(time.time())
         self.save(metadata_only=True)
 
@@ -611,16 +612,16 @@ class Game(GObject.Object):
         """Do things depending on how the game quitted."""
         if self.game_thread.return_code == 127:
             # Error missing shared lib
-            error = "error while loading shared lib"
+            error = _("error while loading shared lib")
             error_line = strings.lookup_string_in_text(error, self.game_thread.stdout)
             if error_line:
                 dialogs.ErrorDialog(
-                    "<b>Error: Missing shared library.</b>" "\n\n%s" % error_line
+                    _("<b>Error: Missing shared library.</b>" "\n\n%s") % error_line
                 )
 
         if self.game_thread.return_code == 1:
             # Error Wine version conflict
-            error = "maybe the wrong wineserver"
+            error = _("maybe the wrong wineserver")
             if strings.lookup_string_in_text(error, self.game_thread.stdout):
                 dialogs.ErrorDialog(
                     _("<b>Error: A different Wine version is "
@@ -632,11 +633,11 @@ class Game(GObject.Object):
         if not self.game_thread:
             return
         if "Fully Installed" in appmanifest.states and not self.game_thread.ready_state:
-            logger.info("Steam game %s is fully installed", appmanifest.steamid)
+            logger.info(_("Steam game %s is fully installed"), appmanifest.steamid)
             self.game_thread.ready_state = True
         elif "Update Required" in appmanifest.states and self.game_thread.ready_state:
             logger.info(
-                "Steam game %s updating, setting game thread as not ready",
+                _("Steam game %s updating, setting game thread as not ready"),
                 appmanifest.steamid,
             )
             self.game_thread.ready_state = False

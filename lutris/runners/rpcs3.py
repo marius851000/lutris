@@ -1,10 +1,12 @@
+from gettext import gettext as _
+
 from lutris.runners.runner import Runner
 
 
 class rpcs3(Runner):
     human_name = "rpcs3"
-    description = "PlayStation 3 emulator"
-    platforms = ["Sony PlayStation 3"]
+    description = _("PlayStation 3 emulator")
+    platforms = [_("Sony PlayStation 3")]
     runnable_alone = True
     runner_executable = "rpcs3/rpcs3"
     game_options = [
@@ -12,7 +14,7 @@ class rpcs3(Runner):
             "option": "main_file",
             "type": "file",
             "default_path": "game_path",
-            "label": "Path to EBOOT.BIN",
+            "label": _("Path to EBOOT.BIN"),
         }
     ]
 

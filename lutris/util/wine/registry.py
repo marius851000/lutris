@@ -2,6 +2,7 @@ import os
 import re
 from collections import OrderedDict
 from datetime import datetime
+from gettext import gettext as _
 from lutris.util.log import logger
 from lutris.util import system
 from lutris.util.wine.wine import WINE_DEFAULT_ARCH
@@ -58,7 +59,7 @@ class WindowsFileTime:
 
     def to_unix_timestamp(self):
         if not self.timestamp:
-            raise ValueError("No timestamp set")
+            raise ValueError(_("No timestamp set"))
         unix_ts = self.timestamp / self.ticks_per_seconds
         unix_ts = unix_ts - self.epoch_delta
         return unix_ts
@@ -79,7 +80,7 @@ class WineRegistry:
         self.reg_filename = reg_filename
         if reg_filename:
             if not system.path_exists(reg_filename):
-                logger.error("Unexisting registry %s", reg_filename)
+                logger.error(_("Unexisting registry %s"), reg_filename)
             self.parse_reg_file(reg_filename)
 
     @property
@@ -99,7 +100,7 @@ class WineRegistry:
                 registry_content = reg_file.readlines()
             except Exception:  # pylint: disable=broad-except
                 logger.exception(
-                    "Failed to registry read %s, please send attach this file in a bug report",
+                    _("Failed to registry read %s, please send attach this file in a bug report"),
                     reg_filename
                 )
                 registry_content = []
@@ -147,11 +148,11 @@ class WineRegistry:
         if not path:
             path = self.reg_filename
         if not path:
-            raise OSError("No filename provided")
+            raise OSError(_("No filename provided"))
         prefix_path = os.path.dirname(path)
         if not os.path.isdir(prefix_path):
-            raise OSError("Invalid Wine prefix path %s, make sure to "
-                          "create the prefix before saving to a registry")
+            raise OSError(_("Invalid Wine prefix path %s, make sure to "
+                          "create the prefix before saving to a registry"))
         with open(path, "w") as registry_file:
             registry_file.write(self.render())
 
@@ -197,7 +198,7 @@ class WineRegistry:
         try:
             drive_path = os.readlink(drive_link)
         except FileNotFoundError:
-            logger.error("Unable to read link for %s", drive_link)
+            logger.error(_("Unable to read link for %s"), drive_link)
             return
 
         if not os.path.isabs(drive_path):
@@ -249,7 +250,7 @@ class WineRegistryKey:
             try:
                 key, value = re.split(re.compile(r"(?<![^\\]\\\")="), line, maxsplit=1)
             except ValueError as ex:
-                logger.error("Unable to parse line %s", line)
+                logger.error(_("Unable to parse line %s"), line)
                 logger.exception(ex)
                 return
             key = key[1:-1]
@@ -287,7 +288,7 @@ class WineRegistryKey:
 
     def add_meta(self, meta_line):
         if not meta_line.startswith("#"):
-            raise ValueError("Key metas should start with '#'")
+            raise ValueError(_("Key metas should start with '#'"))
         meta_line = meta_line[1:]
         parts = meta_line.split("=")
         if len(parts) == 2:
@@ -297,7 +298,7 @@ class WineRegistryKey:
             key = parts[0]
             value = None
         else:
-            raise ValueError("Invalid meta line '{}'".format(meta_line))
+            raise ValueError(_("Invalid meta line '{}'").format(meta_line))
         self.metas[key] = value
 
     def get_meta(self, name):
@@ -314,4 +315,4 @@ class WineRegistryKey:
             return value[1:-1]
         if value.startswith("dword:"):
             return int(value[6:], 16)
-        raise ValueError("Handle %s" % value)
+        raise ValueError(_("Handle %s") % value)

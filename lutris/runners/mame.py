@@ -7,8 +7,8 @@ from gettext import gettext as _
 
 class mame(Runner):
     human_name = "MAME"
-    description = "Arcade game emulator"
-    platforms = ["Arcade"]
+    description = _("Arcade game emulator")
+    platforms = [_("Arcade")]
     runner_executable = "mame/mame"
     game_options = [
         {
@@ -20,12 +20,17 @@ class mame(Runner):
     ]
 
     runner_options = [
-        {"option": "fullscreen", "type": "bool", "label": "Fullscreen", "default": True},
+        {
+            "option": "fullscreen",
+            "type": "bool",
+            "label": _("Fullscreen"),
+            "default": True
+        },
         {
             "option": "waitvsync",
             "type": "bool",
-            "label": "Wait for VSync",
-            "help": (
+            "label": _("Wait for VSync"),
+            "help": _(
                 "Enable waiting for  the  start  of  VBLANK  before "
                 "flipping  screens; reduces tearing effects."
             ),

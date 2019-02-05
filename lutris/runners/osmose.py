@@ -5,7 +5,7 @@ from gettext import gettext as _
 class osmose(Runner):
     human_name = "Osmose"
     description = _("Sega Master System Emulator")
-    platforms = ["Sega Master System"]
+    platforms = [_("Sega Master System")]
     runner_executable = "osmose/osmose"
     game_options = [
         {

@@ -4,7 +4,7 @@ from lutris.gui.dialogs import GtkBuilderDialog
 from lutris.game import Game
 from lutris.util.system import is_removeable, reverse_expanduser
 from lutris.gui.dialogs import QuestionDialog
-
+from gettext import gettext as _
 
 class UninstallGameDialog(GtkBuilderDialog):
     glade_file = "dialog-uninstall-game.ui"
@@ -19,7 +19,7 @@ class UninstallGameDialog(GtkBuilderDialog):
             get_text = widget.get_label
             set_text = widget.set_label
         else:
-            raise TypeError("Unsupported type %s" % type(widget))
+            raise TypeError(_("Unsupported type %s") % type(widget))
 
         set_text(get_text().replace("{%s}" % name, replacement))
 
@@ -52,7 +52,7 @@ class UninstallGameDialog(GtkBuilderDialog):
                     remove_contents_button.set_active(True)
                 else:
                     remove_contents_button.set_sensitive(False)
-                    path = "No game folder"
+                    path = _("No game folder")
 
             path = reverse_expanduser(path)
             self.substitute_label(remove_contents_button, "path", path)

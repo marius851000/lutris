@@ -1,5 +1,6 @@
 """Wine prefix management"""
 import os
+from gettext import gettext as _
 from lutris.util.wine.registry import WineRegistry
 from lutris.util.log import logger
 from lutris.util import joypad, system
@@ -14,7 +15,7 @@ class WinePrefixManager:
 
     def __init__(self, path):
         if not path:
-            logger.warning("No path specified for Wine prefix")
+            logger.warning(_("No path specified for Wine prefix"))
         self.path = path
 
     def setup_defaults(self):
@@ -29,13 +30,13 @@ class WinePrefixManager:
         """
         if key.startswith(self.hkcu_prefix):
             return os.path.join(self.path, "user.reg")
-        raise ValueError("Unsupported key '{}'".format(key))
+        raise ValueError(_("Unsupported key '{}'").format(key))
 
     def get_key_path(self, key):
         if key.startswith(self.hkcu_prefix):
             return key[len(self.hkcu_prefix) + 1:]
         raise ValueError(
-            "The key {} is currently not supported by WinePrefixManager".format(key)
+            _("The key {} is currently not supported by WinePrefixManager").format(key)
         )
 
     def set_registry_key(self, key, subkey, value):
@@ -58,7 +59,7 @@ class WinePrefixManager:
         if mode.startswith("dis"):
             mode = ""
         if mode not in ("builtin", "native", "builtin,native", "native,builtin", ""):
-            logger.error("DLL override '%s' mode is not valid", mode)
+            logger.error(_("DLL override '%s' mode is not valid"), mode)
             return
         self.set_registry_key(key, dll, mode)
 
@@ -118,7 +119,7 @@ class WinePrefixManager:
         The Lutris virtual desktop is refered to as 'WineDesktop', in Wine the
         virtual desktop name is 'default'.
         """
-        logger.debug("Virtual desktop: %s", enabled)
+        logger.debug(_("Virtual desktop: %s"), enabled)
 
         path = self.hkcu_prefix + "/Software/Wine/Explorer"
         if enabled:

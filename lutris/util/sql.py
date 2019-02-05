@@ -1,5 +1,6 @@
 import time
 import sqlite3
+from gettext import gettext as _
 from lutris.util.log import logger
 
 # Number of attempts to retry failed queries
@@ -34,7 +35,7 @@ def cursor_execute(cursor, query, params=None):
                 raise
             else:
                 logger.error(
-                    "SQL query '%s' failed. %d retries remaining", query, DB_RETRIES - i
+                    _("SQL query '%s' failed. %d retries remaining"), query, DB_RETRIES - i
                 )
                 logger.error(ex)
                 time.sleep(1)

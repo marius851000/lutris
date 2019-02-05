@@ -17,8 +17,8 @@ def dosexec(config_file=None, executable=None, args=None, exit=True, working_dir
         if not working_dir:
             working_dir = os.path.dirname(executable)
     else:
-        raise ValueError("Neither a config file or an executable were provided")
-    logger.debug("Running dosbox with %s", run_with)
+        raise ValueError(_("Neither a config file or an executable were provided"))
+    logger.debug(_("Running dosbox with %s"), run_with)
     working_dir = system.create_folder(working_dir)
     dosbox = import_runner("dosbox")
     dosbox_runner = dosbox()
@@ -27,7 +27,7 @@ def dosexec(config_file=None, executable=None, args=None, exit=True, working_dir
         command += ["-conf", config_file]
     if executable:
         if not system.path_exists(executable):
-            raise OSError("Can't find file {}".format(executable))
+            raise OSError(_("Can't find file {}").format(executable))
         command += [executable]
     if args:
         command += args.split()

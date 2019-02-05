@@ -85,7 +85,7 @@ class SidebarRow(Gtk.ListBoxRow):
         RunnerConfigDialog(self.runner, parent=self.get_toplevel())
 
     def on_manage_versions(self, *args):
-        dlg_title = "Manage %s versions" % self.runner.name
+        dlg_title = _("Manage %s versions") % self.runner.name
         RunnerInstallDialog(dlg_title, self.get_toplevel(), self.runner.name)
 
     def do_state_flags_changed(self, previous_flags):
@@ -187,9 +187,9 @@ class SidebarListBox(Gtk.ListBox):
             return
 
         if not before:
-            row.set_header(SidebarHeader("Runners"))
+            row.set_header(SidebarHeader(_("Runners")))
         elif before.type == "runner" and row.type == "platform":
-            row.set_header(SidebarHeader("Platforms"))
+            row.set_header(SidebarHeader(_("Platforms")))
 
     def update(self, *args):
         self.installed_runners = [runner.name for runner in runners.get_installed()]

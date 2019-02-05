@@ -1,33 +1,33 @@
 from lutris.runners.runner import Runner
 from lutris.util import system
-
+from gettext import gettext as _
 
 class tic80(Runner):
     human_name = "TIC-80"
-    description = "TIC-80 tiny computer"
-    platforms = ["TIC-80"]
+    description = _("TIC-80 tiny computer")
+    platforms = [_("TIC-80")]
     runner_executable = "tic80/tic80"
     game_options = [
         {
             "option": "main_file",
             "type": "file",
-            "label": "ROM file",
+            "label": _("ROM file"),
             "default_path": "game_path",
         }
     ]
 
     runner_options = [
-        {"option": "surf", "type": "bool", "label": "Start in Surf", "default": False},
+        {"option": "surf", "type": "bool", "label": _("Start in Surf"), "default": False},
         {
             "option": "skip",
             "type": "bool",
-            "label": "Skip startup animation",
+            "label": _("Skip startup animation"),
             "default": False,
         },
         {
             "option": "nosound",
             "type": "bool",
-            "label": "Start in silent mode",
+            "label": _("Start in silent mode"),
             "default": False,
         },
     ]

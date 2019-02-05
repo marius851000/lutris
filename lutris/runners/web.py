@@ -36,7 +36,7 @@ class web(Runner):
             "label": _("Open window maximized"),
             "type": "bool",
             "default": False,
-            "help": "Maximizes the window when game starts.",
+            "help": _("Maximizes the window when game starts."),
         },
         {
             "option": "window_size",
@@ -186,8 +186,7 @@ class web(Runner):
                     "error": "CUSTOM",
                     "text": _(
                         "The file %s does not exist, \n"
-                        "verify the game's configuration." % url
-                    ),
+                        "verify the game's configuration.") % url,
                 }
             url = "file://" + url
 

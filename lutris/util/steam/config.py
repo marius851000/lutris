@@ -1,6 +1,7 @@
 """Handle Steam configuration"""
 import os
 from collections import OrderedDict, defaultdict
+from gettext import gettext as _
 
 from lutris.util import system
 from lutris.util.log import logger
@@ -34,7 +35,7 @@ def read_config(steam_data_dir):
     try:
         config = config["InstallConfigStore"]["Software"]["Valve"]["Steam"]
     except KeyError as ex:
-        logger.error("Steam config %s is empty: %s", config_filename, ex)
+        logger.error(_("Steam config %s is empty: %s"), config_filename, ex)
         return None
     else:
         return config
@@ -57,7 +58,7 @@ def get_steamapps_paths(flat=False, platform=None):
 
     if platform:
         if platform not in base_platforms:
-            raise ValueError("Illegal value for Steam platform: %s" % platform)
+            raise ValueError(_("Illegal value for Steam platform: %s") % platform)
         platforms = [platform]
     else:
         platforms = base_platforms

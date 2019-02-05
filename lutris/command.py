@@ -14,6 +14,7 @@ from lutris import runtime
 from lutris.util.log import logger
 from lutris.util import system
 from lutris.util.signals import PID_HANDLERS, register_handler
+from gettext import gettext as _
 
 WRAPPER_SCRIPT = os.path.join(os.path.dirname(os.path.abspath(sys.argv[0])), "lutris-wrapper")
 
@@ -107,9 +108,9 @@ class MonitoredCommand:
 
     def start(self):
         """Run the thread."""
-        logger.debug("Running %s", " ".join(self.wrapper_command))
+        logger.debug(_("Running %s"), " ".join(self.wrapper_command))
         for key, value in self.env.items():
-            logger.debug("ENV: %s=\"%s\"", key, value)
+            logger.debug(_("ENV: %s=\"%s\""), key, value)
             pass
 
         if self.terminal:
@@ -119,7 +120,7 @@ class MonitoredCommand:
             self.game_process = self.execute_process(self.wrapper_command, env)
 
         if not self.game_process:
-            logger.warning("No game process available")
+            logger.warning(_("No game process available"))
             return
 
         register_handler(self.game_process.pid, self.on_stop)
@@ -146,13 +147,13 @@ class MonitoredCommand:
 
     def on_stop(self, returncode):
         """Callback registered on the SIGCHLD handler"""
-        logger.debug("The process has terminated with code %s", returncode)
+        logger.debug(_("The process has terminated with code %s"), returncode)
         self.is_running = False
         self.return_code = returncode
 
         resume_stop = self.stop()
         if not resume_stop:
-            logger.info("Full shutdown prevented")
+            logger.info(_("Full shutdown prevented"))
             return False
 
         return False
@@ -215,12 +216,12 @@ class MonitoredCommand:
                 env=env,
             )
         except OSError as ex:
-            logger.exception("Failed to execute %s: %s", " ".join(command), ex)
+            logger.exception(_("Failed to execute %s: %s"), " ".join(command), ex)
             self.error = ex.strerror
 
     def restore_environment(self):
         """Restore the environment to its original state"""
-        logger.debug("Restoring environment")
+        logger.debug(_("Restoring environment"))
         for key in self.original_env:
             if self.original_env[key] is None:
                 try:
@@ -242,7 +243,7 @@ class MonitoredCommand:
         try:
             self.game_process.terminate()
         except ProcessLookupError:  # process already dead.
-            logger.debug("Management process looks dead already.")
+            logger.debug(_("Management process looks dead already."))
 
         if hasattr(self, "stop_func"):
             resume_stop = self.stop_func()
@@ -250,10 +251,10 @@ class MonitoredCommand:
                 return False
 
         if self.stdout_monitor:
-            logger.debug("Detaching logger")
+            logger.debug(_("Detaching logger"))
             GLib.source_remove(self.stdout_monitor)
         else:
-            logger.debug("logger already detached")
+            logger.debug(_("logger already detached"))
 
         self.restore_environment()
         self.is_running = False

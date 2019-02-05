@@ -6,7 +6,7 @@ from lutris.game import Game
 from lutris.util.log import logger
 from lutris.util.strings import gtk_safe, get_formatted_playtime
 from lutris.gui.widgets.utils import get_pixbuf_for_game
-
+from gettext import gettext as _
 
 class PgaGame:
     """Representation of a game for views
@@ -65,7 +65,7 @@ class PgaGame:
             if not _platform:
                 game_inst.set_platform_from_runner()
                 _platform = game_inst.platform
-                logger.debug("Setting platform for %s: %s", self, _platform)
+                logger.debug(_("Setting platform for %s: %s"), self, _platform)
         return _platform
 
     @property
@@ -121,7 +121,7 @@ class PgaGame:
             playtime_text = get_formatted_playtime(self._pga_data["playtime"])
         except ValueError:
             # We're all screwed
-            logger.warning("Invalid playtime value %s for %s", self.playtime, self)
+            logger.warning(_("Invalid playtime value %s for %s"), self.playtime, self)
             pga.fix_playtime(self._pga_data)
             playtime_text = ""  # Do not show erroneous values
         return playtime_text

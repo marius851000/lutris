@@ -9,6 +9,7 @@ from lutris.runners import import_runner, InvalidRunner
 from lutris.util.log import logger
 from lutris.util.system import reverse_expanduser
 from lutris.util.jobs import AsyncCall
+from gettext import gettext as _
 
 class ConfigBox(VBox):
     """Dynamically generate a vbox built upon on a python dict."""
@@ -46,7 +47,7 @@ class ConfigBox(VBox):
     def generate_widgets(self, config_section):
         """Parse the config dict and generates widget accordingly."""
         if not self.options:
-            no_options_label = Label("No options available")
+            no_options_label = Label(_("No options available"))
             no_options_label.set_halign(Gtk.Align.CENTER)
             no_options_label.set_valign(Gtk.Align.CENTER)
             self.pack_start(no_options_label, True, True, 0)
@@ -177,7 +178,7 @@ class ConfigBox(VBox):
             )
         elif option_type == "string":
             if "label" not in option:
-                raise ValueError("Option %s has no label" % option)
+                raise ValueError(_("Option %s has no label") % option)
             self.generate_entry(option_key, option["label"], value, option_size)
         elif option_type == "directory_chooser":
             self.generate_directory_chooser(option_key, option["label"], value)
@@ -190,7 +191,7 @@ class ConfigBox(VBox):
         elif option_type == "mapping":
             self.generate_editable_grid(option_key, label=option["label"], value=value)
         else:
-            raise ValueError("Unknown widget type %s" % option_type)
+            raise ValueError(_("Unknown widget type %s") % option_type)
 
     # Label
     def generate_label(self, text):
@@ -443,7 +444,7 @@ class ConfigBox(VBox):
         vbox = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
         label = Label(label + ":")
         label.set_halign(Gtk.Align.START)
-        button = Gtk.Button("Add files")
+        button = Gtk.Button(_("Add files"))
         button.connect("clicked", self.on_add_files_clicked, option_name, value)
         button.set_margin_left(10)
         vbox.pack_start(label, False, False, 5)
@@ -484,9 +485,9 @@ class ConfigBox(VBox):
             parent=None,
             action=Gtk.FileChooserAction.OPEN,
             buttons=(
-                "_Cancel",
+                _("_Cancel"),
                 Gtk.ResponseType.CANCEL,
-                "_Add",
+                _("_Add"),
                 Gtk.ResponseType.ACCEPT,
             ),
         )
@@ -604,7 +605,7 @@ class GameBox(ConfigBox):
             if runner:
                 self.options = runner.game_options
         else:
-            logger.warning("No runner in game supplied to GameBox")
+            logger.warning(_("No runner in game supplied to GameBox"))
         self.generate_widgets("game")
 
 

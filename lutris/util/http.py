@@ -5,6 +5,7 @@ import urllib.request
 import urllib.error
 import urllib.parse
 from ssl import CertificateError
+from gettext import gettext as _
 
 from lutris.settings import SITE_URL, VERSION, PROJECT
 from lutris.util.log import logger
@@ -26,7 +27,7 @@ class Request:
     ):
 
         if not url:
-            raise ValueError("An URL is required!")
+            raise ValueError(_("An URL is required!"))
 
         if url.startswith("//"):
             url = "https:" + url
@@ -47,7 +48,7 @@ class Request:
         if headers is None:
             headers = {}
         if not isinstance(headers, dict):
-            raise TypeError("HTTP headers needs to be a dict ({})".format(headers))
+            raise TypeError(_("HTTP headers needs to be a dict ({})").format(headers))
         self.headers.update(headers)
         if cookies:
             cookie_processor = urllib.request.HTTPCookieProcessor(cookies)
@@ -70,22 +71,22 @@ class Request:
             else:
                 request = urllib.request.urlopen(req, timeout=self.timeout)
         except (urllib.error.HTTPError, CertificateError) as error:
-            raise HTTPError("Unavailable url %s: %s" % (self.url, error))
+            raise HTTPError(_("Unavailable url %s: %s") % (self.url, error))
         except (socket.timeout, urllib.error.URLError) as error:
-            raise HTTPError("Unable to connect to server %s: %s" % (self.url, error))
+            raise HTTPError(_("Unable to connect to server %s: %s") % (self.url, error))
         if request.getcode() > 200:
-            logger.debug("Server responded with status code %s", request.getcode())
+            logger.debug(_("Server responded with status code %s"), request.getcode())
         try:
             total_size = request.info().get("Content-Length").strip()
             total_size = int(total_size)
         except AttributeError:
-            logger.warning("Failed to read response's content length")
+            logger.warning(_("Failed to read response's content length"))
             total_size = 0
 
         self.response_headers = request.getheaders()
         self.status_code = request.getcode()
         if self.status_code > 299:
-            logger.warning("Request responded with code %s", self.status_code)
+            logger.warning(_("Request responded with code %s"), self.status_code)
         chunks = []
         while 1:
             if self.stop_request and self.stop_request.is_set():
@@ -94,7 +95,7 @@ class Request:
             try:
                 chunk = request.read(self.buffer_size)
             except socket.timeout:
-                logger.error("Request timed out")
+                logger.error(_("Request timed out"))
                 self.content = ""
                 return self
             self.downloaded_size += len(chunk)
@@ -125,7 +126,7 @@ class Request:
                 return json.loads(self.text)
             except json.decoder.JSONDecodeError:
                 raise ValueError(
-                    "Invalid response ({}:{}): {}".format(
+                    _("Invalid response ({}:{}): {}").format(
                         self.url, self.status_code, self.text[:80]
                     )
                 )

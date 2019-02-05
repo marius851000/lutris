@@ -7,7 +7,7 @@ from lutris.services import get_services
 from lutris.settings import read_setting, write_setting
 from lutris.util.log import logger
 from lutris.util.jobs import AsyncCall
-
+from gettext import gettext as _
 
 class ServiceSyncBox(Gtk.Box):
     """Display components to import games from a service"""
@@ -45,7 +45,7 @@ class ServiceSyncBox(Gtk.Box):
         if service.ONLINE:
             self.refresh_button = Gtk.Button()
             self.refresh_button.connect("clicked", self.on_refresh_clicked)
-            self.refresh_button.set_tooltip_text("Reload")
+            self.refresh_button.set_tooltip_text(_("Reload"))
             self.refresh_button.set_image(
                 Gtk.Image.new_from_icon_name("view-refresh-symbolic", Gtk.IconSize.MENU)
             )
@@ -61,9 +61,9 @@ class ServiceSyncBox(Gtk.Box):
         actions = Gtk.Box(spacing=6)
         self.pack_start(actions, False, False, 0)
 
-        self.sync_button = Gtk.Button("Import games")
+        self.sync_button = Gtk.Button(_("Import games"))
         self.sync_button.set_sensitive(False)
-        self.sync_button.set_tooltip_text("Sync now")
+        self.sync_button.set_tooltip_text(_("Sync now"))
         self.sync_button.connect(
             "clicked", self.on_sync_button_clicked, service.SYNCER.sync
         )
@@ -77,7 +77,7 @@ class ServiceSyncBox(Gtk.Box):
             self.sync_switch.set_state(True)
         actions.pack_start(Gtk.Alignment(), True, True, 0)
         actions.pack_start(self.sync_switch, False, False, 0)
-        actions.pack_start(Gtk.Label("Sync all games at startup"), False, False, 0)
+        actions.pack_start(Gtk.Label(_("Sync all games at startup")), False, False, 0)
 
         if service.ONLINE and not service.is_connected():
             self.sync_switch.set_sensitive(False)
@@ -90,11 +90,11 @@ class ServiceSyncBox(Gtk.Box):
             gog_logo = self.get_icon(size=(64, 64))
 
             gog_label = Gtk.Label(
-                "Connect to GOG to automatically \ndownload games during installations"
+                _("Connect to GOG to automatically \ndownload games during installations")
             )
             gog_label.set_justify(Gtk.Justification.CENTER)
 
-            gog_button = Gtk.Button("Connect your account")
+            gog_button = Gtk.Button(_("Connect your account"))
             gog_button.connect("clicked", self.on_connect_clicked)
 
             gog_box = Gtk.VBox()
@@ -177,12 +177,12 @@ class ServiceSyncBox(Gtk.Box):
         """Called when games are imported"""
         window = self.get_main_window()
         if not window:
-            logger.warning("Unable to get main window")
+            logger.warning(_("Unable to get main window"))
             return
         if games:
             send_notification(
-                "Games imported",
-                "%s game%s imported to Lutris" %
+                _("Games imported"),
+                _("%s game%s imported to Lutris") % # TODO: proper translation
                 (len(games), "s were" if len(games) > 1 else " was")
             )
             window.game_store.add_games_by_ids(games)
@@ -200,7 +200,7 @@ class ServiceSyncBox(Gtk.Box):
 
         renderer_text = Gtk.CellRendererText()
 
-        import_column = Gtk.TreeViewColumn("Import", renderer_toggle, active=self.COL_SELECTED)
+        import_column = Gtk.TreeViewColumn(_("Import"), renderer_toggle, active=self.COL_SELECTED)
         treeview.append_column(import_column)
 
         image_cell = Gtk.CellRendererPixbuf()
@@ -256,14 +256,14 @@ class ServiceSyncBox(Gtk.Box):
     def get_game_list_widget(self):
         content = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=6)
         filter_box = Gtk.Box(spacing=6)
-        select_all_button = Gtk.CheckButton.new_with_label("Select all")
+        select_all_button = Gtk.CheckButton.new_with_label(_("Select all"))
         select_all_button.connect("toggled", self.on_select_all)
         filter_box.add(select_all_button)
 
         search_entry = Gtk.Entry()
         search_entry.connect("changed", self.on_search_entry_changed)
         filter_box.pack_start(Gtk.Alignment(), True, True, 0)
-        filter_box.add(Gtk.Label("Filter:"))
+        filter_box.add(Gtk.Label(_("Filter:")))
         filter_box.add(search_entry)
         content.pack_start(filter_box, False, False, 0)
 

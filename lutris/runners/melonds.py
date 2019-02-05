@@ -1,17 +1,17 @@
 from lutris.runners.runner import Runner
 from lutris.util import system
-
+from gettext import gettext as _
 
 class melonds(Runner):
     human_name = "melonDS"
-    description = "Nintendo DS Emulator"
-    platforms = ["Nintendo DS"]
+    description = _("Nintendo DS Emulator")
+    platforms = [_("Nintendo DS")]
     runner_executable = "melonDS/melonDS"
     game_options = [
         {
             "option": "main_file",
             "type": "file",
-            "label": "ROM file",
+            "label": _("ROM file"),
             "default_path": "game_path",
         }
     ]

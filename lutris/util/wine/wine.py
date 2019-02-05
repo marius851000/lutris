@@ -3,6 +3,7 @@ import os
 import subprocess
 from functools import lru_cache
 from collections import OrderedDict
+from gettext import gettext as _
 
 from lutris import runtime, settings
 from lutris.gui.dialogs import DontShowAgainDialog, ErrorDialog
@@ -67,7 +68,7 @@ def detect_prefix_arch(prefix_path=None):
     registry_path = os.path.join(prefix_path, "system.reg")
     if not os.path.isdir(prefix_path) or not os.path.isfile(registry_path):
         # No prefix_path exists or invalid prefix
-        logger.debug("Prefix not found: %s", prefix_path)
+        logger.debug(_("Prefix not found: %s"), prefix_path)
         return None
     with open(registry_path, "r") as registry:
         for _line_no in range(5):
@@ -76,7 +77,7 @@ def detect_prefix_arch(prefix_path=None):
                 return "win64"
             if "win32" in line:
                 return "win32"
-    logger.debug("Failed to detect Wine prefix architecture in %s", prefix_path)
+    logger.debug(_("Failed to detect Wine prefix architecture in %s"), prefix_path)
     return None
 
 
@@ -84,11 +85,11 @@ def set_drive_path(prefix, letter, path):
     """Changes the path to a Wine drive"""
     dosdevices_path = os.path.join(prefix, "dosdevices")
     if not system.path_exists(dosdevices_path):
-        raise OSError("Invalid prefix path %s" % prefix)
+        raise OSError(_("Invalid prefix path %s") % prefix)
     drive_path = os.path.join(dosdevices_path, letter + ":")
     if system.path_exists(drive_path):
         os.remove(drive_path)
-    logger.debug("Linking %s to %s", drive_path, path)
+    logger.debug(_("Linking %s to %s"), drive_path, path)
     os.symlink(path, drive_path)
 
 
@@ -98,15 +99,15 @@ def use_lutris_runtime(wine_path, force_disable=False):
     automatically if Wine is installed system wide.
     """
     if force_disable or runtime.RUNTIME_DISABLED:
-        logger.info("Runtime is forced disabled")
+        logger.info(_("Runtime is forced disabled"))
         return False
     if WINE_DIR in wine_path:
-        logger.debug("%s is provided by Lutris, using runtime", wine_path)
+        logger.debug(_("%s is provided by Lutris, using runtime"), wine_path)
         return True
     if is_installed_systemwide():
-        logger.info("Using system wine version, not using runtime")
+        logger.info(_("Using system wine version, not using runtime"))
         return False
-    logger.debug("Using Lutris runtime for wine")
+    logger.debug(_("Using Lutris runtime for wine"))
     return True
 
 
@@ -119,7 +120,7 @@ def is_installed_systemwide():
                 and system.path_exists("/usr/lib/wine/wine64")
                 and not system.path_exists("/usr/lib/wine/wine")
             ):
-                logger.warning("wine32 is missing from system")
+                logger.warning(_("wine32 is missing from system"))
                 return False
             return True
     return False
@@ -154,7 +155,7 @@ def get_wine_versions():
                 continue
             for version in os.listdir(builds_path):
                 if system.path_exists(os.path.join(builds_path, version, "bin/wine")):
-                    logger.debug("Adding PoL version %s", version)
+                    logger.debug(_("Adding PoL version %s"), version)
                     versions.append("PlayOnLinux %s-%s" % (version, arch))
                 else:
                     logger.warning(os.path.join(builds_path, "bin/wine"))
@@ -165,7 +166,7 @@ def get_wine_version_exe(version):
     if not version:
         version = get_default_version()
     if not version:
-        raise RuntimeError("Wine is not installed")
+        raise RuntimeError(_("Wine is not installed"))
     return os.path.join(WINE_DIR, "{}/bin/wine".format(version))
 
 
@@ -176,7 +177,7 @@ def is_version_installed(version):
 def is_esync_limit_set():
     """Checks if the number of files open is acceptable for esync usage."""
     if ESYNC_LIMIT_CHECK in ("0", "off"):
-        logger.info("fd limit check for esync was manually disabled")
+        logger.info(_("fd limit check for esync was manually disabled"))
         return True
     return system.LINUX_SYSTEM.has_enough_file_descriptors()
 
@@ -205,7 +206,7 @@ def get_system_wine_version(wine_path="wine"):
     try:
         version = subprocess.check_output([wine_path, "--version"]).decode().strip()
     except (OSError, subprocess.CalledProcessError) as ex:
-        logger.exception("Error reading wine version for %s: %s", wine_path, ex)
+        logger.exception(_("Error reading wine version for %s: %s"), wine_path, ex)
         return
     else:
         if version.startswith("wine-"):
@@ -253,18 +254,18 @@ def get_real_executable(windows_executable, working_dir=None):
 
 def display_vulkan_error(on_launch):
     if on_launch:
-        checkbox_message = "Launch anyway and do not show this message again."
+        checkbox_message = _("Launch anyway and do not show this message again.")
     else:
-        checkbox_message = "Enable anyway and do not show this message again."
+        checkbox_message = _("Enable anyway and do not show this message again.")
 
     setting = "hide-no-vulkan-warning"
     DontShowAgainDialog(
         setting,
-        "Vulkan is not installed or is not supported by your system",
-        secondary_message="If you have compatible hardware, please follow "
+        _("Vulkan is not installed or is not supported by your system"),
+        secondary_message=_("If you have compatible hardware, please follow "
         "the installation procedures as described in\n"
         "<a href='https://github.com/lutris/lutris/wiki/How-to:-DXVK'>"
-        "How-to:-DXVK (https://github.com/lutris/lutris/wiki/How-to:-DXVK)</a>",
+        "How-to:-DXVK (https://github.com/lutris/lutris/wiki/How-to:-DXVK)</a>"),
         checkbox_message=checkbox_message,
     )
     return settings.read_setting(setting) == "True"
@@ -272,26 +273,26 @@ def display_vulkan_error(on_launch):
 
 def esync_display_limit_warning():
     ErrorDialog(
-        "Your limits are not set correctly."
+        _("Your limits are not set correctly."
         " Please increase them as described here:"
         " <a href='https://github.com/lutris/lutris/wiki/How-to:-Esync'>"
-        "How-to:-Esync (https://github.com/lutris/lutris/wiki/How-to:-Esync)</a>"
+        "How-to:-Esync (https://github.com/lutris/lutris/wiki/How-to:-Esync)</a>")
     )
 
 
 def esync_display_version_warning(on_launch=False):
     setting = "hide-wine-non-esync-version-warning"
     if on_launch:
-        checkbox_message = "Launch anyway and do not show this message again."
+        checkbox_message = _("Launch anyway and do not show this message again.")
     else:
-        checkbox_message = "Enable anyway and do not show this message again."
+        checkbox_message = _("Enable anyway and do not show this message again.")
 
     DontShowAgainDialog(
         setting,
-        "Incompatible Wine version detected",
-        secondary_message="The wine build you have selected "
+        _("Incompatible Wine version detected"),
+        secondary_message=_("The wine build you have selected "
         "does not seem to support Esync.\n"
-        "Please switch to an esync-capable version.",
+        "Please switch to an esync-capable version."),
         checkbox_message=checkbox_message,
     )
     return settings.read_setting(setting) == "True"
@@ -317,7 +318,7 @@ def get_overrides_env(overrides):
         try:
             override_buckets[value].append(dll)
         except KeyError:
-            logger.error("Invalid override value %s", value)
+            logger.error(_("Invalid override value %s"), value)
             continue
 
     override_strings = []

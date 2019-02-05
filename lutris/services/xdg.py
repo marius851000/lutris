@@ -25,7 +25,7 @@ def get_appid(app):
         return os.path.splitext(app.get_id())[0]
     except UnicodeDecodeError:
         logger.exception(
-            "Failed to read ID for app %s (non UTF-8 encoding). Reverting to executable name.",
+            _("Failed to read ID for app %s (non UTF-8 encoding). Reverting to executable name."),
             app,
         )
         return app.get_executable()

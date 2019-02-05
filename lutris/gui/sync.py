@@ -7,7 +7,7 @@ from lutris.gui.dialogs import NoticeDialog
 from lutris.services import get_services
 from lutris.settings import read_setting, write_setting
 from lutris.util.jobs import AsyncCall
-
+from gettext import gettext as _
 
 class ServiceSyncRow(Gtk.HBox):
 
@@ -36,8 +36,8 @@ class ServiceSyncRow(Gtk.HBox):
             sync_switch.set_state(True)
         actions.pack_start(sync_switch, False, False, 0)
 
-        sync_button = Gtk.Button("Sync")
-        sync_button.set_tooltip_text("Sync now")
+        sync_button = Gtk.Button(_("Sync"))
+        sync_button.set_tooltip_text(_("Sync now"))
         sync_button.connect('clicked', self.on_sync_button_clicked, service.sync_with_lutris)
         actions.pack_start(sync_button, False, False, 0)
 

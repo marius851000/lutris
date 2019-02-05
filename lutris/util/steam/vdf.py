@@ -1,4 +1,6 @@
 """Read and write VDF files"""
+from gettext import gettext as _
+
 from lutris.util.log import logger
 
 
@@ -10,7 +12,7 @@ def vdf_parse(steam_config_file, config):
             line = steam_config_file.readline()
         except UnicodeDecodeError:
             logger.error(
-                "Error while reading Steam VDF file %s. Returning %s",
+                _("Error while reading Steam VDF file %s. Returning %s"),
                 steam_config_file,
                 config,
             )
@@ -32,7 +34,7 @@ def vdf_parse(steam_config_file, config):
             try:
                 config[line_elements[1]] = line_elements[3]
             except IndexError:
-                logger.error("Malformed config file: %s", line)
+                logger.error(_("Malformed config file: %s"), line)
     return config
 
 

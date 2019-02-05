@@ -1,4 +1,5 @@
 """Synchronization of the game library with server and local data."""
+from gettext import gettext as _
 from lutris import api, pga
 from lutris.util import resources
 from lutris.util.log import logger
@@ -16,7 +17,7 @@ def sync_missing_games(not_in_local, remote_library):
     for remote_game in remote_library:
         slug = remote_game["slug"]
         if slug in not_in_local:
-            logger.debug("Adding to local library: %s", slug)
+            logger.debug(_("Adding to local library: %s"), slug)
             missing.append(
                 {
                     "name": remote_game["name"],
@@ -58,14 +59,14 @@ def sync_game_details(remote_library):
                         and not local_game[key]
                 ):
                     # Remote game has data that is missing from the local game.
-                    logger.info("Key %s is not present, forcing update", key)
+                    logger.info(_("Key %s is not present, forcing update"), key)
                     sync_required = True
                     break
 
         if not sync_required:
             continue
 
-        logger.debug("Syncing details for %s", slug)
+        logger.debug(_("Syncing details for %s"), slug)
         game_id = pga.add_or_update(
             name=local_game["name"],
             runner=local_game["runner"],
@@ -84,7 +85,7 @@ def sync_game_details(remote_library):
             resources.download_media(remote_game["icon_url"], path, overwrite=True)
 
     if updated:
-        logger.debug("%d games updated", len(updated))
+        logger.debug(_("%d games updated"), len(updated))
     return updated
 
 
@@ -100,7 +101,7 @@ def sync_from_remote():
     try:
         remote_library = api.get_library()
     except Exception as ex:
-        logger.error("Error while downloading the remote library: %s", ex)
+        logger.error(_("Error while downloading the remote library: %s"), ex)
         remote_library = {}
     remote_slugs = {game["slug"] for game in remote_library}
 

@@ -5,7 +5,7 @@ from gettext import gettext as _
 class pcsx2(Runner):
     human_name = "PCSX2"
     description = _("PlayStation 2 emulator")
-    platforms = ["Sony PlayStation 2"]
+    platforms = [_("Sony PlayStation 2")]
     runner_executable = "pcsx2/PCSX2"
     game_options = [
         {
@@ -23,8 +23,8 @@ class pcsx2(Runner):
             "label": _("Fullscreen"),
             "default": False,
         },
-        {"option": "full_boot", "type": "bool", "label": "Fullboot", "default": False},
-        {"option": "nogui", "type": "bool", "label": "No GUI", "default": False},
+        {"option": "full_boot", "type": "bool", "label": _("Fullboot"), "default": False},
+        {"option": "nogui", "type": "bool", "label": _("No GUI"), "default": False},
     ]
 
     def play(self):

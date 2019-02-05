@@ -3,7 +3,7 @@ from datetime import datetime
 from gi.repository import Gtk, Pango, Gdk
 from lutris.gui.widgets.utils import get_pixbuf_for_panel, get_pixbuf_for_game
 from lutris.util.strings import gtk_safe
-
+from gettext import gettext as _
 
 class GamePanel(Gtk.Fixed):
     """Panel allowing users to interact with a game"""
@@ -86,7 +86,7 @@ class GamePanel(Gtk.Fixed):
         """Return the label containing the playtime info"""
         playtime_label = Gtk.Label()
         playtime_label.show()
-        playtime_label.set_markup("Time played: <b>%s</b>" % self.game.formatted_playtime)
+        playtime_label.set_markup(_("Time played: <b>%s</b>") % self.game.formatted_playtime)
         return playtime_label
 
     def get_last_played_label(self):
@@ -94,7 +94,7 @@ class GamePanel(Gtk.Fixed):
         last_played_label = Gtk.Label()
         last_played_label.show()
         lastplayed = datetime.fromtimestamp(self.game.lastplayed)
-        last_played_label.set_markup("Last played: <b>%s</b>" % lastplayed.strftime("%x"))
+        last_played_label.set_markup(_("Last played: <b>%s</b>") % lastplayed.strftime("%x"))
         return last_played_label
 
     def get_buttons(self):

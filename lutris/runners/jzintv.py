@@ -6,16 +6,16 @@ from gettext import gettext as _
 
 class jzintv(Runner):
     human_name = "jzIntv"
-    description = "Intellivision Emulator"
-    platforms = ["Intellivision"]
+    description = _("Intellivision Emulator")
+    platforms = [_("Intellivision")]
     runner_executable = "jzintv/bin/jzintv"
     game_options = [
         {
             "option": "main_file",
             "type": "file",
-            "label": "ROM file",
+            "label": _("ROM file"),
             "default_path": "game_path",
-            "help": (
+            "help": _(
                 "The game data, commonly called a ROM image. \n"
                 "Supported rom formats: .rom, .bin+.cfg, .int, .itv \n"
                 "The file extension must be lower-case."
@@ -26,27 +26,31 @@ class jzintv(Runner):
         {
             "option": "bios_path",
             "type": "directory_chooser",
-            "label": "Bios location",
-            "help": (
+            "label": _("Bios location"),
+            "help": _(
                 "Choose the folder containing the Intellivision bios "
                 "files (exec.bin and grom.bin).\n"
                 "These files contain code from the original hardware "
                 "necessary to the emulation."
             ),
         },
-        {"option": "fullscreen", "type": "bool", "label": "Fullscreen"},
+        {
+            "option": "fullscreen",
+            "type": "bool",
+            "label": _("Fullscreen")
+        },
         {
             "option": "resolution",
             "type": "choice",
             "label": _("Resolution"),
             "choices": (
-                ("320 x 200 (default)", "0"),
-                ("640 x 480", "1"),
-                ("800 x 400", "5"),
-                ("800 x 600", "2"),
-                ("1024 x 768", "3"),
-                ("1680 x 1050", "4"),
-                ("1600 x 1200", "6"),
+                (_("320 x 200 (default)"), "0"),
+                (_("640 x 480"), "1"),
+                (_("800 x 400"), "5"),
+                (_("800 x 600"), "2"),
+                (_("1024 x 768"), "3"),
+                (_("1680 x 1050"), "4"),
+                (_("1600 x 1200"), "6"),
             ),
         },
     ]

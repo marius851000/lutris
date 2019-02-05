@@ -15,6 +15,7 @@ from lutris.gui.widgets.utils import get_pixbuf_for_game, BANNER_SIZE, BANNER_SM
 
 from lutris.services import xdg
 from lutris.util.log import logger
+from gettext import gettext as _
 
 (
     COL_ID,
@@ -105,7 +106,7 @@ class GameStore(GObject.Object):
             return
         game = pga.get_game_by_field(game_id, 'id')
         if not game or 'slug' not in game:
-            raise ValueError('Can\'t find game {} ({})'.format(
+            raise ValueError(_('Can\'t find game {} ({})').format(
                 game_id, game
             ))
         self.add_game(game)
@@ -208,7 +209,7 @@ class GameView(object):
         if row:
             self.remove_row(row.iter)
         else:
-            logger.debug("Tried to remove %s but couln't find the row", removed_id)
+            logger.debug(_("Tried to remove %s but couln't find the row"), removed_id)
 
     def remove_row(self, model_iter):
         """Remove a game from the view."""
@@ -219,7 +220,7 @@ class GameView(object):
         """Update a game row to show as installed"""
         row = self.get_row_by_id(game.id)
         if not row:
-            raise ValueError("Couldn't find row for id %d (%s)" % (game.id, game))
+            raise ValueError(_("Couldn't find row for id %d (%s)") % (game.id, game))
         row[COL_RUNNER] = game.runner_name
         row[COL_PLATFORM] = ''
         self.update_image(game.id, is_installed=True)
@@ -228,7 +229,7 @@ class GameView(object):
         """Update a game row to show as uninstalled"""
         row = self.get_row_by_id(game.id)
         if not row:
-            raise ValueError("Couldn't find row for id %s" % game.id)
+            raise ValueError(_("Couldn't find row for id %s") % game.id)
         row[COL_RUNNER] = ''
         row[COL_PLATFORM] = ''
         self.update_image(game.id, is_installed=False)

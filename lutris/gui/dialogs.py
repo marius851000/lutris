@@ -9,19 +9,20 @@ from lutris.gui.widgets.dialogs import Dialog
 from lutris.gui.widgets.download_progress import DownloadProgressBox
 from lutris.util import datapath
 from lutris.util.log import logger
+from gettext import gettext as _
 
 import gi
 gi.require_version("WebKit2", "4.0")
 
 from gi.repository import GLib, GObject, Gtk, WebKit2
-
+from gettext import gettext as _
 
 class GtkBuilderDialog(GObject.Object):
     def __init__(self, parent=None, **kwargs):
         super().__init__()
         ui_filename = os.path.join(datapath.get(), "ui", self.glade_file)
         if not os.path.exists(ui_filename):
-            raise ValueError("ui file does not exists: %s" % ui_filename)
+            raise ValueError(_("ui file does not exists: %s") % ui_filename)
 
         self.builder = Gtk.Builder()
         self.builder.add_from_file(ui_filename)
@@ -101,7 +102,7 @@ class DirectoryDialog(Gtk.FileChooserDialog):
         super().__init__(
             title=message,
             action=Gtk.FileChooserAction.SELECT_FOLDER,
-            buttons=("_Cancel", Gtk.ResponseType.CLOSE, "_OK", Gtk.ResponseType.OK),
+            buttons=(_("_Cancel"), Gtk.ResponseType.CLOSE, _("_OK"), Gtk.ResponseType.OK),
             parent=parent,
         )
         self.result = self.run()
@@ -194,11 +195,11 @@ class InstallOrPlayDialog(Gtk.Dialog):
         self.run()
 
     def on_button_toggled(self, button, action):
-        logger.debug("Action set to %s", action)
+        logger.debug(_("Action set to %s"), action)
         self.action = action
 
     def on_confirm(self, button):
-        logger.debug("Action %s confirmed", self.action)
+        logger.debug(_("Action %s confirmed"), self.action)
         self.action_confirmed = True
         self.destroy()
 
@@ -269,7 +270,7 @@ class PgaSourceDialog(GtkBuilderDialog):
             _("Select directory"),
             self.dialog,
             Gtk.FileChooserAction.SELECT_FOLDER,
-            ("_Cancel", Gtk.ResponseType.CANCEL, "_OK", Gtk.ResponseType.OK),
+            (_("_Cancel"), Gtk.ResponseType.CANCEL, _("_OK"), Gtk.ResponseType.OK),
         )
         chooser.set_local_only(False)
         response = chooser.run()
@@ -333,7 +334,7 @@ class ClientLoginDialog(GtkBuilderDialog):
         username, password = self.get_credentials()
         token = api.connect(username, password)
         if not token:
-            NoticeDialog("Login failed", parent=self.parent)
+            NoticeDialog(_("Login failed"), parent=self.parent)
         else:
             self.emit("connected", username)
             self.dialog.destroy()
@@ -416,7 +417,7 @@ class InstallerSourceDialog(Gtk.Dialog):
     """Show install script source"""
 
     def __init__(self, code, name, parent):
-        Gtk.Dialog.__init__(self, "Install script for {}".format(name), parent=parent)
+        Gtk.Dialog.__init__(self, _("Install script for {}").format(name), parent=parent)
         self.set_size_request(500, 350)
         self.set_border_width(0)
 
@@ -432,7 +433,7 @@ class InstallerSourceDialog(Gtk.Dialog):
         self.get_content_area().add(self.scrolled_window)
         self.scrolled_window.add(source_box)
 
-        close_button = Gtk.Button("OK")
+        close_button = Gtk.Button(_("OK"))
         close_button.connect("clicked", self.on_close)
         self.get_content_area().add(close_button)
 
@@ -455,7 +456,7 @@ class DontShowAgainDialog(Gtk.MessageDialog):
     ):
 
         if settings.read_setting(setting) == "True":
-            logger.info("Dialog %s dismissed by user", setting)
+            logger.info(_("Dialog %s dismissed by user"), setting)
             return
 
         super().__init__(
@@ -469,7 +470,7 @@ class DontShowAgainDialog(Gtk.MessageDialog):
             self.props.secondary_text = secondary_message
 
         if not checkbox_message:
-            checkbox_message = "Do not display this message again."
+            checkbox_message = _("Do not display this message again.")
 
         dont_show_checkbutton = Gtk.CheckButton(checkbox_message)
         dont_show_checkbutton.props.halign = Gtk.Align.CENTER
@@ -489,11 +490,11 @@ class WineNotInstalledWarning(DontShowAgainDialog):
     def __init__(self, parent=None):
         super().__init__(
             "hide-wine-systemwide-install-warning",
-            "Wine is not installed on your system.",
-            secondary_message="Having Wine installed on your system guarantees that "
+            _("Wine is not installed on your system."),
+            secondary_message=_("Having Wine installed on your system guarantees that "
             "Wine builds from Lutris will have all required dependencies.\n\nPlease "
             "follow the instructions given in the <a "
             "href='https://github.com/lutris/lutris/wiki/Wine'>Lutris Wiki</a> to "
-            "install Wine.",
+            "install Wine."),
             parent=parent,
         )

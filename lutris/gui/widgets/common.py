@@ -4,7 +4,7 @@ import os
 from gi.repository import Gtk, GObject, Pango
 
 from lutris.util import system
-
+from gettext import gettext as _
 
 class SlugEntry(Gtk.Entry, Gtk.Editable):
     def __init__(self):
@@ -55,8 +55,8 @@ class FileChooserEntry(Gtk.Box):
         )
 
         self.file_chooser_dlg.add_buttons(
-            "_Cancel", Gtk.ResponseType.CLOSE,
-            "_OK", Gtk.ResponseType.OK
+            _("_Cancel"), Gtk.ResponseType.CLOSE,
+            _("_OK"), Gtk.ResponseType.OK
         )
 
         self.file_chooser_dlg.set_create_folders(True)
@@ -69,7 +69,7 @@ class FileChooserEntry(Gtk.Box):
             self.file_chooser_dlg.set_current_folder(os.path.expanduser(default_folder))
 
         button = Gtk.Button()
-        button.set_label("Browse...")
+        button.set_label(_("Browse..."))
         button.connect("clicked", self.on_browse_clicked, default_path)
         self.add(button)
 
@@ -173,7 +173,7 @@ class EditableGrid(Gtk.Grid):
             self.treeview.append_column(column)
 
         self.buttons = []
-        self.add_button = Gtk.Button("Add")
+        self.add_button = Gtk.Button(_("Add"))
         self.buttons.append(self.add_button)
         self.add_button.connect("clicked", self.on_add)
 

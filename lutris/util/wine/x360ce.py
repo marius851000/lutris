@@ -1,6 +1,8 @@
 """Module to setup and interact with X360CE"""
 from collections import OrderedDict
 from configparser import RawConfigParser
+from gettext import gettext as _
+
 from lutris.util import system
 from lutris.util.log import logger
 from lutris.util.joypad import get_controller_mappings
@@ -137,7 +139,7 @@ class X360ce:
 
     def load(self, path):
         if not system.path_exists(path):
-            logger.error("X360ce path %s does not exists")
+            logger.error(_("X360ce path %s does not exists"))
             return
         self.config.read(path)
 
@@ -186,7 +188,7 @@ class X360ce:
                 continue
             xinput_name = self.gamecontroller_map.get(xinput_key)
             if not xinput_name:
-                logger.warning("No mapping for %s", xinput_key)
+                logger.warning(_("No mapping for %s"), xinput_key)
             button_name = self.convert_sdl_key(sdl_key)
             if button_name.startswith("x"):
                 if xinput_name.endswith("Y"):

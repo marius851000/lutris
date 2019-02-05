@@ -3,11 +3,11 @@ from lutris.gui.widgets.dialogs import Dialog
 from lutris.gui.config.common import GameDialogCommon
 from lutris.gui.config_boxes import SystemBox
 from lutris.gui.config import DIALOG_WIDTH, DIALOG_HEIGHT
-
+from gettext import gettext as _
 
 class SystemConfigDialog(Dialog, GameDialogCommon):
     def __init__(self, parent=None):
-        super().__init__("System preferences", parent=parent)
+        super().__init__(_("System preferences"), parent=parent)
 
         self.game = None
         self.runner_name = None

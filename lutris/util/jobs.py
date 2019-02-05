@@ -1,6 +1,7 @@
 import sys
 import traceback
 import threading
+from gettext import gettext as _
 from gi.repository import GLib
 
 from lutris.util.log import logger
@@ -29,7 +30,7 @@ class AsyncCall(threading.Thread):
         try:
             result = self.function(*args, **kwargs)
         except Exception as ex:  # pylint: disable=broad-except
-            logger.error("Error while completing task %s: %s", self.function, ex)
+            logger.error(_("Error while completing task %s: %s"), self.function, ex)
             error = ex
             ex_type, ex_value, trace = sys.exc_info()
             print(ex_type, ex_value)
