@@ -27,7 +27,7 @@ try:
     locale_name = locale.getlocale()
     locale.setlocale(locale.LC_ALL, locale_name)
     import locale
-    d="/usr/share/gettext"
+    d="/usr/share/locale"
     gettext.bindtextdomain("lutris", d)
     gettext.textdomain("lutris")
 
