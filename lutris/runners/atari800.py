@@ -115,7 +115,7 @@ class atari800(Runner):
             real_hash = system.get_md5_hash(os.path.join(bios_path, filename))
             for bios_file, checksum in self.bios_checksums.items():
                 if real_hash == checksum:
-                    logging.debug(_("%s Checksum : OK", filename))
+                    logging.debug(_("%s Checksum : OK"), filename)
                     good_bios[bios_file] = filename
         return good_bios
 

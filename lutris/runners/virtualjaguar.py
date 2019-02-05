@@ -3,7 +3,7 @@ from lutris.util import system
 from gettext import gettext as _
 
 class virtualjaguar(Runner):
-    description = _(_("Atari Jaguar emulator"))
+    description = _("Atari Jaguar emulator")
     human_name = "Virtual Jaguar"
     platforms = [_("Atari Jaguar")]
     runnable_alone = True

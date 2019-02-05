@@ -18,7 +18,7 @@ class DownloadProgressBox(Gtk.Box):
         self.url = params.get("url")
         self.dest = params.get("dest")
         self.referer = params.get("referer")
-        title = params.get("title", _("Downloading {}".format(self.url)))
+        title = params.get("title", _("Downloading {}").format(self.url))
 
         self.main_label = Gtk.Label(title)
         self.main_label.set_alignment(0, 0)

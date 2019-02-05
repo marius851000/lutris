@@ -204,7 +204,7 @@ class mess(Runner):
             ],
             "help": _(
                 "Key to switch between Full Keyboard Mode and "
-                "Partial Keyboard Mode (default: Scroll Lock)",
+                "Partial Keyboard Mode (default: Scroll Lock)"
             )
         },
     ]
