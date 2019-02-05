@@ -119,7 +119,7 @@ class Game(GObject.Object):
             dialogs.ErrorDialog(message_text)
         elif message["error"] == "NOT_EXECUTABLE":
             message_text = message["file"].replace("&", "&amp;")
-            dialogs.ErrorDialog(_("The file %s is not executable" % message_text))
+            dialogs.ErrorDialog(_("The file %s is not executable") % message_text)
 
     def get_browse_dir(self):
         """Return the path to open with the Browse Files action."""
@@ -219,7 +219,7 @@ class Game(GObject.Object):
             if runtime_updater.is_updating():
                 logger.warning(_("Runtime updates: %s"), runtime_updater.current_updates)
                 dialogs.ErrorDialog(
-                    _("Runtime currently updating", "Game might not work as expected")
+                    _("Runtime currently updating"), _("Game might not work as expected")
                 )
         if "wine" in self.runner_name and not wine.get_system_wine_version():
 
