@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "POT-Creation-Date: 2019-02-05 01:55+CET\n"
-"PO-Revision-Date: 2019-02-05 14:01+0100\n"
+"PO-Revision-Date: 2019-02-06 01:02+0100\n"
 "Last-Translator: marius <mariusdavid@laposte.net>\n"
 "Language-Team: French <>\n"
 "MIME-Version: 1.0\n"
@@ -14,7 +14,7 @@ msgstr ""
 "Generated-By: pygettext.py 1.5\n"
 "Language: fr\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
-"X-Generator: Lokalize 19.03.70\n"
+"X-Generator: Lokalize 2.0\n"
 
 #: lutris/api.py:35
 msgid "Unable to connect to server (%s): %s"
@@ -22,7 +22,7 @@ msgstr "Impossible de se connecter au serveur (%s) : %s"
 
 #: lutris/api.py:54
 msgid "Fetching game library"
-msgstr "Récupération de librairie de jeux"
+msgstr "Récupération de la librairie des jeux"
 
 #: lutris/api.py:94
 msgid "No game id provided will fetch all games from the API"
@@ -46,7 +46,7 @@ msgstr "La page actuelle est %s, la prochaine est %s"
 
 #: lutris/api.py:119
 msgid "Unable to get response for page %s"
-msgstr "Impossible d'obtenir la réponse pour la page %s"
+msgstr "Impossible d'obtenir une réponse pour la page %s"
 
 #: lutris/command.py:111
 msgid "Running %s"
@@ -82,7 +82,7 @@ msgstr ""
 
 #: lutris/command.py:254
 msgid "Detaching logger"
-msgstr ""
+msgstr "Détachement du logger"
 
 #: lutris/command.py:257
 msgid "logger already detached"
@@ -117,7 +117,7 @@ msgstr "Un fichier bios est nécessaire pour lancer ce jeu"
 #: lutris/game.py:114
 #: lutris/game.py:113
 msgid "The file {} could not be found"
-msgstr "Le fichier {} ne peut pas être trouvé"
+msgstr "Le fichier {} est introuvable"
 
 #: lutris/game.py:122
 msgid "The file %s is not executable"
@@ -278,15 +278,15 @@ msgstr ""
 
 #: lutris/game_actions.py:54
 msgid "Play"
-msgstr ""
+msgstr "Jouer"
 
 #: lutris/game_actions.py:58
 msgid "Stop"
-msgstr ""
+msgstr "Arretter"
 
 #: lutris/game_actions.py:62
 msgid "Show logs"
-msgstr ""
+msgstr "Montrer les logs"
 
 #: lutris/game_actions.py:66 lutris/gui/widgets/cellrenderers.py:46
 msgid "Install"
@@ -294,19 +294,19 @@ msgstr "Installer"
 
 #: lutris/game_actions.py:70
 msgid "Add installed game"
-msgstr ""
+msgstr "Ajouter des jeux installés"
 
 #: lutris/game_actions.py:74
 msgid "Configure"
-msgstr ""
+msgstr "Configurer"
 
 #: lutris/game_actions.py:78
 msgid "Execute script"
-msgstr ""
+msgstr "Executer un script"
 
 #: lutris/game_actions.py:82
 msgid "Browse files"
-msgstr ""
+msgstr "Naviguer dans les fichiers"
 
 #: lutris/game_actions.py:86 lutris/gui/installerwindow.py:459
 msgid "Create desktop shortcut"
@@ -314,7 +314,7 @@ msgstr "Créer un raccourci sur le bureau"
 
 #: lutris/game_actions.py:90
 msgid "Delete desktop shortcut"
-msgstr ""
+msgstr "Supprimer le racourci sur le bureau"
 
 #: lutris/game_actions.py:94 lutris/gui/installerwindow.py:460
 msgid "Create application menu shortcut"
@@ -326,15 +326,15 @@ msgstr ""
 
 #: lutris/game_actions.py:102
 msgid "Install another version"
-msgstr ""
+msgstr "Installer une version différente"
 
 #: lutris/game_actions.py:106
 msgid "Remove"
-msgstr ""
+msgstr "Supprimer"
 
 #: lutris/game_actions.py:110
 msgid "View on Lutris.net"
-msgstr ""
+msgstr "Voir sur Lutris.net"
 
 #: lutris/game_actions.py:167
 msgid "%s not in running game list"
@@ -359,13 +359,14 @@ msgstr ""
 msgid ""
 "Running Lutris as root is not recommended and may cause unexpected issues"
 msgstr ""
-"Executer Lutris en tant que super-utilisateur est découragé et peux causer "
-"des probléme"
+"Executer Lutris en tant que super-utilisateur est découragé et peux causer"
+" des probléme"
 
 #: lutris/gui/application.py:94 lutris/vendor/gi_composites.py:89
 #: lutris/gui/application.py:101
 msgid "Your Linux distribution is too old, Lutris won't function properly"
-msgstr "Votre distribution Linux est trop vieille, Lutris ne marchera pas bien"
+msgstr ""
+"Votre distribution Linux est trop ancienne, Lutris ne marchera pas bien"
 
 #: lutris/gui/application.py:100
 #: lutris/gui/application.py:107
@@ -383,8 +384,8 @@ msgid ""
 "GLib.set_option_context_summary missing, was added in GLib 2.56 (Released"
 " 2018-03-12)"
 msgstr ""
-"Glib.set_option_context_summary est manquant, qui a été ajouté dans GLib "
-"2.56 (publié le 12 mars 2018)"
+"Glib.set_option_context_summary est manquant, ce qui a été ajouté dans GLib"
+" 2.56 (publié le 12 mars 2018)"
 
 #: lutris/gui/application.py:116
 #: lutris/gui/application.py:123
@@ -404,7 +405,7 @@ msgstr "Installe un jeu depuis un fichier yml"
 #: lutris/gui/application.py:140
 #: lutris/gui/application.py:147
 msgid "Execute a program with the lutris runtime"
-msgstr ""
+msgstr "Execute un programme avec l'environnement d'execution de Lutris"
 
 #: lutris/gui/application.py:148
 #: lutris/gui/application.py:155
@@ -469,11 +470,11 @@ msgstr ""
 #: lutris/gui/application.py:454
 #: lutris/gui/application.py:461
 msgid "Shutting down Lutris"
-msgstr ""
+msgstr "Fermeture de Lutris"
 
 #: lutris/gui/config/add_game.py:11
 msgid "Add a new game"
-msgstr ""
+msgstr "Ajouter un nouveau jeu"
 
 #: lutris/gui/config/common.py:25
 msgid "Select a runner in the Game Info tab"
@@ -481,16 +482,16 @@ msgstr ""
 
 #: lutris/gui/config/common.py:68
 msgid "Game info"
-msgstr ""
+msgstr "Information du jeu"
 
 #: lutris/gui/config/common.py:73 lutris/gui/gameviews.py:308
 #: lutris/gui/views/list.py:44
 msgid "Name"
-msgstr ""
+msgstr "Nom"
 
 #: lutris/gui/config/common.py:86
 msgid "Identifier"
-msgstr ""
+msgstr "Identifiant"
 
 #: lutris/gui/config/common.py:95 lutris/gui/config/common.py:224
 msgid "Change"
@@ -499,11 +500,11 @@ msgstr ""
 #: lutris/gui/config/common.py:104 lutris/gui/gameviews.py:320
 #: lutris/gui/views/list.py:46
 msgid "Runner"
-msgstr ""
+msgstr "Runner"
 
 #: lutris/gui/config/common.py:110
 msgid "Install runners"
-msgstr ""
+msgstr "Installer des runners"
 
 #: lutris/gui/config/common.py:131
 msgid "Remove custom banner"
@@ -515,7 +516,7 @@ msgstr ""
 
 #: lutris/gui/config/common.py:155
 msgid "Release year"
-msgstr ""
+msgstr "Année de publication"
 
 #: lutris/gui/config/common.py:203
 msgid "Select a runner from the list"
@@ -523,7 +524,7 @@ msgstr "Selectionner un runner depuis la liste"
 
 #: lutris/gui/config/common.py:213
 msgid "Apply"
-msgstr ""
+msgstr "Appliquer"
 
 #: lutris/gui/config/common.py:251
 msgid "Game options"
@@ -543,7 +544,7 @@ msgstr "Montrer les options avancées"
 
 #: lutris/gui/config/common.py:282
 msgid "Cancel"
-msgstr "Annuller "
+msgstr "Annuler"
 
 #: lutris/gui/config/common.py:286
 msgid "Save"
@@ -5878,4 +5879,3 @@ msgstr ""
 #: lutris/vendor/gi_composites.py:269
 msgid "Cannot nest template classes"
 msgstr ""
-
