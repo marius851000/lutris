@@ -147,7 +147,7 @@ class SidebarListBox(Gtk.ListBox):
         if local_theme_path not in icon_theme.get_search_path():
             icon_theme.prepend_search_path(local_theme_path)
 
-        all_row = SidebarRow(None, "runner", "All", None)
+        all_row = SidebarRow(None, "runner", _("All"), None)
         self.add(all_row)
         self.select_row(all_row)
         for runner in self.runners:
@@ -157,7 +157,7 @@ class SidebarListBox(Gtk.ListBox):
             name = runners.import_runner(runner).human_name
             self.add(SidebarRow(runner, "runner", name, icon))
 
-        self.add(SidebarRow(None, "platform", "All", None))
+        self.add(SidebarRow(None, "platform", _("All"), None))
         for platform in self.platforms:
             icon_name = platform.lower().replace(" ", "") + "-symbolic"
             icon = Gtk.Image.new_from_icon_name(icon_name, Gtk.IconSize.MENU)

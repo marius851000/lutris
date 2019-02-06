@@ -2,7 +2,7 @@ from lutris.runners.runner import Runner
 from gettext import gettext as _
 
 class browser(Runner):
-    human_name = "Browser"
+    human_name = _("Browser")
     platforms = ["Web"]
     description = _("Runs games in the browser")
     game_options = [
